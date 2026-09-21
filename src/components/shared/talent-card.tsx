@@ -15,7 +15,7 @@ interface TalentCardProps {
 
 export function TalentCard({ id, name, role, tower, endorsements, imageUrl }: TalentCardProps) {
   return (
-    <Link href={`/talent/${id}`} className="w-full shrink-0 group cursor-pointer block">
+    <Link href={`/talent/${id}`} className="w-[140px] shrink-0 group cursor-pointer block snap-start">
       <div className="aspect-[4/5] rounded-3xl relative overflow-hidden mb-3 bg-white border border-slate-200 shadow-sm group-hover:shadow-md transition-all duration-300">
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent z-10" />
         

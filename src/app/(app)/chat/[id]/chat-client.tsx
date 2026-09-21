@@ -70,7 +70,7 @@ export default function ChatClient({
   };
 
   return (
-    <div className="flex flex-col min-h-full relative w-full max-w-2xl mx-auto pb-24">
+    <div className="flex flex-col min-h-full relative w-full max-w-md mx-auto pb-24">
       {/* Header */}
       <div className="bg-white/70 backdrop-blur-xl border-b border-white/80 px-6 pt-12 pb-4 flex items-center justify-between sticky top-0 z-20 shadow-sm">
         <div className="flex items-center gap-3">
@@ -146,7 +146,7 @@ export default function ChatClient({
 
       {/* Floating Input */}
       <div className="fixed bottom-[90px] left-0 w-full px-6 flex justify-center z-40 pointer-events-none">
-        <div className="w-full max-w-2xl pointer-events-auto">
+        <div className="w-full max-w-md pointer-events-auto">
           <div className="flex items-end gap-2 bg-white/90 backdrop-blur-md p-2 border border-slate-200 rounded-[2rem] shadow-2xl shadow-indigo-500/10">
             <button className="p-3 bg-slate-50 text-slate-400 hover:text-indigo-600 rounded-full transition-colors flex-shrink-0">
               <ImageIcon className="w-5 h-5" />

@@ -148,7 +148,7 @@ export default async function HomePage() {
                 🛠️
               </div>
               <div>
-                <div className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">Available to Borrow</div>
+                <div className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">Library</div>
                 <div className="text-sm font-bold text-slate-900 leading-tight line-clamp-1">{borrowItems[0].title}</div>
               </div>
             </Link>

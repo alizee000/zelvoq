@@ -76,7 +76,7 @@ export default async function MarketPage({
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-6">
             {borrowItems.length > 0 ? (
               borrowItems.map((item: any) => (
                 <BorrowCard 

@@ -107,7 +107,7 @@ function DiscoverSection({ title, children }: { title: string, children: React.R
         <h3 className="text-base font-bold text-slate-800">{title}</h3>
         <button className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700">See all</button>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pb-4">
+      <div className="flex overflow-x-auto gap-4 pb-6 -mx-6 px-6 snap-x snap-mandatory hide-scrollbar">
         {children}
       </div>
     </div>

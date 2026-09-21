@@ -1,7 +1,9 @@
 "use client";
 
-import { User, MapPin } from "lucide-react";
+import { User, MapPin, HandHeart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ActionModal } from "./action-modal";
+import { useState } from "react";
 
 interface BorrowCardProps {
   id: string;
@@ -15,6 +17,15 @@ interface BorrowCardProps {
 }
 
 export function BorrowCard({ name, ownerName, tower, condition, available, imageFallback, description }: BorrowCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRequested, setIsRequested] = useState(false);
+
+  const handleRequest = async () => {
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsRequested(true);
+  };
+
   return (
     <div className="w-full bg-white border border-slate-200 rounded-3xl p-5 shadow-sm flex flex-col gap-4 relative overflow-hidden group hover:shadow-md transition-all">
       <div className="flex gap-4">
@@ -43,14 +54,29 @@ export function BorrowCard({ name, ownerName, tower, condition, available, image
       </div>
 
       <button 
-        disabled={!available}
+        disabled={!available || isRequested}
+        onClick={() => setIsModalOpen(true)}
         className={`w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm mt-2 
-          ${available 
+          ${available && !isRequested
             ? "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02]" 
             : "bg-slate-100 text-slate-400 cursor-not-allowed"}`}
       >
-        {available ? "Request to Borrow" : "Currently Unavailable"}
+        {isRequested ? "Request Sent" : (available ? "Request to Borrow" : "Currently Unavailable")}
       </button>
+
+      <ActionModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleRequest}
+        title={`Borrow ${name}?`}
+        description={
+          <>
+            You are requesting to borrow <strong>{name}</strong> from <strong>{ownerName}</strong> ({tower}). They will be notified of your request.
+          </>
+        }
+        confirmText="Send Request"
+        icon={<HandHeart className="w-6 h-6" />}
+      />
     </div>
   );
 }

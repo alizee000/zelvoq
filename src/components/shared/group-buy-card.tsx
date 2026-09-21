@@ -1,7 +1,9 @@
 "use client";
 
-import { Users, Clock, ArrowRight } from "lucide-react";
+import { Users, Clock, ArrowRight, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ActionModal } from "./action-modal";
+import { useState } from "react";
 
 interface GroupBuyCardProps {
   id: string;
@@ -19,6 +21,15 @@ interface GroupBuyCardProps {
 export function GroupBuyCard({ title, vendor, targetQuantity, currentQuantity, originalPrice, discountedPrice, expiresInDays, imageFallback, description }: GroupBuyCardProps) {
   const progressPercent = Math.min(100, Math.round((currentQuantity / targetQuantity) * 100));
   const isGoalReached = currentQuantity >= targetQuantity;
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isJoined, setIsJoined] = useState(false);
+
+  const handleJoin = async () => {
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsJoined(true);
+  };
 
   return (
     <div className="w-full bg-white border border-slate-200 rounded-3xl p-5 shadow-sm flex flex-col gap-4 relative overflow-hidden group hover:shadow-md transition-all">
@@ -66,12 +77,31 @@ export function GroupBuyCard({ title, vendor, targetQuantity, currentQuantity, o
       </div>
 
       <button 
-        className={`w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm mt-2
-          ${isGoalReached ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-indigo-600 text-white hover:bg-indigo-700"} hover:scale-[1.02]`}
+        onClick={() => setIsModalOpen(true)}
+        disabled={isJoined}
+        className={`w-full py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 shadow-sm ${
+          isJoined 
+            ? "bg-slate-100 text-slate-400 cursor-not-allowed" 
+            : "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02]"
+        }`}
       >
-        Join Deal
-        <ArrowRight className="w-4 h-4" />
+        {isJoined ? "Joined Successfully" : "Join Deal"}
+        {!isJoined && <ArrowRight className="w-4 h-4" />}
       </button>
+
+      <ActionModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleJoin}
+        title={`Join ${title} Deal?`}
+        description={
+          <>
+            You are committing to purchase this item from <strong>{vendor}</strong> for the discounted price of <strong>₹{discountedPrice}</strong>.
+          </>
+        }
+        confirmText="Confirm Purchase"
+        icon={<ShoppingBag className="w-6 h-6" />}
+      />
     </div>
   );
 }

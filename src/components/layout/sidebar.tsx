@@ -22,7 +22,7 @@ export function Sidebar() {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shrink-0">
             <Sparkles className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold tracking-tight">MyInAi</span>
+          <span className="text-xl font-bold tracking-tight">MyINAI</span>
         </Link>
         
         <div className="mt-8 flex flex-col px-2 py-3 bg-secondary/50 rounded-xl gap-1">

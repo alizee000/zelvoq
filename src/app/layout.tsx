@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MyInAi | Community Talent Network",
+  title: "MyINAI | Community Talent Network",
   description: "Discover People. Discover Possibilities.",
 };
 

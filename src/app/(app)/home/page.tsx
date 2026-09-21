@@ -42,7 +42,7 @@ export default async function HomePage() {
       <header className="flex items-center justify-between">
         <div className="flex flex-col">
           <h1 className="text-2xl font-black tracking-tight text-slate-900">
-            MyInAi
+            MyINAI
           </h1>
           <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
             Discover People. Discover Possibilities.

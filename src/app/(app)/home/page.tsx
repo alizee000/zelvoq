@@ -2,7 +2,23 @@ import { MapPin, Target, Activity, Zap, ShieldAlert, Cpu, User, Sun, ShoppingBag
 import Link from "next/link";
 import { getFeedPosts, getGroupBuys, getTalents } from "@/lib/data/fetchers";
 
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
+
 export default async function HomePage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  
+  let fullName = "INAI";
+  if (user) {
+    fullName = user.user_metadata?.full_name || "Resident";
+  } else if (cookieStore.has("test_name")) {
+    fullName = cookieStore.get("test_name")?.value || "INAI";
+  }
+  
+  const firstName = fullName.split(" ")[0];
+
   const feedPosts = await getFeedPosts();
   const groupBuys = await getGroupBuys();
   const talents = await getTalents();
@@ -62,7 +78,7 @@ export default async function HomePage() {
                 <span className="text-[10px] font-bold uppercase tracking-widest">{temp} • {weatherCondition}</span>
               </div>
               <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
-                {greeting},<br/>Zeeshan.
+                {greeting},<br/>{firstName}.
               </h1>
             </div>
             <Link href="/profile" className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm border border-white flex items-center justify-center shadow-sm hover:scale-105 transition-transform z-10">

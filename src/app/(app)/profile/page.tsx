@@ -28,7 +28,7 @@ export default async function MyProfilePage() {
     tower = user.user_metadata?.tower || "Unknown Tower";
     flat = user.user_metadata?.flat || "Unknown Flat";
   } else {
-    ownerName = cookieStore.get("test_name")?.value || "Test Resident";
+    ownerName = cookieStore.get("test_name")?.value || "INAI";
     tower = cookieStore.get("test_tower")?.value || "Test Tower";
     flat = cookieStore.get("test_flat")?.value || "101";
   }

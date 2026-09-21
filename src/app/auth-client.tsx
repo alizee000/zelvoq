@@ -114,6 +114,11 @@ export default function AuthClientPage() {
             </p>
           </div>
           
+          <div className="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-xl">
+            <p className="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-1">Demo Access</p>
+            <p className="text-sm text-indigo-700 font-medium">Use <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">test@example.com</span> and any password to bypass email verification!</p>
+          </div>
+          
           {error && (
             <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 text-sm font-medium rounded-xl">
               {error}

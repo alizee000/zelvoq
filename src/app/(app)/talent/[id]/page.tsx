@@ -81,10 +81,10 @@ export default async function TalentProfilePage({ params }: { params: Promise<{ 
 
         {/* Action Buttons */}
         <div className="flex gap-4 w-full max-w-sm mt-8">
-          <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-bold shadow-lg shadow-indigo-500/30 transition-all active:scale-95 flex items-center justify-center gap-2">
+          <Link href={`/chat/${talent.id}`} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-bold shadow-lg shadow-indigo-500/30 transition-all active:scale-95 flex items-center justify-center gap-2">
             <MessageSquare className="w-5 h-5" />
             Message
-          </button>
+          </Link>
           <button className="flex-1 bg-white border border-slate-200 text-slate-700 py-4 rounded-2xl font-bold shadow-sm hover:bg-slate-50 transition-all active:scale-95 flex items-center justify-center gap-2">
             <Phone className="w-5 h-5" />
             Call

@@ -82,7 +82,7 @@ export default function AuthClientPage() {
           
           <div className="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-xl">
             <p className="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-1">Demo Access</p>
-            <p className="text-sm text-indigo-700 font-medium">Use <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">test@example.com</span> and any password to bypass email verification!</p>
+            <p className="text-sm text-indigo-700 font-medium">Use <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">test@example.com</span>, any password, and Society Passcode <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">KOODU-2026</span> to bypass verification!</p>
           </div>
           
           {error && (
@@ -117,6 +117,14 @@ export default function AuthClientPage() {
                   <div className="flex-1 space-y-2">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Flat #</label>
                     <input name="flat" type="text" placeholder="e.g. 402" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Society Passcode</label>
+                  <div className="relative">
+                    <KeyRound className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" />
+                    <input name="passcode" type="text" placeholder="e.g. KOODU-2026" required className="w-full bg-indigo-50/50 border border-indigo-200 rounded-2xl py-4 pl-12 pr-4 text-sm text-indigo-900 placeholder:text-indigo-400 font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all uppercase" />
                   </div>
                 </div>
               </>

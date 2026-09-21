@@ -42,14 +42,19 @@ export async function signup(formData: FormData) {
   const password = formData.get("password") as string;
   const tower = formData.get("tower") as string;
   const flat = formData.get("flat") as string;
-  const name = formData.get("name") as string; // We'll add this to the UI
+  const name = formData.get("name") as string;
+  const passcode = formData.get("passcode") as string;
 
-  if (!email || !password || !tower || !flat || !name) {
-    return { error: "All fields are required" };
+  if (!email || !password || !tower || !flat || !name || !passcode) {
+    return { error: "All fields including Society Passcode are required" };
   }
 
   // Bypass for test emails
   if (email.toLowerCase().includes("test")) {
+    if (passcode.toUpperCase() !== "KOODU-2026") {
+       return { error: "Invalid Society Passcode. Hint: Use KOODU-2026 for testing." };
+    }
+    
     const cookieStore = await cookies();
     cookieStore.set("test_bypass", email, { path: "/" });
     cookieStore.set("test_name", name, { path: "/" });

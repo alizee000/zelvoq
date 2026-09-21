@@ -17,7 +17,7 @@ export default function LandingPage() {
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shrink-0 shadow-lg">
               <Sparkles className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold tracking-tight">ZELVOQ</span>
+            <span className="text-xl font-bold tracking-tight">MyInAi</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-sm font-medium text-foreground hover:text-foreground/80">Log in</Link>

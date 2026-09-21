@@ -11,11 +11,11 @@ export default async function HomePage() {
   const { data: { user } } = await supabase.auth.getUser();
   const cookieStore = await cookies();
   
-  let fullName = "INAI";
+  let fullName = "Koodu";
   if (user) {
     fullName = user.user_metadata?.full_name || "Resident";
   } else if (cookieStore.has("test_name")) {
-    fullName = cookieStore.get("test_name")?.value || "INAI";
+    fullName = cookieStore.get("test_name")?.value || "Koodu";
   }
   
   const firstName = fullName.split(" ")[0];
@@ -57,13 +57,15 @@ export default async function HomePage() {
       
       {/* Header */}
       <header className="flex items-center justify-between">
-        <div className="flex flex-col">
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">
-            MyINAI
+        <div>
+          <h1 className="text-[28px] leading-tight font-extrabold tracking-tight text-slate-900 mb-1">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+            MyKoodu
+            </span>
           </h1>
-          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-            Discover People. Discover Possibilities.
-          </div>
+          <p className="text-slate-500 font-medium text-sm">
+            My community. My people. My world.
+          </p>
         </div>
       </header>
 

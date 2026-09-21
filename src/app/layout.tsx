@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MyINAI | Community Talent Network",
-  description: "Discover People. Discover Possibilities.",
+  title: "MyKoodu | Community Talent Network",
+  description: "My community. My people. My world.",
 };
 
 export default function RootLayout({

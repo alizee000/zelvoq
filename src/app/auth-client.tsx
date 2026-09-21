@@ -133,7 +133,7 @@ export default function AuthClientPage() {
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Full Name</label>
                   <div className="relative">
                     <User className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input name="name" type="text" placeholder="John Doe" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                    <input name="name" type="text" placeholder="John Doe" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -141,12 +141,12 @@ export default function AuthClientPage() {
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Tower</label>
                     <div className="relative">
                       <Building2 className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input name="tower" type="text" placeholder="e.g. Block A" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                      <input name="tower" type="text" placeholder="e.g. Block A" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-2">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Flat No.</label>
-                    <input name="flat" type="text" placeholder="e.g. 104" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                    <input name="flat" type="text" placeholder="e.g. 104" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
                   </div>
                 </div>
               </>
@@ -156,7 +156,7 @@ export default function AuthClientPage() {
               <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Email Address</label>
               <div className="relative">
                 <Fingerprint className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input name="email" type="email" placeholder="Enter your email" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                <input name="email" type="email" placeholder="Enter your email" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
               </div>
             </div>
 
@@ -167,7 +167,7 @@ export default function AuthClientPage() {
               </div>
               <div className="relative">
                 <KeyRound className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input name="password" type="password" placeholder="••••••••" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                <input name="password" type="password" placeholder="••••••••" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
               </div>
             </div>
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Compass, User, Store, Plus } from "lucide-react";
+import { Home, Compass, User, Store, Plus, Vote } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const LEFT_NAV = [

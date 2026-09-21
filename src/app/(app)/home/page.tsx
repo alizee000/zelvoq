@@ -1,10 +1,12 @@
-import { Target, User, ShoppingBag, CloudSun } from "lucide-react";
-import Link from "next/link";
-import { getFeedPosts, getGroupBuys, getTalents } from "@/lib/data/fetchers";
-
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { LiveFeedClient } from "./live-feed-client";
+import { getFeedPosts, getGroupBuys, getTalents } from "@/lib/data/fetchers";
+import { getPollsForUser } from "@/lib/data/polls";
+import { PollsTile } from "./polls-tile";
+import { PollsResultsList } from "./polls-results-list";
+import { CloudSun, ShoppingBag, Target, User } from "lucide-react";
+import Link from "next/link";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -24,6 +26,7 @@ export default async function HomePage() {
   const groupBuys = await getGroupBuys();
   const talents = await getTalents();
   const borrowItems = talents.filter((t: any) => t.category === "lend");
+  const { activePolls, completedPolls } = await getPollsForUser(fullName);
   
   // Real weather fetch
   let temp = "24°C";
@@ -53,7 +56,7 @@ export default async function HomePage() {
   const totalActivity = talents.length + groupBuys.length;
 
   return (
-    <div className="flex flex-col min-h-full pt-8 pb-[90px] px-6 gap-6 relative animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
+    <div className="flex flex-col min-h-full pt-8 pb-[90px] px-6 gap-6 relative animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out z-0">
       
       {/* Header */}
       <header className="flex items-center justify-between">
@@ -115,7 +118,12 @@ export default async function HomePage() {
             <div className="text-[10px] font-bold text-indigo-100 uppercase tracking-widest mt-0.5">Skills Shared</div>
           </div>
         </Link>
+        {/* Liquid Democracy Tile */}
+        <PollsTile initialActive={activePolls} initialCompleted={completedPolls} />
       </section>
+
+      {/* Community Decisions */}
+      <PollsResultsList completedPolls={completedPolls} />
 
       {/* Marketplace Spotlight */}
       <section className="flex flex-col gap-4">

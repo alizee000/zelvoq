@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Compass, Sparkles, Calendar, User, Search, MapPin } from "lucide-react";
+import { Home, Compass, Sparkles, Calendar, User, Vote } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [

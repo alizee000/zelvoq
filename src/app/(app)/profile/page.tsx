@@ -4,15 +4,40 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { AvatarUploader } from "@/components/shared/avatar-uploader";
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { logout } from "@/app/actions/auth";
 
 export default async function MyProfilePage() {
   const supabase = await createClient();
-  
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const cookieStore = await cookies();
+  const isTestBypass = cookieStore.has("test_bypass");
+
+  if (!user && !isTestBypass) {
+    redirect("/");
+  }
+
+  let ownerName = "";
+  let tower = "";
+  let flat = "";
+
+  if (user) {
+    ownerName = user.user_metadata?.full_name || user.email;
+    tower = user.user_metadata?.tower || "Unknown Tower";
+    flat = user.user_metadata?.flat || "Unknown Flat";
+  } else {
+    ownerName = cookieStore.get("test_name")?.value || "Test Resident";
+    tower = cookieStore.get("test_tower")?.value || "Test Tower";
+    flat = cookieStore.get("test_flat")?.value || "101";
+  }
+
   // Fetch existing image from their real profile table
   const { data: myProfile } = await supabase
     .from("profiles")
     .select("image_url")
-    .eq("owner_name", "Zeeshan Ali")
+    .eq("owner_name", ownerName)
     .single();
     
   const currentImageUrl = myProfile?.image_url || undefined;
@@ -21,7 +46,7 @@ export default async function MyProfilePage() {
   const { data: myTalents } = await supabase
     .from("talents")
     .select("*")
-    .eq("owner_name", "Zeeshan Ali")
+    .eq("owner_name", ownerName)
     .order("created_at", { ascending: false });
 
   return (
@@ -34,9 +59,11 @@ export default async function MyProfilePage() {
           </h1>
           <p className="text-sm font-bold text-slate-500 mt-1">Manage your account</p>
         </div>
-        <button className="p-2 bg-white rounded-full border border-slate-200 shadow-sm hover:scale-105 transition-transform">
-          <Settings className="w-5 h-5 text-slate-700" />
-        </button>
+        <form action={logout}>
+          <button type="submit" className="p-2 bg-white rounded-full border border-slate-200 shadow-sm hover:scale-105 transition-transform group">
+            <LogOut className="w-5 h-5 text-slate-700 group-hover:text-red-500" />
+          </button>
+        </form>
       </header>
 
       <div className="px-6 mt-6 flex flex-col gap-6 max-w-4xl mx-auto w-full">
@@ -54,8 +81,8 @@ export default async function MyProfilePage() {
             </div>
           </div>
           
-          <h2 className="text-2xl font-bold text-slate-900">Zeeshan Ali</h2>
-          <p className="text-slate-500 font-medium text-sm mt-1">Apt 134 · RED BLOCK</p>
+          <h2 className="text-2xl font-bold text-slate-900">{ownerName}</h2>
+          <p className="text-slate-500 font-medium text-sm mt-1">Flat {flat} · {tower}</p>
           
           <div className="flex items-center gap-2 mt-4 px-4 py-2 bg-indigo-50 rounded-full">
             <Award className="w-4 h-4 text-indigo-600" />

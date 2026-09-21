@@ -1,12 +1,23 @@
 import { BottomNav } from "@/components/layout/bottom-nav";
-
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
+import { cookies } from "next/headers";
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const isTestBypass = cookieStore.has("test_bypass");
+
+  if (!user && !isTestBypass) {
+    redirect("/");
+  }
+
   return (
     <div className="flex min-h-screen w-full bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/80 selection:bg-indigo-500/30 text-slate-900 flex-col relative">
       {/* Decorative background blur elements */}

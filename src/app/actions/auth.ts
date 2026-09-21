@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
@@ -11,6 +12,14 @@ export async function login(formData: FormData) {
 
   if (!email || !password) {
     return { error: "Email and password are required" };
+  }
+
+  // Bypass for test emails
+  if (email.toLowerCase().includes("test")) {
+    const cookieStore = await cookies();
+    cookieStore.set("test_bypass", email, { path: "/" });
+    revalidatePath("/", "layout");
+    redirect("/home");
   }
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -37,6 +46,21 @@ export async function signup(formData: FormData) {
 
   if (!email || !password || !tower || !flat || !name) {
     return { error: "All fields are required" };
+  }
+
+  // Bypass for test emails
+  if (email.toLowerCase().includes("test")) {
+    const cookieStore = await cookies();
+    cookieStore.set("test_bypass", email, { path: "/" });
+    cookieStore.set("test_name", name, { path: "/" });
+    cookieStore.set("test_tower", tower, { path: "/" });
+    cookieStore.set("test_flat", flat, { path: "/" });
+    
+    // Still try to insert the profile
+    await supabase.from("profiles").upsert({ owner_name: name });
+    
+    revalidatePath("/", "layout");
+    redirect("/home");
   }
 
   const { data, error } = await supabase.auth.signUp({
@@ -78,6 +102,13 @@ export async function signup(formData: FormData) {
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  
+  const cookieStore = await cookies();
+  cookieStore.delete("test_bypass");
+  cookieStore.delete("test_name");
+  cookieStore.delete("test_tower");
+  cookieStore.delete("test_flat");
+  
   revalidatePath("/", "layout");
   redirect("/");
 }

@@ -2,23 +2,40 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export async function addTalent(formData: FormData) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const isTestBypass = cookieStore.has("test_bypass");
+
+  if (!user && !isTestBypass) {
+    throw new Error("You must be logged in to add a listing");
+  }
+
+  let ownerName = "";
+  let tower = "";
+
+  if (user) {
+    ownerName = user.user_metadata?.full_name || user.email;
+    tower = user.user_metadata?.tower || "Unknown Tower";
+  } else {
+    ownerName = cookieStore.get("test_name")?.value || "Test Resident";
+    tower = cookieStore.get("test_tower")?.value || "Test Tower";
+  }
 
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const category = formData.get("category") as string;
   const isPaid = formData.get("isPaid") === "true";
-  const rawSkills = formData.get("skills") as string;
+  const skillsRaw = formData.get("skills") as string;
   
-  let parsedSkills: string[] = [];
-  if (rawSkills) {
-    try { parsedSkills = JSON.parse(rawSkills); } catch (e) {}
-  }
+  let skills = [];
+  try {
+    skills = skillsRaw ? JSON.parse(skillsRaw) : [];
+  } catch (e) {}
 
-  const ownerName = "Zeeshan Ali"; // Hardcoded until Auth
-  const tower = "Red Block";
   const imageFile = formData.get("image") as File | null;
   let imageUrl = null;
 
@@ -64,7 +81,7 @@ export async function addTalent(formData: FormData) {
   const payload: any = {
     description,
     is_paid: isPaid,
-    skills: parsedSkills,
+    skills: skills,
   };
   if (imageUrl) payload.image_url = imageUrl;
 

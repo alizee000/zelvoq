@@ -2,11 +2,20 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export async function uploadProfilePic(formData: FormData) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const isTestBypass = cookieStore.has("test_bypass");
+
+  if (!user && !isTestBypass) {
+    throw new Error("You must be logged in to upload a profile picture");
+  }
+
+  const ownerName = user ? (user.user_metadata?.full_name || user.email) : (cookieStore.get("test_name")?.value || "Test Resident");
   const imageFile = formData.get("image") as File | null;
-  const ownerName = "Zeeshan Ali"; // Hardcoded user
 
   if (!imageFile || imageFile.size === 0) {
     throw new Error("No image provided");

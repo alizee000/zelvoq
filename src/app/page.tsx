@@ -1,93 +1,191 @@
-import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+"use client";
 
-export default function LandingPage() {
+import { useState, useTransition } from "react";
+import { Building2, KeyRound, Sparkles, UserPlus, Fingerprint, ArrowRight, Loader2, User } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { login, signup } from "@/app/actions/auth";
+
+export default function AuthPage() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    const formData = new FormData(e.currentTarget);
+    
+    startTransition(async () => {
+      let result;
+      if (isLogin) {
+        result = await login(formData);
+      } else {
+        result = await signup(formData);
+      }
+      
+      if (result?.error) {
+        setError(result.error);
+      }
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-background selection:bg-primary/20 flex flex-col relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full bg-gradient-to-b from-blue-500/10 to-purple-500/10 blur-[120px]" />
-        <div className="absolute top-[40%] -left-[20%] w-[60%] h-[60%] rounded-full bg-gradient-to-b from-orange-500/10 to-pink-500/10 blur-[120px]" />
+    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[70%] rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-600/10 blur-[100px] pointer-events-none" />
+      <div className="absolute top-[40%] -right-[10%] w-[50%] h-[70%] rounded-full bg-gradient-to-br from-amber-400/20 to-orange-500/10 blur-[100px] pointer-events-none" />
+
+      {/* LEFT: Branding & Vision (Visible on Desktop) */}
+      <div className="hidden md:flex flex-col flex-1 p-12 justify-between relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <Sparkles className="w-6 h-6 text-white" />
+          </div>
+          <span className="text-3xl font-black tracking-tight text-slate-900">MyINAI</span>
+        </div>
+        
+        <div className="max-w-xl">
+          <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-[1.1] mb-6">
+            Your Apartment,<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+              Unlocked.
+            </span>
+          </h1>
+          <p className="text-xl text-slate-600 font-medium leading-relaxed mb-8">
+            Connect with verified neighbors, discover hidden talents in your tower, and build a smarter community.
+          </p>
+          
+          <div className="flex items-center gap-4 bg-white/60 backdrop-blur-md p-4 rounded-3xl border border-white/80 shadow-sm max-w-md">
+            <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+              <Building2 className="w-6 h-6 text-orange-600" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-slate-900">Join 1,200+ Residents</p>
+              <p className="text-xs text-slate-500 font-medium">Currently active in your society</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+          Discover People. Discover Possibilities.
+        </div>
       </div>
 
-      {/* Nav */}
-      <nav className="relative z-10 border-b border-border/50 bg-background/50 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2 z-10">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shrink-0 shadow-lg">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold tracking-tight">MyINAI</span>
+      {/* RIGHT: Auth Card */}
+      <div className="flex-1 flex items-center justify-center p-6 relative z-10 w-full min-h-screen md:min-h-0">
+        {/* Mobile Logo (Visible only on Mobile) */}
+        <div className="absolute top-8 left-6 md:hidden flex items-center gap-2">
+          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-md">
+            <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm font-medium text-foreground hover:text-foreground/80">Log in</Link>
-            <Link href="/home" className="bg-foreground text-background text-sm font-medium px-5 py-2.5 rounded-full hover:scale-105 transition-transform shadow-sm">
-              Explore Demo
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero */}
-      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center max-w-5xl mx-auto mt-20 md:mt-32">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted/50 border border-border/50 text-sm font-medium text-muted-foreground mb-8">
-          <Sparkles className="w-4 h-4 text-orange-500" />
-          <span>The AI-Powered Community Network</span>
-        </div>
-        
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-foreground leading-[1.1] mb-8">
-          THERE'S MORE TALENT <br className="hidden md:block" />
-          <span className="text-gradient-primary">BEHIND EVERY DOOR.</span>
-        </h1>
-        
-        <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mb-12 leading-relaxed">
-          Discover People. Discover Possibilities.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-          <Link href="/home" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-lg hover:scale-105 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group">
-            Explore Your Community
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link href="#how-it-works" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-card border border-border text-foreground font-medium text-lg hover:bg-muted transition-colors flex items-center justify-center">
-            See How It Works
-          </Link>
+          <span className="text-xl font-black tracking-tight text-slate-900">MyINAI</span>
         </div>
 
-        {/* Hero Visual Concept */}
-        <div className="mt-24 w-full max-w-4xl relative aspect-video rounded-3xl border border-white/10 bg-black/5 shadow-2xl overflow-hidden glass-card">
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
+        <div className="w-full max-w-md bg-white/80 backdrop-blur-xl border border-white rounded-[2rem] p-8 shadow-2xl shadow-indigo-900/5">
           
-          <div className="absolute inset-0 flex items-center justify-center opacity-80">
-            {/* Visual representation of a connected community graph */}
-            <div className="relative w-full h-full max-w-2xl mx-auto">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border border-primary/30 flex items-center justify-center">
-                 <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shadow-[0_0_50px_rgba(var(--primary),0.5)]">You</div>
+          {/* Auth Tabs */}
+          <div className="flex bg-slate-100/50 p-1 rounded-2xl mb-8">
+            <button 
+              onClick={() => { setIsLogin(true); setError(null); }}
+              className={cn(
+                "flex-1 py-3 text-sm font-bold rounded-xl transition-all",
+                isLogin ? "bg-white text-indigo-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+              )}
+            >
+              Resident Login
+            </button>
+            <button 
+              onClick={() => { setIsLogin(false); setError(null); }}
+              className={cn(
+                "flex-1 py-3 text-sm font-bold rounded-xl transition-all",
+                !isLogin ? "bg-white text-indigo-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+              )}
+            >
+              New Move-in
+            </button>
+          </div>
+
+          <div className="mb-6">
+            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+              {isLogin ? "Welcome home." : "Join the society."}
+            </h2>
+            <p className="text-sm font-medium text-slate-500 mt-1">
+              {isLogin ? "Enter your society credentials to enter." : "Verify your apartment to get started."}
+            </p>
+          </div>
+          
+          {error && (
+            <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 text-sm font-medium rounded-xl">
+              {error}
+            </div>
+          )}
+
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+            
+            {!isLogin && (
+              <>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Full Name</label>
+                  <div className="relative">
+                    <User className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input name="name" type="text" placeholder="John Doe" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-1 space-y-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Tower</label>
+                    <div className="relative">
+                      <Building2 className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input name="tower" type="text" placeholder="e.g. Block A" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                    </div>
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Flat No.</label>
+                    <input name="flat" type="text" placeholder="e.g. 104" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Email Address</label>
+              <div className="relative">
+                <Fingerprint className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input name="email" type="email" placeholder="Enter your email" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
               </div>
-              
-              <div className="absolute top-1/4 left-1/4 w-12 h-12 rounded-full bg-orange-500/20 text-orange-600 flex items-center justify-center text-xs font-bold border border-orange-500/20 backdrop-blur-md">Baker</div>
-              <div className="absolute top-1/3 right-1/4 w-14 h-14 rounded-full bg-blue-500/20 text-blue-600 flex items-center justify-center text-xs font-bold border border-blue-500/20 backdrop-blur-md">Doctor</div>
-              <div className="absolute bottom-1/3 left-1/3 w-16 h-16 rounded-full bg-green-500/20 text-green-600 flex items-center justify-center text-xs font-bold border border-green-500/20 backdrop-blur-md">Yoga</div>
-              <div className="absolute bottom-1/4 right-1/3 w-12 h-12 rounded-full bg-purple-500/20 text-purple-600 flex items-center justify-center text-xs font-bold border border-purple-500/20 backdrop-blur-md">Tutor</div>
-              
-              {/* Connecting lines */}
-              <svg className="absolute inset-0 w-full h-full -z-10 opacity-30" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <line x1="50" y1="50" x2="25" y2="25" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                <line x1="50" y1="50" x2="75" y2="33" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                <line x1="50" y1="50" x2="33" y2="66" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                <line x1="50" y1="50" x2="66" y2="75" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-              </svg>
             </div>
-          </div>
-          
-          <div className="absolute bottom-8 left-8 right-8 z-20 text-left">
-            <h3 className="text-xl md:text-2xl font-bold text-foreground">The Community Graph</h3>
-            <p className="text-muted-foreground">Connecting you with the capabilities around you.</p>
-          </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Passcode</label>
+                {isLogin && <button type="button" className="text-xs font-bold text-indigo-600 hover:text-indigo-700">Forgot?</button>}
+              </div>
+              <div className="relative">
+                <KeyRound className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input name="password" type="password" placeholder="••••••••" required className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+              </div>
+            </div>
+
+            <button type="submit" disabled={isPending} className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-2xl py-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 transition-all active:scale-95 group">
+              {isPending ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <>
+                  {isLogin ? "Enter Community" : "Verify Residency"}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </button>
+
+            {!isLogin && (
+              <p className="text-xs text-center text-slate-500 font-medium mt-2">
+                By joining, you agree to the <span className="text-indigo-600 font-bold cursor-pointer">Society Guidelines</span>.
+              </p>
+            )}
+
+          </form>
         </div>
-      </main>
-      
-      <div className="h-32" />
+      </div>
     </div>
   );
 }

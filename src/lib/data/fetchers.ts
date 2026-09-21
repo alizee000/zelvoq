@@ -47,7 +47,7 @@ export async function getFeedPosts() {
     .from("feed_posts")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(10); // Only get latest 10 for feed
+    .limit(3); // Only get latest 3 for feed
 
   if (error) {
     console.error("Error fetching feed posts:", error);

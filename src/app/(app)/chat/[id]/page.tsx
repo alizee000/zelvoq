@@ -6,28 +6,46 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
   const resolvedParams = await params;
   const supabase = await createClient();
   
-  const { data: talent } = await supabase
-    .from("talents")
-    .select("*")
-    .eq("id", resolvedParams.id)
-    .single();
+  const { data: talent } = await supabase.from("talents").select("*").eq("id", resolvedParams.id).single();
+  const { data: groupBuy } = await supabase.from("group_buys").select("*").eq("id", resolvedParams.id).single();
+  const { data: borrowItem } = await supabase.from("borrow_items").select("*").eq("id", resolvedParams.id).single();
 
-  if (!talent) return notFound();
+  if (!talent && !groupBuy && !borrowItem) return notFound();
 
-  // Fetch the owner's profile to get their image
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("image_url")
-    .eq("owner_name", talent.owner_name)
-    .single();
+  let receiverName = "User";
+  let talentTitle = "Chat";
+  let ownerNameForImage = null;
+
+  if (talent) {
+    receiverName = talent.owner_name;
+    talentTitle = talent.title;
+    ownerNameForImage = talent.owner_name;
+  } else if (groupBuy) {
+    receiverName = "Group Buy Chat";
+    talentTitle = groupBuy.title;
+  } else if (borrowItem) {
+    receiverName = borrowItem.owner_name;
+    talentTitle = borrowItem.title;
+    ownerNameForImage = borrowItem.owner_name;
+  }
+
+  let receiverImage = null;
+  if (ownerNameForImage) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("image_url")
+      .eq("owner_name", ownerNameForImage)
+      .single();
+    receiverImage = profile?.image_url || null;
+  }
 
   return (
     <>
       <ChatClient 
-        talentId={talent.id}
-        receiverName={talent.owner_name}
-        receiverImage={profile?.image_url || null}
-        talentTitle={talent.title}
+        talentId={resolvedParams.id}
+        receiverName={receiverName}
+        receiverImage={receiverImage}
+        talentTitle={talentTitle}
       />
     </>
   );

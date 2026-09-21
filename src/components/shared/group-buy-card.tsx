@@ -1,6 +1,7 @@
 "use client";
 
-import { Users, Clock, ArrowRight, ShoppingBag } from "lucide-react";
+import { Users, Clock, ArrowRight, ShoppingBag, MessageSquare, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ActionModal } from "./action-modal";
 import { useState } from "react";
@@ -18,7 +19,7 @@ interface GroupBuyCardProps {
   description: string;
 }
 
-export function GroupBuyCard({ title, vendor, targetQuantity, currentQuantity, originalPrice, discountedPrice, expiresInDays, imageFallback, description }: GroupBuyCardProps) {
+export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantity, originalPrice, discountedPrice, expiresInDays, imageFallback, description }: GroupBuyCardProps) {
   const progressPercent = Math.min(100, Math.round((currentQuantity / targetQuantity) * 100));
   const isGoalReached = currentQuantity >= targetQuantity;
   
@@ -76,18 +77,24 @@ export function GroupBuyCard({ title, vendor, targetQuantity, currentQuantity, o
         </div>
       </div>
 
-      <button 
-        onClick={() => setIsModalOpen(true)}
-        disabled={isJoined}
-        className={`w-full py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 shadow-sm ${
-          isJoined 
-            ? "bg-slate-100 text-slate-400 cursor-not-allowed" 
-            : "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02]"
-        }`}
-      >
-        {isJoined ? "Joined Successfully" : "Join Deal"}
-        {!isJoined && <ArrowRight className="w-4 h-4" />}
-      </button>
+      {isJoined ? (
+        <div className="flex gap-2 mt-2">
+          <div className="flex-[0.8] py-4 rounded-2xl font-black text-[13px] bg-green-50 text-green-600 flex items-center justify-center gap-1.5 border border-green-200">
+            <CheckCircle2 className="w-4 h-4" /> Joined
+          </div>
+          <Link href={`/chat/${id}`} className="flex-1 py-4 rounded-2xl font-black text-[13px] bg-indigo-600 text-white hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20">
+            <MessageSquare className="w-4 h-4" /> Group Chat
+          </Link>
+        </div>
+      ) : (
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="w-full py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 shadow-sm bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02] shadow-indigo-500/20 mt-2"
+        >
+          Join Deal
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      )}
 
       <ActionModal 
         isOpen={isModalOpen}

@@ -108,11 +108,27 @@ export async function addTalent(formData: FormData) {
 
   if (error) {
     console.error("Error inserting talent:", error);
-    throw new Error(error.message);
+    throw new Error((error as any).message);
+  }
+
+  // Broadcast to feed only for new entries
+  if (!existing) {
+    const feedContent = category === 'item' 
+      ? `listed a new item to the Library: ${title}.`
+      : `is offering a new skill: ${title}.`;
+      
+    await supabase.from("feed_posts").insert([{
+      content: feedContent,
+      type: "offer",
+      author_name: ownerName,
+      tower: tower
+    }]);
   }
 
   // Revalidate the discover page to show the new data
   revalidatePath("/discover");
+  revalidatePath("/market");
+  revalidatePath("/home");
   
   return { success: true };
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { User, MapPin, HandHeart } from "lucide-react";
+import { User, MapPin, HandHeart, MessageSquare, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ActionModal } from "./action-modal";
 import { useState } from "react";
@@ -16,7 +17,7 @@ interface BorrowCardProps {
   description: string;
 }
 
-export function BorrowCard({ name, ownerName, tower, condition, available, imageFallback, description }: BorrowCardProps) {
+export function BorrowCard({ id, name, ownerName, tower, condition, available, imageFallback, description }: BorrowCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
 
@@ -53,16 +54,27 @@ export function BorrowCard({ name, ownerName, tower, condition, available, image
         </div>
       </div>
 
-      <button 
-        disabled={!available || isRequested}
-        onClick={() => setIsModalOpen(true)}
-        className={`w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm mt-2 
-          ${available && !isRequested
-            ? "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02]" 
-            : "bg-slate-100 text-slate-400 cursor-not-allowed"}`}
-      >
-        {isRequested ? "Request Sent" : (available ? "Request to Borrow" : "Currently Unavailable")}
-      </button>
+      {isRequested ? (
+        <div className="flex gap-2 mt-2">
+          <div className="flex-[0.8] py-4 rounded-xl font-bold text-[13px] bg-green-50 text-green-600 flex items-center justify-center gap-1.5 border border-green-200">
+            <CheckCircle2 className="w-4 h-4" /> Requested
+          </div>
+          <Link href={`/chat/${id}`} className="flex-1 py-4 rounded-xl font-bold text-[13px] bg-indigo-600 text-white hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20">
+            <MessageSquare className="w-4 h-4" /> Chat Now
+          </Link>
+        </div>
+      ) : (
+        <button 
+          disabled={!available}
+          onClick={() => setIsModalOpen(true)}
+          className={`w-full py-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm mt-2 
+            ${available 
+              ? "bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02] shadow-indigo-500/20" 
+              : "bg-slate-100 text-slate-400 cursor-not-allowed"}`}
+        >
+          {available ? "Request to Borrow" : "Currently Unavailable"}
+        </button>
+      )}
 
       <ActionModal 
         isOpen={isModalOpen}

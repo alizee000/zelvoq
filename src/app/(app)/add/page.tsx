@@ -160,7 +160,7 @@ export default function AddPage() {
             <input 
               name="title" 
               required 
-              placeholder={category === 'skill' ? "e.g., Mathematics Tutoring" : category === 'item' ? "e.g., Bosch Power Drill" : category === 'space' ? "e.g., Covered Parking Basement 1" : "e.g., Farm Fresh Mangoes"} 
+              placeholder={category === 'skill' ? "e.g., Mathematics Tutoring" : category === 'item' ? "e.g., Bosch Power Drill" : category === 'space' ? "e.g., Covered Parking Basement 1" : category === 'event' ? "e.g., Weekend Badminton Tournament" : "e.g., Farm Fresh Mangoes"} 
               className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all"
             />
           </div>

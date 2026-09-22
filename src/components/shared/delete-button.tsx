@@ -8,15 +8,36 @@ export function DeleteButton({ id, type }: { id: string, type: 'talent' | 'group
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDelete = async (e: React.MouseEvent) => {
+    // Optimistic UI: Hide the modal instantly
+    setShowConfirm(false);
+    
+    // Optimistic UI: Find the parent card and animate it away instantly
+    const card = (e.target as HTMLElement).closest('.group') as HTMLElement;
+    if (card) {
+      card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        card.style.display = 'none';
+      }, 300);
+    }
+
     setIsDeleting(true);
     try {
       if (type === 'talent') await deleteTalent(id);
       else await deleteGroupBuy(id);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
       setIsDeleting(false);
-      setShowConfirm(false);
+      // If it fails, we could revert the card visibility here
+      if (card) {
+        card.style.display = '';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'scale(1)';
+        }, 50);
+      }
     }
   };
 
@@ -68,7 +89,7 @@ export function DeleteButton({ id, type }: { id: string, type: 'talent' | 'group
               <button 
                 onClick={(e) => {
                   e.preventDefault();
-                  handleDelete();
+                  handleDelete(e);
                 }}
                 disabled={isDeleting}
                 className="flex-1 bg-rose-500 hover:bg-rose-600 text-white font-bold py-3.5 rounded-xl transition-colors shadow-sm shadow-rose-500/20 disabled:opacity-70 flex items-center justify-center gap-2"

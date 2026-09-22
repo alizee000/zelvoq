@@ -1,6 +1,7 @@
 import { getTalents } from "@/lib/data/fetchers";
 import { DiscoverClient } from "./discover-client";
 
+
 export default async function DiscoverPage() {
   const allTalents = await getTalents();
   // Filter for category 'skill' only

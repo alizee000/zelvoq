@@ -5,6 +5,7 @@ import { SpaceCard } from "@/components/shared/space-card";
 import { getTalents, getGroupBuys } from "@/lib/data/fetchers";
 import Link from "next/link";
 
+
 export default async function MarketPage({
   searchParams,
 }: {

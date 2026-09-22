@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building } from "lucide-react";
+import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { addTalent } from "@/app/actions/talents";
@@ -21,29 +21,112 @@ function TagsInput() {
 }
 
 export default function AddPage() {
-  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space">("skill");
+  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space" | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
+  if (!category) {
+    return (
+      <div className="flex flex-col min-h-screen bg-white animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-32 pt-8">
+
+        <div className="px-6 pt-6">
+          <h1 className="text-3xl font-black tracking-tight text-slate-900 leading-tight mb-2">
+            What would you like to list?
+          </h1>
+          <p className="text-slate-500 font-medium mb-10">Select a category to get started.</p>
+
+          <div className="grid grid-cols-2 gap-4">
+            
+            {/* Space Option */}
+            <button 
+              onClick={() => setCategory("space")}
+              className="text-left bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] p-5 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform flex flex-col justify-between h-[200px]"
+            >
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20">
+                <CarFront className="w-6 h-6" />
+              </div>
+              <div className="mt-auto">
+                <h3 className="text-lg font-black text-white leading-tight mb-1">Share Space</h3>
+                <p className="text-[10px] font-bold text-indigo-100 uppercase tracking-wider">Parking & Rooms</p>
+              </div>
+            </button>
+
+            {/* Deal Option */}
+            <button 
+              onClick={() => setCategory("deal")}
+              className="text-left bg-gradient-to-br from-orange-400 to-rose-500 rounded-[2rem] p-5 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform flex flex-col justify-between h-[200px]"
+            >
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20">
+                <ShoppingBag className="w-6 h-6" />
+              </div>
+              <div className="mt-auto">
+                <h3 className="text-lg font-black text-white leading-tight mb-1">Group Buy</h3>
+                <p className="text-[10px] font-bold text-orange-100 uppercase tracking-wider">Bulk Discounts</p>
+              </div>
+            </button>
+
+            {/* Item Option */}
+            <button 
+              onClick={() => setCategory("item")}
+              className="text-left bg-gradient-to-br from-blue-500 to-cyan-500 rounded-[2rem] p-5 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform flex flex-col justify-between h-[200px]"
+            >
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20">
+                <Wrench className="w-6 h-6" />
+              </div>
+              <div className="mt-auto">
+                <h3 className="text-lg font-black text-white leading-tight mb-1">Lend Item</h3>
+                <p className="text-[10px] font-bold text-blue-100 uppercase tracking-wider">Tools & Books</p>
+              </div>
+            </button>
+
+            {/* Skill Option */}
+            <button 
+              onClick={() => setCategory("skill")}
+              className="text-left bg-gradient-to-br from-emerald-400 to-teal-500 rounded-[2rem] p-5 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform flex flex-col justify-between h-[200px]"
+            >
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20">
+                <Target className="w-6 h-6" />
+              </div>
+              <div className="mt-auto">
+                <h3 className="text-lg font-black text-white leading-tight mb-1">Offer Skill</h3>
+                <p className="text-[10px] font-bold text-teal-100 uppercase tracking-wider">Teach & Help</p>
+              </div>
+            </button>
+
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col min-h-screen bg-white animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-32">
+    <div className="flex flex-col min-h-screen bg-white animate-in fade-in slide-in-from-right-4 duration-300 pb-32">
       
-      {/* Sleek Page Header */}
-      <header className="px-6 pt-8 pb-6 flex items-center justify-between">
-        <Link href="/home" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors">
+      {/* Sleek Page Header with Back Button */}
+      <header className="px-6 pt-8 pb-4 flex items-center justify-between border-b border-slate-100">
+        <button 
+          onClick={() => setCategory(null)} 
+          className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors"
+        >
           <ArrowLeft className="w-5 h-5 text-slate-700" />
-        </Link>
-        <h1 className="text-2xl font-black tracking-tight text-slate-900">
-          Create Listing
+        </button>
+        <h1 className="text-lg font-black tracking-tight text-slate-900">
+          {category === 'space' ? 'New Space' : category === 'deal' ? 'New Group Buy' : category === 'item' ? 'Lend Item' : 'Offer Skill'}
         </h1>
-        <div className="w-10 h-10" /> {/* Spacer for centering */}
+        <div className="w-10 h-10" />
       </header>
 
-      <form 
-        action={async (formData) => {
+      {/* Form Area */}
+      <div className="px-6 mt-8">
+        <form action={async (formData) => {
           setIsSubmitting(true);
-          formData.append("category", category);
           try {
+            formData.append("category", category);
+            
             if (category === "deal") {
               const res = await addGroupBuy(formData);
               if (res.success) router.push("/market");
@@ -53,159 +136,89 @@ export default function AddPage() {
             }
           } catch (e: any) {
             setIsSubmitting(false);
-            alert("Error: " + e.message);
           }
-        }} 
-        className="flex flex-col gap-8 px-6"
-      >
-        {/* iOS Segmented Control Style Category Selector */}
-        <div className="bg-slate-100 p-1.5 rounded-full flex relative">
-          <div 
-            className="absolute top-1.5 bottom-1.5 w-[calc(25%-4px)] bg-white rounded-full shadow-sm transition-transform duration-300 ease-out"
-            style={{ 
-              transform: `translateX(${category === 'skill' ? '0%' : category === 'item' ? '100%' : category === 'deal' ? '200%' : '300%'})` 
-            }}
-          />
-          <button 
-            type="button"
-            onClick={() => setCategory("skill")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold z-10 transition-colors ${category === 'skill' ? 'text-indigo-600' : 'text-slate-500'}`}
-          >
-            <Sparkles className="w-4 h-4" /> Skill
-          </button>
-          <button 
-            type="button"
-            onClick={() => setCategory("item")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold z-10 transition-colors ${category === 'item' ? 'text-indigo-600' : 'text-slate-500'}`}
-          >
-            <Wrench className="w-4 h-4" /> Library
-          </button>
-          <button 
-            type="button"
-            onClick={() => setCategory("deal")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold z-10 transition-colors ${category === 'deal' ? 'text-indigo-600' : 'text-slate-500'}`}
-          >
-            <ShoppingBag className="w-4 h-4" /> Group Buy
-          </button>
-          <button 
-            type="button"
-            onClick={() => setCategory("space")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold z-10 transition-colors ${category === 'space' ? 'text-indigo-600' : 'text-slate-500'}`}
-          >
-            <Building className="w-4 h-4" /> Space
-          </button>
-        </div>
-
-        {/* Inputs */}
-        <div className="flex flex-col gap-5">
+        }} className="flex flex-col gap-6">
           
           <div className="space-y-1.5">
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Title</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+              Title
+            </label>
             <input 
               name="title" 
-              required
-              placeholder={category === 'skill' ? "e.g., Mathematics Tutoring" : category === 'item' ? "e.g., Bosch Power Drill" : "e.g., Farm Fresh Mangoes"} 
+              required 
+              placeholder={category === 'skill' ? "e.g., Mathematics Tutoring" : category === 'item' ? "e.g., Bosch Power Drill" : category === 'space' ? "e.g., Covered Parking Basement 1" : "e.g., Farm Fresh Mangoes"} 
               className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Description</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Description</label>
             <textarea 
-              name="description"
-              required
-              rows={4} 
-              placeholder="Provide more details about what you're sharing..." 
-              className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all resize-none leading-relaxed"
+              name="description" 
+              required 
+              placeholder="Provide some details..." 
+              rows={4}
+              className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all resize-none"
             />
           </div>
 
           {category === 'deal' ? (
-            <div className="flex flex-col gap-5">
+            <>
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Vendor Name</label>
-                <input name="vendor" required placeholder="e.g., Local Farm Supply" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all" />
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Vendor Name</label>
+                <input name="vendor" required placeholder="e.g., FreshFarms Co." className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Retail (₹)</label>
-                  <input name="originalPrice" type="number" required placeholder="500" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all" />
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Original Price</label>
+                  <input name="original_price" type="number" required placeholder="₹800" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Deal (₹)</label>
-                  <input name="discountedPrice" type="number" required placeholder="300" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all text-emerald-600 font-bold" />
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Discount Price</label>
+                  <input name="discounted_price" type="number" required placeholder="₹600" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Target Qty</label>
-                  <input name="targetQuantity" type="number" required placeholder="10" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all" />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Days Active</label>
-                  <input name="expiresInDays" type="number" required placeholder="3" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all" />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-5">
-              {category === 'skill' && <TagsInput />}
-              
-              {/* Vibe / Paid Toggle */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Is this free?</label>
-                <div className="flex gap-3">
-                  <label className="flex-1 relative cursor-pointer group">
-                    <input type="radio" name="isPaid" value="false" defaultChecked className="peer sr-only" />
-                    <div className="bg-slate-50 border-2 border-transparent peer-checked:border-indigo-600 peer-checked:bg-indigo-50 rounded-2xl p-4 transition-all text-center">
-                      <span className="text-[13px] font-extrabold text-slate-900 peer-checked:text-indigo-900 block mb-1">Free</span>
-                      <span className="text-[10px] text-slate-500 font-medium">Just helping out</span>
-                    </div>
-                  </label>
-                  <label className="flex-1 relative cursor-pointer group">
-                    <input type="radio" name="isPaid" value="true" className="peer sr-only" />
-                    <div className="bg-slate-50 border-2 border-transparent peer-checked:border-indigo-600 peer-checked:bg-indigo-50 rounded-2xl p-4 transition-all text-center">
-                      <span className="text-[13px] font-extrabold text-slate-900 peer-checked:text-indigo-900 block mb-1">Paid</span>
-                      <span className="text-[10px] text-slate-500 font-medium">Professional service</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
-            </div>
-          )}
-
-        </div>
-
-        {/* Optional Photo Upload for Items/Deals */}
-        {category !== 'skill' && (
-          <div className="mt-2">
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1 block mb-2">
-              Cover Photo <span className="text-slate-400 font-medium normal-case tracking-normal">(Optional)</span>
-            </label>
-            <div className="w-full aspect-[21/9] bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-slate-100 transition-colors group">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                <UploadCloud className="w-5 h-5 text-indigo-500" />
-              </div>
-              <span className="text-[11px] font-bold text-slate-400">Tap to upload image</span>
-            </div>
-          </div>
-        )}
-
-        <button 
-          disabled={isSubmitting}
-          type="submit"
-          className="w-full py-4 mt-4 rounded-full bg-slate-900 text-white text-[15px] font-bold shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
-        >
-          {isSubmitting ? (
-             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            </>
           ) : (
             <>
-              Publish Listing
+              {category === 'skill' && <TagsInput />}
+              
+              <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center shrink-0">
+                  <HeartHandshake className="w-5 h-5 text-indigo-500" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-slate-900">{category === 'space' ? "Is this space free?" : "Is this free?"}</p>
+                  <p className="text-xs text-slate-500 font-medium">Charge money or offer it for free</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" name="is_paid" className="sr-only peer" />
+                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+              </div>
             </>
           )}
-        </button>
 
-      </form>
+          {category !== 'skill' && (
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Cover Photo</label>
+              <div className="w-full h-32 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-slate-400 group cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-colors relative overflow-hidden">
+                <UploadCloud className="w-8 h-8 mb-2 group-hover:scale-110 transition-transform text-slate-300" />
+                <span className="text-xs font-bold uppercase tracking-wider">Tap to upload</span>
+                <input name="image_url" type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" />
+              </div>
+            </div>
+          )}
+
+          <button 
+            type="submit" 
+            disabled={isSubmitting}
+            className="w-full mt-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-[15px] py-4 rounded-2xl transition-transform active:scale-95 disabled:opacity-70 disabled:active:scale-100 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center gap-2"
+          >
+            {isSubmitting ? "Publishing..." : <><Sparkles className="w-4 h-4" /> Publish Listing</>}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

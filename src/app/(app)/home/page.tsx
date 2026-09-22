@@ -7,6 +7,7 @@ import { CloudSun, Zap, ShoppingBag, Target, ArrowRight, Flame, Wrench, MapPin }
 import Link from "next/link";
 import Image from "next/image";
 
+
 export default async function HomePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

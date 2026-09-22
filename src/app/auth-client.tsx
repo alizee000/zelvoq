@@ -10,6 +10,7 @@ export default function AuthClientPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [showDemo, setShowDemo] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,18 +73,32 @@ export default function AuthClientPage() {
             </button>
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-              {isLogin ? "Welcome home." : "Join the society."}
-            </h2>
-            <p className="text-sm font-medium text-slate-500 mt-1">
-              {isLogin ? "Enter your society credentials to enter." : "Verify your apartment to get started."}
-            </p>
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                {isLogin ? "Welcome home." : "Join the society."}
+              </h2>
+              <p className="text-sm font-medium text-slate-500 mt-1">
+                {isLogin ? "Enter your credentials to enter." : "Verify your apartment to start."}
+              </p>
+            </div>
           </div>
           
-          <div className="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-xl">
-            <p className="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-1">Demo Access</p>
-            <p className="text-sm text-indigo-700 font-medium">Use <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">test@example.com</span>, any password, and Society Passcode <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">KOODU-2026</span> to bypass verification!</p>
+          <div className="mb-6">
+            <button 
+              type="button"
+              onClick={() => setShowDemo(!showDemo)}
+              className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition-colors uppercase tracking-widest bg-indigo-50 px-3 py-1.5 rounded-full w-fit"
+            >
+              {showDemo ? "Hide Demo Credentials" : "Show Demo Credentials"}
+            </button>
+            
+            {showDemo && (
+              <div className="mt-3 p-4 bg-indigo-50 border border-indigo-100 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
+                <p className="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-1">Demo Access</p>
+                <p className="text-sm text-indigo-700 font-medium">Use <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">test@example.com</span>, any password, and Society Passcode <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">KOODU-2026</span> to bypass verification!</p>
+              </div>
+            )}
           </div>
           
           {error && (

@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { getPollsForUser } from "@/lib/data/polls";
 import { NotificationsDropdown } from "./notifications-dropdown";
+import { Logo } from "@/components/shared/logo";
 
 export async function TopNav() {
   const supabase = await createClient();
@@ -26,7 +27,7 @@ export async function TopNav() {
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-            <Sparkles className="w-4 h-4 text-white" />
+            <Logo className="w-5 h-5 text-white" />
           </div>
           <h1 className="text-xl font-black tracking-tight text-slate-900">
             MyKoodu

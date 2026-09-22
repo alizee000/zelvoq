@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { Building2, KeyRound, Sparkles, UserPlus, Fingerprint, ArrowRight, Loader2, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { login, signup } from "@/app/actions/auth";
+import { Logo } from "@/components/shared/logo";
 
 export default function AuthClientPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -38,8 +39,8 @@ export default function AuthClientPage() {
       <main className="flex-1 w-full max-w-md mx-auto relative overflow-y-auto overflow-x-hidden pb-12 z-0 flex flex-col justify-center min-h-screen p-6">
         {/* Branding Header */}
         <div className="flex flex-col items-center justify-center mb-8 gap-4">
-          <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-500/30">
-            <Sparkles className="w-7 h-7 text-white" />
+          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] flex items-center justify-center shadow-xl shadow-indigo-500/30">
+            <Logo className="w-8 h-8 text-white" />
           </div>
           <div className="text-center">
             <h1 className="text-3xl font-black tracking-tight text-slate-900 mb-1">MyKoodu</h1>

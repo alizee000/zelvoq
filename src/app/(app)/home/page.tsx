@@ -102,8 +102,8 @@ export default async function HomePage() {
           </Link>
         </section>
 
-        {/* Horizontal Scrolling Marketplace Spotlight */}
-        <section className="flex flex-col gap-4 -mx-6 px-6">
+        {/* Marketplace Spotlight */}
+        <section className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-black tracking-tight text-slate-900">Spotlight</h2>
             <Link href="/market" className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1.5 rounded-full">
@@ -111,33 +111,33 @@ export default async function HomePage() {
             </Link>
           </div>
           
-          <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-4 pr-6">
+          <div className="grid grid-cols-2 gap-4 pb-2">
             {groupBuys.length > 0 && (
-              <Link href="/market" className="shrink-0 w-64 bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100/50 rounded-3xl p-5 shadow-sm flex flex-col gap-4">
+              <Link href="/market" className="w-full bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100/50 rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col gap-4 hover:scale-[1.02] transition-transform">
                 <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
                   <Snowflake className="w-6 h-6 text-orange-500" />
                 </div>
                 <div>
                   <div className="text-[10px] font-bold text-orange-600 uppercase tracking-wider mb-1">Group Buy</div>
-                  <div className="text-lg font-black text-slate-900 leading-tight line-clamp-2">{groupBuys[0].item_name}</div>
+                  <div className="text-sm font-black text-slate-900 leading-tight line-clamp-2">{groupBuys[0].item_name || groupBuys[0].title}</div>
                 </div>
               </Link>
             )}
             
             {borrowItems.length > 0 && (
-              <Link href="/market" className="shrink-0 w-64 bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100/50 rounded-3xl p-5 shadow-sm flex flex-col gap-4">
+              <Link href="/market" className="w-full bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100/50 rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col gap-4 hover:scale-[1.02] transition-transform">
                 <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
                   <span className="text-2xl">🛠️</span>
                 </div>
                 <div>
                   <div className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-1">Library</div>
-                  <div className="text-lg font-black text-slate-900 leading-tight line-clamp-2">{borrowItems[0].title}</div>
+                  <div className="text-sm font-black text-slate-900 leading-tight line-clamp-2">{borrowItems[0].title}</div>
                 </div>
               </Link>
             )}
 
             {groupBuys.length === 0 && borrowItems.length === 0 && (
-              <div className="shrink-0 w-64 border-2 border-dashed border-slate-200 rounded-3xl p-5 flex flex-col justify-center items-center text-center">
+              <div className="col-span-2 w-full border-2 border-dashed border-slate-200 rounded-[2rem] p-5 flex flex-col justify-center items-center text-center">
                 <p className="text-sm font-bold text-slate-400">Nothing here yet</p>
                 <Link href="/add" className="text-xs font-bold text-indigo-600 mt-2">Start a listing</Link>
               </div>

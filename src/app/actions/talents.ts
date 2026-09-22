@@ -113,9 +113,9 @@ export async function addTalent(formData: FormData) {
 
   // Broadcast to feed only for new entries
   if (!existing) {
-    const feedContent = category === 'item' 
-      ? `listed a new item to the Library: ${title}.`
-      : `is offering a new skill: ${title}.`;
+    let feedContent = `is offering a new skill: ${title}.`;
+    if (category === 'item') feedContent = `listed a new item to the Library: ${title}.`;
+    if (category === 'space') feedContent = `listed a new space: ${title}.`;
       
     await supabase.from("feed_posts").insert([{
       content: feedContent,

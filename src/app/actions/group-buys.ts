@@ -17,10 +17,10 @@ export async function addGroupBuy(formData: FormData) {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const vendor = formData.get("vendor") as string;
-  const originalPrice = parseFloat(formData.get("originalPrice") as string);
-  const discountedPrice = parseFloat(formData.get("discountedPrice") as string);
-  const targetQuantity = parseInt(formData.get("targetQuantity") as string, 10);
-  const expiresInDays = parseInt(formData.get("expiresInDays") as string, 10);
+  const originalPrice = parseFloat(formData.get("original_price") as string) || 0;
+  const discountedPrice = parseFloat(formData.get("discounted_price") as string) || 0;
+  const targetQuantity = parseInt(formData.get("target_quantity") as string, 10) || 10; // Default to 10 if not provided
+  const expiresInDays = parseInt(formData.get("expires_in_days") as string, 10) || 3; // Default to 3 days if not provided
 
   const { error } = await supabase.from("group_buys").insert([
     {

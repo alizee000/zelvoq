@@ -28,16 +28,16 @@ export function BorrowCard({ id, name, ownerName, tower, condition, available, i
   };
 
   return (
-    <div className="w-full bg-white border border-slate-200 rounded-3xl p-5 shadow-sm flex flex-col gap-4 relative overflow-hidden group hover:shadow-md transition-all">
+    <div className="w-full bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col gap-5 relative overflow-hidden group">
       <div className="flex gap-4">
-        <div className="w-16 h-16 shrink-0 bg-indigo-50/50 border border-indigo-100 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
+        <div className="w-16 h-16 shrink-0 bg-indigo-50 rounded-2xl flex items-center justify-center text-3xl">
           {imageFallback}
         </div>
-        <div className="flex-1 flex flex-col justify-start">
-          <Badge variant="secondary" className="w-fit bg-slate-100 text-slate-600 border-slate-200 text-[9px] mb-2 uppercase tracking-wider font-bold">
+        <div className="flex-1 flex flex-col justify-center">
+          <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-0.5">
             {ownerName} · {tower}
-          </Badge>
-          <h3 className="font-bold text-slate-900 leading-tight">{name}</h3>
+          </span>
+          <h3 className="font-black text-lg text-slate-900 leading-tight">{name}</h3>
         </div>
       </div>
       

@@ -2,12 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { LiveFeedClient } from "./live-feed-client";
 import { getFeedPosts, getGroupBuys, getTalents } from "@/lib/data/fetchers";
-import { getPollsForUser } from "@/lib/data/polls";
-import { PollsTile } from "./polls-tile";
-import { PollsResultsList } from "./polls-results-list";
-import { CloudSun, ShoppingBag, Target, User, Sparkles, Zap, Snowflake } from "lucide-react";
+import { CloudSun, ShoppingBag, Target, Zap, Snowflake } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -15,10 +11,8 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   
   let fullName = "Koodu";
-  let avatarUrl = "";
   if (user) {
     fullName = user.user_metadata?.full_name || "Resident";
-    avatarUrl = user.user_metadata?.avatar_url || "";
   } else if (cookieStore.has("test_name")) {
     fullName = cookieStore.get("test_name")?.value || "Koodu";
   }
@@ -29,7 +23,6 @@ export default async function HomePage() {
   const groupBuys = await getGroupBuys();
   const talents = await getTalents();
   const borrowItems = talents.filter((t: any) => t.category === "lend");
-  const { activePolls, completedPolls } = await getPollsForUser(fullName);
   
   // Real weather fetch
   let temp = "24°C";
@@ -57,13 +50,11 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-full pb-[90px] relative bg-[#F8FAFC]">
-      
       <div className="flex flex-col gap-8 px-6 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out z-0">
         
         {/* Dynamic Greeting Card */}
         <section>
           <div className="w-full bg-slate-900 rounded-[2rem] p-6 shadow-2xl relative overflow-hidden group">
-            {/* Mesh Gradient Background */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full mix-blend-screen filter blur-[80px] opacity-40 animate-pulse" />
             <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-purple-600 rounded-full mix-blend-screen filter blur-[80px] opacity-40" />
             
@@ -90,7 +81,7 @@ export default async function HomePage() {
 
         {/* Action Grid */}
         <section className="grid grid-cols-2 gap-4">
-          <Link href="/market" className="bg-white rounded-[2rem] p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:border-indigo-100 transition-all h-40 group">
+          <Link href="/market" className="col-span-1 bg-white rounded-[2rem] p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:border-indigo-100 transition-all h-40 group">
             <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-2 group-hover:scale-110 transition-transform">
               <ShoppingBag className="w-6 h-6" />
             </div>
@@ -100,7 +91,7 @@ export default async function HomePage() {
             </div>
           </Link>
 
-          <Link href="/discover" className="bg-white rounded-[2rem] p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:border-purple-100 transition-all h-40 group">
+          <Link href="/discover" className="col-span-1 bg-white rounded-[2rem] p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:border-purple-100 transition-all h-40 group">
             <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 mb-2 group-hover:scale-110 transition-transform">
               <Target className="w-6 h-6" />
             </div>
@@ -109,13 +100,7 @@ export default async function HomePage() {
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Skills Shared</div>
             </div>
           </Link>
-
-          {/* Liquid Democracy Tile (Full Width) */}
-          <PollsTile initialActive={activePolls} initialCompleted={completedPolls} />
         </section>
-
-        {/* Community Decisions */}
-        <PollsResultsList completedPolls={completedPolls} />
 
         {/* Horizontal Scrolling Marketplace Spotlight */}
         <section className="flex flex-col gap-4 -mx-6 px-6">
@@ -160,7 +145,6 @@ export default async function HomePage() {
           </div>
         </section>
         
-        {/* Live Feed Header Wrapper */}
         <section className="flex flex-col gap-4">
           <h2 className="text-lg font-black tracking-tight text-slate-900">Activity</h2>
           <LiveFeedClient initialPosts={feedPosts} />

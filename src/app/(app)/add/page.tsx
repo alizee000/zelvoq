@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront } from "lucide-react";
+import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront, Calendar } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { addTalent } from "@/app/actions/talents";
 import { addGroupBuy } from "@/app/actions/group-buys";
+import { createEvent } from "@/app/actions/events";
 
 function TagsInput() {
   return (
@@ -21,7 +22,7 @@ function TagsInput() {
 }
 
 export default function AddPage() {
-  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space" | null>(null);
+  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space" | "event" | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -93,6 +94,20 @@ export default function AddPage() {
               </div>
             </button>
 
+            {/* Event Option */}
+            <button 
+              onClick={() => setCategory("event")}
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+            >
+              <div>
+                <h3 className="text-xl font-black text-slate-900 mb-1">Host an Event</h3>
+                <p className="text-sm text-slate-500 font-medium">Tournament, Festival, or Meetup</p>
+              </div>
+              <div className="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(244,63,94,0.2)]">
+                <Calendar className="w-7 h-7" />
+              </div>
+            </button>
+
           </div>
         </div>
       </div>
@@ -111,7 +126,7 @@ export default function AddPage() {
           <ArrowLeft className="w-5 h-5 text-slate-700" />
         </button>
         <h1 className="text-lg font-black tracking-tight text-slate-900">
-          {category === 'space' ? 'New Space' : category === 'deal' ? 'New Group Buy' : category === 'item' ? 'Lend Item' : 'Offer Skill'}
+          {category === 'space' ? 'New Space' : category === 'deal' ? 'New Group Buy' : category === 'item' ? 'Lend Item' : category === 'event' ? 'Host Event' : 'Offer Skill'}
         </h1>
         <div className="w-10 h-10" />
       </header>
@@ -126,6 +141,9 @@ export default function AddPage() {
             if (category === "deal") {
               const res = await addGroupBuy(formData);
               if (res.success) router.push("/market");
+            } else if (category === "event") {
+              const res = await createEvent(formData);
+              if (res.success) router.push("/events/" + res.id);
             } else {
               const res = await addTalent(formData);
               if (res.success) router.push(category === "skill" ? "/discover" : category === "space" ? "/market?tab=spaces" : "/market?tab=borrow");
@@ -173,6 +191,17 @@ export default function AddPage() {
                   <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Discount Price</label>
                   <input name="discounted_price" type="number" required placeholder="₹600" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
                 </div>
+              </div>
+            </>
+          ) : category === 'event' ? (
+            <>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Location</label>
+                <input name="location" required placeholder="e.g., Clubhouse, Badminton Court" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Event Date & Time</label>
+                <input name="event_date" type="datetime-local" required className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
               </div>
             </>
           ) : (

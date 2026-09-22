@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { LiveFeedClient } from "./live-feed-client";
 import { getFeedPosts, getGroupBuys, getTalents } from "@/lib/data/fetchers";
 import { getPollsForUser } from "@/lib/data/polls";
-import { CloudSun, Zap, ShoppingBag, Target, ArrowRight, Flame, Wrench, MapPin } from "lucide-react";
+import { CloudSun, Zap, ShoppingBag, Target, ArrowRight, Flame, Wrench, MapPin, Calendar, Plus } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -146,7 +146,7 @@ export default async function HomePage() {
         </section>
 
         {/* Modern Action Pills */}
-        <section className="flex gap-4">
+        <section className="grid grid-cols-2 gap-4">
           <Link href="/market" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group">
             <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center shrink-0">
               <Flame className="w-6 h-6 text-orange-500" />
@@ -164,6 +164,21 @@ export default async function HomePage() {
             <div>
               <div className="text-lg font-black text-slate-900">{borrowItems.length} Tools</div>
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Library</div>
+            </div>
+          </Link>
+
+          <Link href="/events" className="col-span-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-between group">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-lg font-black text-white">Events & Gatherings</div>
+                <div className="text-[10px] font-bold text-rose-100 uppercase tracking-widest mt-0.5">Tournaments, Festivals</div>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
+              <Plus className="w-4 h-4 text-white" />
             </div>
           </Link>
         </section>

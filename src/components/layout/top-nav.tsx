@@ -33,7 +33,7 @@ export async function TopNav() {
             MyKoodu
           </h1>
         </div>
-        <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-10 -mt-0.5">
+        <p className="text-[7.5px] font-bold uppercase tracking-widest text-slate-400 ml-10 -mt-1 opacity-80">
           My community. My people. My world.
         </p>
       </div>

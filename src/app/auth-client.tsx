@@ -44,7 +44,7 @@ export default function AuthClientPage() {
           </div>
           <div className="text-center">
             <h1 className="text-3xl font-black tracking-tight text-slate-900 mb-1">MyKoodu</h1>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">My community. My people. My world.</p>
+            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest opacity-80">My community. My people. My world.</p>
           </div>
         </div>
 

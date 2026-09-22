@@ -14,10 +14,14 @@ interface BorrowCardProps {
   condition: string;
   available: boolean;
   imageFallback: string;
+  currentUserName?: string;
   description: string;
 }
 
-export function BorrowCard({ id, name, ownerName, tower, condition, available, imageFallback, description }: BorrowCardProps) {
+import { DeleteButton } from "./delete-button";
+
+export function BorrowCard({ id, name, ownerName, tower, condition, available, imageFallback,
+  currentUserName, description }: BorrowCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
 

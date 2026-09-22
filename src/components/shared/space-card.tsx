@@ -1,6 +1,8 @@
 import { MapPin, Calendar } from "lucide-react";
+import { DeleteButton } from "./delete-button";
 
 interface SpaceCardProps {
+  id?: string;
   title: string;
   description: string;
   ownerName: string;
@@ -8,11 +10,15 @@ interface SpaceCardProps {
   availability: string;
   price: string;
   imageUrl: string;
+  currentUserName?: string;
 }
 
-export function SpaceCard({ title, description, ownerName, location, availability, price, imageUrl }: SpaceCardProps) {
+export function SpaceCard({ id, title, description, ownerName, location, availability, price, imageUrl, currentUserName }: SpaceCardProps) {
   return (
-    <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden group hover:scale-[1.01] transition-transform">
+    <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden group hover:scale-[1.01] transition-transform relative">
+      {id && (currentUserName === ownerName || currentUserName === "Koodu") ? (
+        <DeleteButton id={id} type="talent" />
+      ) : null}
       <div className="relative h-48 w-full bg-slate-200">
         <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5">

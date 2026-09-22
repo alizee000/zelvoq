@@ -16,10 +16,14 @@ interface GroupBuyCardProps {
   discountedPrice: number;
   expiresInDays: number;
   imageFallback: string;
+  currentUserName?: string;
   description: string;
 }
 
-export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantity, originalPrice, discountedPrice, expiresInDays, imageFallback, description }: GroupBuyCardProps) {
+import { DeleteButton } from "./delete-button";
+
+export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantity, originalPrice, discountedPrice, expiresInDays, imageFallback,
+  currentUserName, description }: GroupBuyCardProps) {
   const progressPercent = Math.min(100, Math.round((currentQuantity / targetQuantity) * 100));
   const isGoalReached = currentQuantity >= targetQuantity;
   

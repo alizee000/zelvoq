@@ -3,6 +3,8 @@ import { BorrowCard } from "@/components/shared/borrow-card";
 import { GroupBuyCard } from "@/components/shared/group-buy-card";
 import { SpaceCard } from "@/components/shared/space-card";
 import { getTalents, getGroupBuys } from "@/lib/data/fetchers";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 
@@ -18,6 +20,11 @@ export default async function MarketPage({
   const borrowItems = allTalents.filter((t: any) => t.category === 'item' || t.category === 'lend');
   const spacesItems = allTalents.filter((t: any) => t.category === 'space');
   const groupBuys = await getGroupBuys();
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const currentUserName = user?.user_metadata?.full_name || cookieStore.get("test_name")?.value || "Test Resident";
 
   return (
     <div className="flex flex-col min-h-screen bg-white pb-32 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
@@ -82,6 +89,7 @@ export default async function MarketPage({
                   discountedPrice={deal.discounted_price}
                   expiresInDays={deal.expires_in_days}
                   imageFallback="🛍️"
+                  currentUserName={currentUserName}
                 />
               ))
             ) : (
@@ -108,6 +116,7 @@ export default async function MarketPage({
                   condition="Good"
                   available={true}
                   imageFallback="📦"
+                  currentUserName={currentUserName}
                 />
               ))
             ) : (
@@ -126,6 +135,7 @@ export default async function MarketPage({
                spacesItems.map((item: any) => (
                  <SpaceCard 
                    key={item.id}
+                   id={item.id}
                    title={item.title}
                    description={item.description}
                    ownerName={item.owner_name || "Neighbor"}
@@ -133,6 +143,7 @@ export default async function MarketPage({
                    availability="Available Now"
                    price={item.is_paid ? "Paid" : "Free"}
                    imageUrl={item.image_url || "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=600&auto=format&fit=crop"}
+                   currentUserName={currentUserName}
                  />
                ))
              ) : (

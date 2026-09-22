@@ -1,4 +1,5 @@
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { TopNav } from "@/components/layout/top-nav";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -24,7 +25,8 @@ export default async function AppLayout({
       <div className="fixed top-0 left-0 w-full h-96 bg-gradient-to-b from-indigo-100/40 to-transparent pointer-events-none -z-10 blur-3xl" />
       <div className="fixed bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-purple-200/30 to-transparent pointer-events-none -z-10 blur-3xl rounded-full" />
 
-      <main className="flex-1 w-full max-w-md mx-auto relative overflow-y-auto overflow-x-hidden hide-scrollbar pb-32 md:pb-0 z-0">
+      <main className="flex-1 w-full max-w-md mx-auto relative overflow-y-auto overflow-x-hidden hide-scrollbar pb-32 md:pb-0 z-0 bg-white">
+        <TopNav />
         <div className="min-h-full">
           {children}
         </div>

@@ -1,36 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { Search } from "lucide-react";
-import { TalentCard } from "@/components/shared/talent-card";
+import { Search, MapPin, Star, Sparkles, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import Image from "next/image";
 
 const CATEGORIES = [
+  { name: "All", id: "all" },
   { name: "🍰 Food", id: "food" },
   { name: "🏏 Sports", id: "sports" },
   { name: "🧘 Wellness", id: "wellness" },
   { name: "🎵 Music", id: "music" },
-  { name: "📚 Education", id: "education" },
-  { name: "💻 Technology", id: "tech" },
-  { name: "🎨 Art", id: "art" },
-  { name: "📸 Photography", id: "photo" },
-  { name: "⚕ Professionals", id: "prof" },
+  { name: "💻 Tech", id: "tech" },
 ];
 
 export function DiscoverClient({ skills }: { skills: any[] }) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  // Filter skills based on search query and selected category
   const filteredSkills = skills.filter((skill) => {
     const matchesSearch = 
       skill.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
       skill.owner_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       skill.description?.toLowerCase().includes(searchQuery.toLowerCase());
       
-    // Simple category matching logic (in a real app, you'd match actual tags)
-    // Here we check if the category ID is anywhere in the text as a basic proxy
-    const matchesCategory = selectedCategory 
+    const matchesCategory = selectedCategory !== "all" 
       ? (skill.title?.toLowerCase().includes(selectedCategory.toLowerCase()) || 
          skill.description?.toLowerCase().includes(selectedCategory.toLowerCase()))
       : true;
@@ -38,7 +33,6 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
     return matchesSearch && matchesCategory;
   });
 
-  // Group by neighbor so each profile appears exactly once (unless we want to show multiple skills)
   const uniqueNeighborsMap = new Map();
   filteredSkills.forEach((talent: any) => {
     if (!uniqueNeighborsMap.has(talent.owner_name)) {
@@ -48,82 +42,102 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
   const uniqueNeighbors = Array.from(uniqueNeighborsMap.values());
 
   return (
-    <>
-      {/* Header & Search */}
-      <header className="flex flex-col gap-6">
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
-          Discover
-        </h1>
-        
-        <div className="relative group">
+    <div className="flex flex-col relative bg-white min-h-screen pb-32">
+      
+      {/* Page Header */}
+      <div className="pt-6 pb-4 px-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-[32px] font-extrabold tracking-tight text-slate-900">
+            Discover
+          </h1>
+          <div className="w-10 h-10 bg-indigo-50 rounded-full flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-indigo-600" />
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative group mb-6">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-slate-400" />
           </div>
           <Input 
             type="text" 
-            placeholder="Search skills, talents, neighbors..." 
+            placeholder="Search chefs, tutors, skills..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-12 py-6 text-base bg-white border-slate-200 rounded-2xl shadow-sm text-slate-900 placeholder:text-slate-400 transition-all focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-transparent"
+            className="pl-12 pr-12 py-6 text-base font-medium bg-slate-50 border-transparent rounded-2xl shadow-none text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:bg-white transition-all"
           />
+          <button className="absolute inset-y-0 right-4 flex items-center">
+            <Filter className="h-5 w-5 text-slate-400 hover:text-indigo-600 transition-colors" />
+          </button>
         </div>
-      </header>
 
-      {/* Categories Horizontal Scroll */}
-      <section>
-        <div className="flex flex-wrap gap-2 pb-2">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}
-              className={`whitespace-nowrap px-4 py-2 rounded-xl border text-xs font-bold tracking-wide transition-colors snap-start shadow-sm
-                ${selectedCategory === cat.id 
-                  ? "bg-indigo-600 border-indigo-600 text-white" 
-                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                }`}
-            >
-              {cat.name}
-            </button>
-          ))}
+        {/* Categories (Apple style pills) */}
+        <div className="flex overflow-x-auto gap-2 -mx-6 px-6 hide-scrollbar">
+          {CATEGORIES.map((cat) => {
+            const isSelected = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-all shrink-0 border
+                  ${isSelected 
+                    ? "bg-slate-900 border-slate-900 text-white shadow-md" 
+                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                  }`}
+              >
+                {cat.name}
+              </button>
+            )
+          })}
         </div>
-      </section>
+      </div>
 
-      {/* Sections */}
-      <section className="flex flex-col gap-10">
-        <DiscoverSection title={searchQuery || selectedCategory ? "Search Results" : "Recently Added Skills"}>
-          {uniqueNeighbors.length > 0 ? (
-            uniqueNeighbors.map((talent: any) => (
-              <TalentCard 
-                key={talent.id} 
-                id={talent.id} 
-                name={talent.owner_name} 
-                role={talent.title} 
-                tower={talent.tower} 
-                endorsements={Math.floor(Math.random() * 50) + 1} 
-                imageUrl={talent.image_url}
-              />
-            ))
-          ) : (
-            <p className="text-sm text-slate-500 col-span-2">No matching profiles found.</p>
-          )}
-        </DiscoverSection>
-      </section>
-    </>
-  );
-}
-
-function DiscoverSection({ title, children }: { title: string, children: React.ReactNode }) {
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-base font-bold text-slate-800">{title}</h3>
-        {children && Array.isArray(children) && children.length > 0 && (
-          <button className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700">See all</button>
+      {/* Grid Content */}
+      <div className="px-6 pt-6">
+        {uniqueNeighbors.length > 0 ? (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8">
+            {uniqueNeighbors.map((talent: any) => (
+              <Link href={`/talent/${talent.id}`} key={talent.id} className="group flex flex-col">
+                {/* Image Container */}
+                <div className="w-full aspect-[4/5] rounded-[1.5rem] relative overflow-hidden mb-3 bg-slate-100">
+                  {talent.image_url ? (
+                    <Image src={talent.image_url} alt={talent.owner_name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-6xl font-black uppercase bg-indigo-50 text-indigo-200 transition-transform duration-500 group-hover:scale-105">
+                      {talent.owner_name?.charAt(0) || '?'}
+                    </div>
+                  )}
+                  {/* Subtle gradient for text readability if we had text on image, but we don't here */}
+                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                    <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                    <span className="text-[10px] font-bold text-slate-700">5.0</span>
+                  </div>
+                </div>
+                
+                {/* Text Content below image */}
+                <div>
+                  <h4 className="text-base font-extrabold text-slate-900 leading-tight truncate">{talent.owner_name}</h4>
+                  <p className="text-[13px] font-medium text-slate-500 truncate mt-0.5">{talent.title}</p>
+                  <div className="flex items-center gap-1 mt-1.5 text-slate-400">
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span className="text-[11px] font-bold uppercase tracking-widest">{talent.tower || "A-402"}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+              <Search className="w-8 h-8 text-slate-300" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">No results</h3>
+            <p className="text-sm text-slate-500">Try adjusting your filters.</p>
+          </div>
         )}
       </div>
-      <div className="flex overflow-x-auto gap-4 pb-6 -mx-6 px-6 snap-x snap-mandatory hide-scrollbar">
-        {children}
-      </div>
+
     </div>
   );
 }

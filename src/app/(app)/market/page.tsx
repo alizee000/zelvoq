@@ -1,6 +1,7 @@
-import { Store, Wrench, ShoppingBag } from "lucide-react";
+import { Store, Wrench, ShoppingBag, CarFront } from "lucide-react";
 import { BorrowCard } from "@/components/shared/borrow-card";
 import { GroupBuyCard } from "@/components/shared/group-buy-card";
+import { SpaceCard } from "@/components/shared/space-card";
 import { getTalents, getGroupBuys } from "@/lib/data/fetchers";
 import Link from "next/link";
 
@@ -10,10 +11,11 @@ export default async function MarketPage({
   searchParams: Promise<{ tab?: string }>;
 }) {
   const resolvedParams = await searchParams;
-  const activeTab = resolvedParams.tab === "borrow" ? "borrow" : "deals";
+  const activeTab = resolvedParams.tab === "spaces" ? "spaces" : resolvedParams.tab === "borrow" ? "borrow" : "deals";
 
   const allTalents = await getTalents();
-  const borrowItems = allTalents.filter((t: any) => t.category === 'item');
+  const borrowItems = allTalents.filter((t: any) => t.category === 'item' || t.category === 'lend');
+  const spacesItems = allTalents.filter((t: any) => t.category === 'space');
   const groupBuys = await getGroupBuys();
 
   return (
@@ -24,33 +26,40 @@ export default async function MarketPage({
         <h1 className="text-[32px] font-extrabold tracking-tight text-slate-900 leading-tight">
           Marketplace
         </h1>
-        <p className="text-slate-500 text-sm mt-1 font-medium">Borrow equipment and join bulk deals.</p>
+        <p className="text-slate-500 text-sm mt-1 font-medium">Borrow equipment, join deals, and share spaces.</p>
       </div>
 
       {/* iOS Segmented Control */}
       <div className="px-6 mb-8">
         <div className="bg-slate-100 p-1.5 rounded-full flex relative">
           <div 
-            className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-full shadow-sm transition-transform duration-300 ease-out"
+            className="absolute top-1.5 bottom-1.5 w-[calc(33.333%-4px)] bg-white rounded-full shadow-sm transition-transform duration-300 ease-out"
             style={{ 
-              transform: `translateX(${activeTab === 'deals' ? '0%' : '100%'})`,
-              left: activeTab === 'deals' ? '6px' : '0px',
-              marginLeft: activeTab === 'deals' ? '0px' : '6px'
+              transform: `translateX(${activeTab === 'deals' ? '0%' : activeTab === 'borrow' ? '100%' : '200%'})`,
+              left: activeTab === 'deals' ? '6px' : activeTab === 'borrow' ? '0px' : '-6px',
+              marginLeft: activeTab === 'deals' ? '0px' : activeTab === 'borrow' ? '6px' : '12px'
             }}
           />
           <Link
             href="?tab=deals"
             scroll={false}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold z-10 transition-colors ${activeTab === 'deals' ? 'text-indigo-600' : 'text-slate-500'}`}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[11px] uppercase tracking-wider font-bold z-10 transition-colors ${activeTab === 'deals' ? 'text-indigo-600' : 'text-slate-500'}`}
           >
-            <ShoppingBag className="w-4 h-4" /> Group Buys
+            <ShoppingBag className="w-4 h-4" /> Deals
           </Link>
           <Link
             href="?tab=borrow"
             scroll={false}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold z-10 transition-colors ${activeTab === 'borrow' ? 'text-indigo-600' : 'text-slate-500'}`}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[11px] uppercase tracking-wider font-bold z-10 transition-colors ${activeTab === 'borrow' ? 'text-indigo-600' : 'text-slate-500'}`}
           >
             <Wrench className="w-4 h-4" /> Library
+          </Link>
+          <Link
+            href="?tab=spaces"
+            scroll={false}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[11px] uppercase tracking-wider font-bold z-10 transition-colors ${activeTab === 'spaces' ? 'text-indigo-600' : 'text-slate-500'}`}
+          >
+            <CarFront className="w-4 h-4" /> Spaces
           </Link>
         </div>
       </div>
@@ -84,7 +93,7 @@ export default async function MarketPage({
               </div>
             )}
           </div>
-        ) : (
+        ) : activeTab === "borrow" ? (
           <div className="flex flex-col gap-6">
             {borrowItems.length > 0 ? (
               borrowItems.map((item: any) => (
@@ -109,6 +118,31 @@ export default async function MarketPage({
                 <p className="text-sm text-slate-500">List your idle tools for neighbors.</p>
               </div>
             )}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6">
+             {spacesItems.length > 0 ? (
+               spacesItems.map((item: any) => (
+                 <SpaceCard 
+                   key={item.id}
+                   title={item.title}
+                   description={item.description}
+                   ownerName={item.owner_name || "Neighbor"}
+                   location={item.tower || "Your Community"}
+                   availability="Available Now"
+                   price={item.is_paid ? "Paid" : "Free"}
+                   imageUrl={item.image_url || "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=600&auto=format&fit=crop"}
+                 />
+               ))
+             ) : (
+               <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                  <CarFront className="w-8 h-8 text-slate-300" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-1">No spaces listed</h3>
+                <p className="text-sm text-slate-500">List an empty parking spot or guest room.</p>
+              </div>
+             )}
           </div>
         )}
       </div>

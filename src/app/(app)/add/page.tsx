@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud } from "lucide-react";
+import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { addTalent } from "@/app/actions/talents";
@@ -21,7 +21,7 @@ function TagsInput() {
 }
 
 export default function AddPage() {
-  const [category, setCategory] = useState<"skill" | "item" | "deal">("skill");
+  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space">("skill");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -49,7 +49,7 @@ export default function AddPage() {
               if (res.success) router.push("/market");
             } else {
               const res = await addTalent(formData);
-              if (res.success) router.push(category === "skill" ? "/discover" : "/market?tab=borrow");
+              if (res.success) router.push(category === "skill" ? "/discover" : category === "space" ? "/market?tab=spaces" : "/market?tab=borrow");
             }
           } catch (e: any) {
             setIsSubmitting(false);
@@ -61,9 +61,9 @@ export default function AddPage() {
         {/* iOS Segmented Control Style Category Selector */}
         <div className="bg-slate-100 p-1.5 rounded-full flex relative">
           <div 
-            className="absolute top-1.5 bottom-1.5 w-[calc(33.333%-4px)] bg-white rounded-full shadow-sm transition-transform duration-300 ease-out"
+            className="absolute top-1.5 bottom-1.5 w-[calc(25%-4px)] bg-white rounded-full shadow-sm transition-transform duration-300 ease-out"
             style={{ 
-              transform: `translateX(${category === 'skill' ? '0%' : category === 'item' ? '100%' : '200%'})` 
+              transform: `translateX(${category === 'skill' ? '0%' : category === 'item' ? '100%' : category === 'deal' ? '200%' : '300%'})` 
             }}
           />
           <button 
@@ -86,6 +86,13 @@ export default function AddPage() {
             className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold z-10 transition-colors ${category === 'deal' ? 'text-indigo-600' : 'text-slate-500'}`}
           >
             <ShoppingBag className="w-4 h-4" /> Group Buy
+          </button>
+          <button 
+            type="button"
+            onClick={() => setCategory("space")}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-bold z-10 transition-colors ${category === 'space' ? 'text-indigo-600' : 'text-slate-500'}`}
+          >
+            <Building className="w-4 h-4" /> Space
           </button>
         </div>
 

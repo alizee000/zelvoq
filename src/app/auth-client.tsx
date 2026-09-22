@@ -96,7 +96,10 @@ export default function AuthClientPage() {
             {showDemo && (
               <div className="mt-3 p-4 bg-indigo-50 border border-indigo-100 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
                 <p className="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-1">Demo Access</p>
-                <p className="text-sm text-indigo-700 font-medium">Use <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">test@example.com</span>, any password, and Society Passcode <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">KOODU-2026</span> to bypass verification!</p>
+                <p className="text-sm text-indigo-700 font-medium">
+                  Welcome to <strong>DSR Rainbow Heights</strong> (HSR Layout, Bangalore).<br/><br/>
+                  Use <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">test@example.com</span>, any password, and Society Passcode <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">KOODU-2026</span> to bypass verification!
+                </p>
               </div>
             )}
           </div>

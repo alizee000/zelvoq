@@ -35,65 +35,61 @@ export default function AddPage() {
           </h1>
           <p className="text-slate-500 font-medium mb-10">Select a category to get started.</p>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4">
             
             {/* Space Option */}
             <button 
               onClick={() => setCategory("space")}
-              className="text-left bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] p-5 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform flex flex-col justify-between h-[200px]"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20">
-                <CarFront className="w-6 h-6" />
+              <div>
+                <h3 className="text-xl font-black text-slate-900 mb-1">Share a Space</h3>
+                <p className="text-sm text-slate-500 font-medium">Rent out your parking spot or room</p>
               </div>
-              <div className="mt-auto">
-                <h3 className="text-lg font-black text-white leading-tight mb-1">Share Space</h3>
-                <p className="text-[10px] font-bold text-indigo-100 uppercase tracking-wider">Parking & Rooms</p>
+              <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                <CarFront className="w-7 h-7" />
               </div>
             </button>
 
             {/* Deal Option */}
             <button 
               onClick={() => setCategory("deal")}
-              className="text-left bg-gradient-to-br from-orange-400 to-rose-500 rounded-[2rem] p-5 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform flex flex-col justify-between h-[200px]"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20">
-                <ShoppingBag className="w-6 h-6" />
+              <div>
+                <h3 className="text-xl font-black text-slate-900 mb-1">Start Group Buy</h3>
+                <p className="text-sm text-slate-500 font-medium">Unlock bulk discounts together</p>
               </div>
-              <div className="mt-auto">
-                <h3 className="text-lg font-black text-white leading-tight mb-1">Group Buy</h3>
-                <p className="text-[10px] font-bold text-orange-100 uppercase tracking-wider">Bulk Discounts</p>
+              <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+                <ShoppingBag className="w-7 h-7" />
               </div>
             </button>
 
             {/* Item Option */}
             <button 
               onClick={() => setCategory("item")}
-              className="text-left bg-gradient-to-br from-blue-500 to-cyan-500 rounded-[2rem] p-5 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform flex flex-col justify-between h-[200px]"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20">
-                <Wrench className="w-6 h-6" />
+              <div>
+                <h3 className="text-xl font-black text-slate-900 mb-1">Lend an Item</h3>
+                <p className="text-sm text-slate-500 font-medium">Share idle tools and equipment</p>
               </div>
-              <div className="mt-auto">
-                <h3 className="text-lg font-black text-white leading-tight mb-1">Lend Item</h3>
-                <p className="text-[10px] font-bold text-blue-100 uppercase tracking-wider">Tools & Books</p>
+              <div className="w-14 h-14 rounded-2xl bg-cyan-50 flex items-center justify-center text-cyan-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                <Wrench className="w-7 h-7" />
               </div>
             </button>
 
             {/* Skill Option */}
             <button 
               onClick={() => setCategory("skill")}
-              className="text-left bg-gradient-to-br from-emerald-400 to-teal-500 rounded-[2rem] p-5 shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform flex flex-col justify-between h-[200px]"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20">
-                <Target className="w-6 h-6" />
+              <div>
+                <h3 className="text-xl font-black text-slate-900 mb-1">Offer a Skill</h3>
+                <p className="text-sm text-slate-500 font-medium">Teach math, yoga, or baking</p>
               </div>
-              <div className="mt-auto">
-                <h3 className="text-lg font-black text-white leading-tight mb-1">Offer Skill</h3>
-                <p className="text-[10px] font-bold text-teal-100 uppercase tracking-wider">Teach & Help</p>
+              <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                <Target className="w-7 h-7" />
               </div>
             </button>
 

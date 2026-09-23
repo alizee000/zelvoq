@@ -95,10 +95,10 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen pb-[90px] relative bg-[#F8FAFC]">
-      <div className="flex flex-col gap-6 px-6 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out z-0">
+      <div className="flex flex-col gap-6 px-6 pt-6 z-0">
         
         {/* Impactful Typography Header */}
-        <section className="pt-2 pb-2">
+        <section className="pt-2 pb-2 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">
            <div className="flex items-center gap-2 mb-2">
              <MapPin className="w-3.5 h-3.5 text-indigo-600" />
              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest line-clamp-1">
@@ -115,13 +115,13 @@ export default async function HomePage() {
         </section>
 
         {/* Impactful Hero Discover Card (App Store Style) */}
-        <section>
+        <section className="animate-in fade-in zoom-in-95 duration-700 delay-[100ms] fill-mode-both">
           <Link href="/discover" className="block w-full bg-white rounded-[2rem] p-1 shadow-[0_8px_30px_rgb(0,0,0,0.06)] group hover:scale-[1.01] transition-transform">
             <div className="bg-slate-50 rounded-[1.8rem] p-6 relative overflow-hidden h-[220px] flex flex-col justify-between">
               
               {/* Decorative Mesh Background */}
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-fuchsia-200 rounded-full mix-blend-multiply filter blur-[60px] opacity-70 group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-[60px] opacity-70 group-hover:scale-110 transition-transform duration-700" />
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-fuchsia-200 rounded-full mix-blend-multiply filter blur-[60px] opacity-70 animate-[spin_15s_linear_infinite] group-hover:scale-110 transition-transform duration-700" />
+              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-[60px] opacity-70 animate-[spin_15s_linear_infinite] group-hover:scale-110 transition-transform duration-700" />
               
               {/* Overlapping Avatars */}
               <div className="relative z-10 flex -space-x-3">
@@ -151,7 +151,7 @@ export default async function HomePage() {
 
         {/* Modern Action Pills */}
         <section className="grid grid-cols-2 gap-4">
-          <Link href="/market" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group">
+          <Link href="/market" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group animate-in fade-in slide-in-from-left-8 duration-700 delay-[200ms] fill-mode-both">
             <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center shrink-0">
               <Flame className="w-6 h-6 text-orange-500" />
             </div>
@@ -161,7 +161,7 @@ export default async function HomePage() {
             </div>
           </Link>
 
-          <Link href="/market?tab=borrow" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group">
+          <Link href="/market?tab=borrow" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group animate-in fade-in slide-in-from-right-8 duration-700 delay-[300ms] fill-mode-both">
             <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0">
               <Wrench className="w-5 h-5 text-indigo-500" />
             </div>
@@ -171,7 +171,7 @@ export default async function HomePage() {
             </div>
           </Link>
 
-          <Link href="/events" className="col-span-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-between group">
+          <Link href="/events" className="col-span-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-between group animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[400ms] fill-mode-both">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20">
                 <Calendar className="w-6 h-6 text-white" />
@@ -187,7 +187,7 @@ export default async function HomePage() {
           </Link>
         </section>
         
-        <section className="flex flex-col gap-4 mt-2">
+        <section className="flex flex-col gap-4 mt-2 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-[600ms] fill-mode-both">
           <h2 className="text-xl font-black tracking-tight text-slate-900">Live Activity</h2>
           <LiveFeedClient initialPosts={feedPosts} />
         </section>

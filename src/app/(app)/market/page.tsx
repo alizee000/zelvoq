@@ -32,11 +32,19 @@ export default async function MarketPage({
     <div className="flex flex-col min-h-screen bg-white pb-32">
       
       {/* Header */}
-      <div className="px-6 pt-10 pb-6 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">
-        <h1 className="text-[32px] font-extrabold tracking-tight text-slate-900 leading-tight">
-          Marketplace
-        </h1>
-        <p className="text-slate-500 text-sm mt-1 font-medium">Borrow equipment, join deals, and share spaces.</p>
+      <div className="flex flex-col gap-6 px-6 pt-6">
+        <section className="animate-in fade-in slide-in-from-top-4 duration-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                Marketplace
+              </h1>
+              <p className="text-sm text-slate-500 mt-1">
+                Borrow equipment, join deals, and share spaces.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
 
       {/* iOS Segmented Control */}

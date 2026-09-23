@@ -57,7 +57,7 @@ export function SpaceCard({ id, title, description, ownerName, location, availab
   };
 
   return (
-    <div className="w-full bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col gap-5 relative overflow-hidden group">
+    <div className="w-full bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col gap-5 relative overflow-hidden group">
       {/* Top Image & Info */}
       <div className="flex gap-4">
         <div className="w-20 h-20 shrink-0 rounded-2xl overflow-hidden relative shadow-sm">

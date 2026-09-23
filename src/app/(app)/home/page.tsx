@@ -1,13 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+import { getTalents } from "@/lib/data/fetchers";
 import { cookies } from "next/headers";
-import { LiveFeedClient } from "./live-feed-client";
-import { CommunityVideo } from "./community-video";
-import { KnockKnockRadar } from "./knock-knock-radar";
-import { getFeedPosts, getGroupBuys, getTalents } from "@/lib/data/fetchers";
-import { getPollsForUser } from "@/lib/data/polls";
-import { CloudSun, Zap, ShoppingBag, Target, ArrowRight, Flame, Wrench, MapPin, Calendar, PieChart, Plus } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { Search, Sparkles, Ticket, Activity, Camera, Coffee, ChevronRight } from "lucide-react";
+import { CommunityVideo } from "./community-video";
 
 
 export default async function HomePage() {
@@ -15,200 +12,138 @@ export default async function HomePage() {
   const { data: { user } } = await supabase.auth.getUser();
   const cookieStore = await cookies();
   
-  let fullName = "Koodu";
-  if (user) {
-    fullName = user.user_metadata?.full_name || "Resident";
+  let firstName = "Resident";
+  if (user?.user_metadata?.full_name) {
+    firstName = user.user_metadata.full_name.split(" ")[0];
   } else if (cookieStore.has("test_name")) {
-    fullName = cookieStore.get("test_name")?.value || "Koodu";
-  }
-  
-  const firstName = fullName.split(" ")[0];
-
-  const feedPosts = await getFeedPosts();
-  const groupBuys = await getGroupBuys();
-  const talents = await getTalents();
-  const { data: activeKnockKnocks } = await supabase.from("knock_knocks").select("*").eq("status", "active").order("created_at", { ascending: false });
-  const borrowItems = talents.filter((t: any) => t.category === "lend" || t.category === "item");
-  
-  // Real weather fetch
-  let temp = "24°C";
-  let weatherCondition = "Clear";
-  try {
-    const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=12.9081&longitude=77.6476&current_weather=true", { next: { revalidate: 3600 } });
-    if (res.ok) {
-      const weatherData = await res.json();
-      temp = `${Math.round(weatherData.current_weather.temperature)}°C`;
-      const code = weatherData.current_weather.weathercode;
-      if (code === 0) weatherCondition = "Clear sky";
-      else if (code <= 3) weatherCondition = "Partly cloudy";
-      else if (code <= 49) weatherCondition = "Fog/Cloudy";
-      else if (code <= 69) weatherCondition = "Rain";
-      else if (code <= 79) weatherCondition = "Snow";
-      else if (code <= 99) weatherCondition = "Thunderstorm";
-    }
-  } catch (e) {
-    console.error("Failed to fetch weather");
+    firstName = (cookieStore.get("test_name")?.value || "Resident").split(" ")[0];
   }
 
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Morning" : hour < 18 ? "Afternoon" : "Evening";
+  const allTalents = await getTalents();
+  const people = allTalents.filter((t: any) => t.category === "skill" || t.category === "service").slice(0, 5);
 
-  // Get up to 4 real neighbor avatars for the Discover card
-  const displayAvatars = talents
-    .filter((t: any) => t.image_url)
-    .map((t: any) => t.image_url)
-    .filter((val: any, index: number, self: any) => self.indexOf(val) === index) // Unique
-    .slice(0, 4);
 
-  // Fallback avatars if empty
-  const defaultAvatars = ["/images/ananya.jpg", "/images/arjun.jpg", "/images/fatima.jpg", "/images/rohan.jpg"];
-  const finalAvatars = displayAvatars.length >= 3 ? displayAvatars : defaultAvatars;
+  // Dynamic Trending Data
+  const { count: dealsCount } = await supabase.from("group_buys").select("id", { count: "exact", head: true });
+  const { count: knockKnocksCount } = await supabase.from("knock_knocks").select("id", { count: "exact", head: true }).is("resolved_by", null);
+  const { count: eventsCount } = await supabase.from("events").select("id", { count: "exact", head: true });
+  const libraryCount = allTalents?.filter((t: any) => t.category === "lend" || t.category === "item").length || 0;
+  const skillsCount = allTalents?.filter((t: any) => t.category === "skill").length || 0;
 
-  const { activePolls } = await getPollsForUser(fullName);
-  
-  // Decide the most impactful headline to show
-  let impactfulHeadline = (
-    <>
-      Good {greeting.toLowerCase()},<br/>
-      <span className="text-indigo-600">{firstName}.</span>
-    </>
-  );
+  const trendingItems = [];
+  if (dealsCount) trendingItems.push({ count: dealsCount, label: "Active community deals", href: "/market", icon: Ticket, bg: "bg-[#F0FDF4]", iconBg: "bg-[#DCFCE7]", iconColor: "text-[#166534]" });
+  if (knockKnocksCount) trendingItems.push({ count: knockKnocksCount, label: "Neighbors needing help", href: "/knock-knocks", icon: Activity, bg: "bg-[#FFFBEB]", iconBg: "bg-[#FEF3C7]", iconColor: "text-[#D97706]" });
+  if (eventsCount) trendingItems.push({ count: eventsCount, label: "Upcoming community events", href: "/events", icon: Coffee, bg: "bg-[#FFF1F2]", iconBg: "bg-[#FFE4E6]", iconColor: "text-[#BE123C]" });
+  if (libraryCount) trendingItems.push({ count: libraryCount, label: "Items to borrow", href: "/market?tab=borrow", icon: Camera, bg: "bg-[#F3E8FF]", iconBg: "bg-[#E9D5FF]", iconColor: "text-[#7E22CE]" });
+  if (skillsCount) trendingItems.push({ count: skillsCount, label: "Local experts & skills", href: "/discover", icon: Sparkles, bg: "bg-[#FFFBEB]", iconBg: "bg-[#FEF3C7]", iconColor: "text-[#D97706]" });
 
-  if (activePolls.length > 0) {
-    impactfulHeadline = (
-      <>
-        Action required: <span className="text-rose-500">{activePolls.length} pending vote{activePolls.length > 1 ? 's' : ''}.</span>
-      </>
-    );
-  } else if (groupBuys.length > 0) {
-    impactfulHeadline = (
-      <>
-        Unlock <span className="text-orange-500">{groupBuys.length} neighborhood deals</span> today.
-      </>
-    );
-  } else if (talents.length > 0) {
-    impactfulHeadline = (
-      <>
-        Discover <span className="text-indigo-600">{talents.length} local experts</span> today.
-      </>
-    );
-  }
+  const gemTalent = allTalents?.find((t: any) => t.title.toLowerCase().includes("bake") || t.title.toLowerCase().includes("chef") || t.title.toLowerCase().includes("cake")) || allTalents?.[0];
+
 
   return (
-    <div className="flex flex-col min-h-screen pb-[90px] relative bg-[#F8FAFC]">
-      <div className="flex flex-col gap-6 px-6 pt-6 z-0">
+    <div className="flex flex-col min-h-screen pb-[90px] bg-white">
+      <div className="flex flex-col gap-6 px-6 pt-6">
         
+        {/* Header Section */}
+        <section className="animate-in fade-in slide-in-from-top-4 duration-700">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            ☀️ Good morning, {firstName}
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Your community is full of hidden talent.
+          </p>
+        </section>
+
+        {/* Featured Video */}
         <CommunityVideo />
-        
-        {/* Impactful Typography Header */}
-        <section className="pt-2 pb-2 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">
-           <div className="flex items-center gap-2 mb-2">
-             <MapPin className="w-3.5 h-3.5 text-indigo-600" />
-             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest line-clamp-1">
-               DSR Rainbow Heights, HSR
-             </span>
-             <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mx-1">•</span>
-             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
-               <CloudSun className="w-3 h-3 text-amber-500" /> {temp}
-             </span>
-           </div>
-           <h1 className="text-[34px] font-black text-slate-900 tracking-tight leading-[1.1]">
-             {impactfulHeadline}
-           </h1>
+
+        {/* Search Bar */}
+        <section className="animate-in fade-in zoom-in-95 duration-700 delay-75">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-slate-400" />
+            </div>
+            <input 
+              type="text" 
+              placeholder="What are you looking for?" 
+              className="w-full bg-slate-50 border-none rounded-full py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500/20"
+            />
+          </div>
         </section>
 
-        {/* Impactful Hero Discover Card (App Store Style) */}
-        <section className="animate-in fade-in zoom-in-95 duration-700 delay-[100ms] fill-mode-both">
-          <Link href="/discover" className="block w-full bg-white rounded-[2rem] p-1 shadow-[0_8px_30px_rgb(0,0,0,0.06)] group hover:scale-[1.01] transition-transform">
-            <div className="bg-slate-50 rounded-[1.8rem] p-6 relative overflow-hidden h-[220px] flex flex-col justify-between">
-              
-              {/* Decorative Mesh Background */}
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-fuchsia-200 rounded-full mix-blend-multiply filter blur-[60px] opacity-70 animate-[spin_15s_linear_infinite] group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-[60px] opacity-70 animate-[spin_15s_linear_infinite] group-hover:scale-110 transition-transform duration-700" />
-              
-              {/* Overlapping Avatars */}
-              <div className="relative z-10 flex -space-x-3">
-                {finalAvatars.map((src: string, i: number) => (
-                  <div key={i} className="w-12 h-12 rounded-full border-2 border-white shadow-md relative overflow-hidden bg-slate-200">
-                    <Image src={src} alt="Neighbor" fill className="object-cover" />
+        {/* Hidden Gem Hero */}
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+          <Link href={gemTalent ? `/talent/${gemTalent.id}` : "/discover"} className="block w-full bg-gradient-to-br from-[#FFF5F0] to-[#FFE8E0] rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+            <div className="absolute right-0 bottom-0 w-32 h-40">
+              {/* Fallback image if we don't have a baker */}
+              <img src={gemTalent?.image_url || "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=400&auto=format&fit=crop"} alt={gemTalent?.title || "Baker"} className="w-full h-full object-cover object-left rounded-tl-[3rem]" />
+            </div>
+            <div className="relative z-10 w-[65%]">
+              <div className="inline-flex items-center gap-1 text-[#D97706] bg-[#FEF3C7] px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-3">
+                <Sparkles className="w-3 h-3" /> Hidden Gem
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 mb-2 line-clamp-1">{gemTalent ? `Meet ${gemTalent.owner_name.split(' ')[0]}` : "Meet Ayesha"}</h2>
+              <p className="text-xs text-slate-700 mb-4 leading-relaxed line-clamp-3">
+                {gemTalent?.description || "Creates beautiful celebration cakes and custom desserts."}
+              </p>
+              <div className="inline-flex items-center gap-1 bg-white text-slate-900 text-xs font-bold px-4 py-2 rounded-full shadow-sm">
+                View Profile <ChevronRight className="w-3 h-3" />
+              </div>
+            </div>
+          </Link>
+        </section>
+
+        {/* Trending Section */}
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[200ms]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-bold text-slate-900">Trending in your community</h2>
+            <ChevronRight className="w-4 h-4 text-slate-400" />
+          </div>
+          
+          
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x hide-scrollbar">
+            {trendingItems.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <Link href={item.href} key={i} className={`flex-none w-[140px] ${item.bg} rounded-3xl p-5 snap-start shadow-sm hover:scale-[1.02] hover:shadow-md transition-all`}>
+                  <div className={`w-8 h-8 rounded-full ${item.iconBg} flex items-center justify-center mb-4 ${item.iconColor}`}>
+                    <Icon className="w-4 h-4" />
                   </div>
-                ))}
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-md bg-indigo-600 flex items-center justify-center text-white font-bold text-xs z-10">
-                  +{talents.length > 4 ? talents.length - 4 : 2}
-                </div>
-              </div>
-              
-              <div className="relative z-10 mt-auto">
-                <div className="text-[11px] font-bold text-indigo-600 uppercase tracking-widest mb-1 flex items-center gap-1">
-                  <Target className="w-3 h-3" /> The Talent Network
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 leading-tight">
-                  Meet the experts living next door.
-                </h3>
-              </div>
-            </div>
-          </Link>
+                  <div className="text-2xl font-black text-slate-900 mb-1">{item.count}</div>
+                  <div className="text-xs text-slate-600 leading-tight">{item.label}</div>
+                </Link>
+              );
+            })}
+          </div>
         </section>
 
-        <KnockKnockRadar knockKnocks={activeKnockKnocks || []} />
-
-        {/* Modern Action Pills */}
-        <section className="grid grid-cols-2 gap-4">
-          <Link href="/market" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group animate-in fade-in slide-in-from-left-8 duration-700 delay-[200ms] fill-mode-both">
-            <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center shrink-0">
-              <Flame className="w-6 h-6 text-orange-500" />
-            </div>
-            <div>
-              <div className="text-lg font-black text-slate-900">{groupBuys.length} Deals</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Group Buys</div>
-            </div>
-          </Link>
-
-          <Link href="/market?tab=borrow" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group animate-in fade-in slide-in-from-right-8 duration-700 delay-[300ms] fill-mode-both">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0">
-              <Wrench className="w-5 h-5 text-indigo-500" />
-            </div>
-            <div>
-              <div className="text-lg font-black text-slate-900">{borrowItems.length} Tools</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Library</div>
-            </div>
-          </Link>
-
-          <Link href="/events" className="col-span-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-between group animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[400ms] fill-mode-both">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20">
-                <Calendar className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <div className="text-lg font-black text-white">Events & Gatherings</div>
-                <div className="text-[10px] font-bold text-rose-100 uppercase tracking-widest mt-0.5">Tournaments, Festivals</div>
-              </div>
-            </div>
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
-              <Plus className="w-4 h-4 text-white" />
-            </div>
-          </Link>
-
-          <Link href="/market?tab=coown" className="col-span-2 bg-gradient-to-r from-emerald-500 to-teal-400 rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-between group animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[500ms] fill-mode-both">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20">
-                <PieChart className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <div className="text-lg font-black text-white">Co-Own Luxury Assets</div>
-                <div className="text-[10px] font-bold text-teal-100 uppercase tracking-widest mt-0.5">Fractional Ownership</div>
-              </div>
-            </div>
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md transition-transform group-hover:translate-x-1">
-              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-            </div>
-          </Link>
-
-        </section>
-        
-        <section className="flex flex-col gap-4 mt-2 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-[600ms] fill-mode-both">
-          <h2 className="text-xl font-black tracking-tight text-slate-900">Live Activity</h2>
-          <LiveFeedClient initialPosts={feedPosts} />
+        {/* People you should know */}
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[300ms]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-bold text-slate-900">People you should know</h2>
+            <ChevronRight className="w-4 h-4 text-slate-400" />
+          </div>
+          
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x hide-scrollbar">
+            {people.length > 0 ? people.map((person: any) => (
+              <Link href={`/talent/${person.id}`} key={person.id} className="flex-none w-[120px] bg-white border border-slate-100 rounded-3xl p-4 flex flex-col items-center text-center snap-start shadow-sm hover:scale-[1.02] hover:border-indigo-100 transition-all cursor-pointer">
+                <div className="w-14 h-14 rounded-full overflow-hidden mb-3 bg-slate-100 border-2 border-white shadow-sm">
+                  {person.image_url ? (
+                    <img src={person.image_url} alt={person.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xl bg-indigo-50">
+                      👤
+                    </div>
+                  )}
+                </div>
+                <h3 className="text-sm font-bold text-slate-900 line-clamp-1 w-full">{person.owner_name}</h3>
+                <p className="text-[10px] text-slate-500 line-clamp-1 w-full mt-0.5 font-medium">{person.title}</p>
+                <p className="text-[9px] text-slate-400 line-clamp-1 w-full mt-1 uppercase tracking-wider">{person.tower || "Resident"}</p>
+              </Link>
+            )) : (
+              <div className="text-sm text-slate-500 p-4">No profiles found. Encourage your neighbors to join!</div>
+            )}
+          </div>
         </section>
 
       </div>

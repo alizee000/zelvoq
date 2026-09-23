@@ -34,23 +34,25 @@ export default function AddPage() {
     return (
       <div className="flex flex-col min-h-screen bg-white pb-32 pt-8">
 
-        <div className="px-6 pt-6 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 leading-tight mb-2">
-            What would you like to list?
-          </h1>
-          <p className="text-slate-500 font-medium mb-10">Select a category to get started.</p>
+        <div className="flex flex-col gap-6 px-6 pt-6 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+              Add Listing
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">Select a category to get started.</p>
+          </div>
 
           <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[200ms] fill-mode-both">
             {/* Knock-Knock Option */}
             <button 
               onClick={() => setCategory("knock")}
-              className="w-full text-left bg-gradient-to-br from-rose-500 to-pink-500 rounded-3xl p-6 shadow-[0_8px_30px_rgba(244,63,94,0.3)] relative overflow-hidden flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              className="w-full text-left bg-[#FFF1F2] rounded-3xl p-6 shadow-sm border border-rose-100 relative overflow-hidden flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
-                <h3 className="text-xl font-black text-white mb-1">Knock-Knock SOS</h3>
-                <p className="text-sm text-white/80 font-medium">Ask neighbors for a quick favor</p>
+                <h3 className="text-xl font-black text-rose-900 mb-1">Knock-Knock SOS</h3>
+                <p className="text-sm text-rose-500 font-medium">Ask neighbors for a quick favor</p>
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform">
+              <div className="w-14 h-14 rounded-2xl bg-[#FFE4E6] flex items-center justify-center text-rose-600 shrink-0 group-hover:scale-110 transition-transform">
                 <BellRing className="w-7 h-7" />
               </div>
             </button>
@@ -58,7 +60,7 @@ export default function AddPage() {
             {/* Item Option */}
             <button 
               onClick={() => setCategory("item")}
-              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
                 <h3 className="text-xl font-black text-slate-900 mb-1">Lend an Item</h3>
@@ -73,7 +75,7 @@ export default function AddPage() {
             {/* Skill Option */}
             <button 
               onClick={() => setCategory("skill")}
-              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
                 <h3 className="text-xl font-black text-slate-900 mb-1">Offer a Skill</h3>
@@ -88,7 +90,7 @@ export default function AddPage() {
             {/* Deal Option */}
             <button 
               onClick={() => setCategory("deal")}
-              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
                 <h3 className="text-xl font-black text-slate-900 mb-1">Start Group Buy</h3>
@@ -103,7 +105,7 @@ export default function AddPage() {
             {/* Event Option */}
             <button 
               onClick={() => setCategory("event")}
-              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
                 <h3 className="text-xl font-black text-slate-900 mb-1">Host an Event</h3>
@@ -117,7 +119,7 @@ export default function AddPage() {
             {/* Space Option */}
             <button 
               onClick={() => setCategory("space")}
-              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
                 <h3 className="text-xl font-black text-slate-900 mb-1">Share a Space</h3>
@@ -134,7 +136,7 @@ export default function AddPage() {
             {/* Co-Own Option */}
             <button 
               onClick={() => setCategory("coown")}
-              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
                 <h3 className="text-xl font-black text-slate-900 mb-1">Co-Own an Asset</h3>

@@ -58,7 +58,7 @@ export function BorrowCard({ id, name, ownerName, tower, condition, available, i
   };
 
   return (
-    <div className="w-full bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col gap-5 relative overflow-hidden group">
+    <div className="w-full bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col gap-5 relative overflow-hidden group">
       <div className="flex gap-4">
         <div className="w-16 h-16 shrink-0 bg-indigo-50 rounded-2xl flex items-center justify-center text-3xl">
           {imageFallback}

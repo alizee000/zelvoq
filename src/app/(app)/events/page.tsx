@@ -30,7 +30,7 @@ export default async function EventsPage() {
             <Link 
               href={`/events/${event.id}`} 
               key={event.id}
-              className="bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 flex flex-col gap-4 group hover:scale-[1.02] transition-transform"
+              className="bg-white rounded-[2rem] p-5 shadow-sm border border-slate-100 flex flex-col gap-4 group hover:scale-[1.02] transition-transform"
             >
               <div className="flex justify-between items-start">
                 <div>

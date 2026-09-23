@@ -60,24 +60,30 @@ export default async function MyProfilePage() {
   return (
     <div className="flex flex-col pb-32 relative min-h-screen bg-white animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
       {/* Header */}
-      <div className="flex items-center justify-between pt-10 px-6 pb-6">
-        <div>
-          <h1 className="text-[32px] font-extrabold tracking-tight text-slate-900 leading-tight">
-            Profile
-          </h1>
-          <p className="text-sm font-medium text-slate-500 mt-1">Manage your account and listings</p>
-        </div>
+      <div className="flex flex-col gap-6 px-6 pt-6 mb-6">
+        <section className="animate-in fade-in slide-in-from-top-4 duration-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                Profile
+              </h1>
+              <p className="text-sm text-slate-500 mt-1">
+                Manage your account and listings.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
 
 
       <div className="px-6 flex flex-col gap-6 max-w-4xl mx-auto w-full">
         {/* Profile Card */}
-        <div className="bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col items-center text-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-indigo-500 to-purple-600 opacity-90"></div>
+        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-32 bg-slate-50 border-b border-slate-100"></div>
           
           {/* INTERACTIVE AVATAR UPLOADER */}
           <div className="relative z-10 mt-10">
-            <div className="bg-white p-2 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+            <div className="bg-white p-2 rounded-[2rem] shadow-sm border border-slate-100">
               <AvatarUploader initialImage={currentImageUrl} />
             </div>
             <div className="absolute bottom-4 right-0 w-8 h-8 bg-indigo-600 rounded-full border-4 border-white flex items-center justify-center z-20 shadow-md">
@@ -99,7 +105,7 @@ export default async function MyProfilePage() {
       </div>
 
         {/* My Skills & Talents */}
-        <div className="bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col gap-4">
+        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col gap-4">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-black text-slate-900">My Listings</h3>
             <Link href="/add" className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 uppercase tracking-widest bg-indigo-50 px-4 py-2 rounded-full transition-colors">Add New</Link>

@@ -3,7 +3,7 @@
 import { MapPin, Calendar, Clock, HandHeart, MessageCircle, Send } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ActionModal } from "./action-modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DeleteButton } from "./delete-button";
 
 interface SpaceCardProps {
@@ -27,17 +27,32 @@ export function SpaceCard({ id, title, description, ownerName, location, availab
     { id: 1, sender: ownerName, text: "Hi! What dates do you need the space for?", time: "09:00 AM" }
   ]);
 
+
+  useEffect(() => {
+    const savedState = localStorage.getItem(`space_${id}`);
+    if (savedState === 'true') setIsRequested(true);
+    localStorage.setItem(`space_${id}`, 'true');
+    
+    const savedChat = localStorage.getItem(`space_chat_${id}`);
+    if (savedChat) {
+      try { setChatMessages(JSON.parse(savedChat)); } catch (e) {}
+    }
+  }, [id]);
   const handleRequest = async () => {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
     setIsRequested(true);
+    localStorage.setItem(`space_${id}`, 'true');
     setIsModalOpen(false);
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
-    setChatMessages([...chatMessages, { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" }]);
+    const newMsg = { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" };
+    const newMessages = [...chatMessages, newMsg];
+    setChatMessages(newMessages);
+    localStorage.setItem(`space_chat_${id}`, JSON.stringify(newMessages));
     setMessage("");
   };
 
@@ -135,7 +150,7 @@ export function SpaceCard({ id, title, description, ownerName, location, availab
         )}
 
         {isRequested && (
-          <button onClick={() => { setIsRequested(false); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Cancel Booking</button>
+          <button onClick={() => { setIsRequested(false); localStorage.removeItem(`space_${id}`); localStorage.removeItem(`space_chat_${id}`); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Cancel Booking</button>
         )}
       </div>
 

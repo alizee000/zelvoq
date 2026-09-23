@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Users, Coins, Sparkles, MessageCircle, Send } from "lucide-react";
 
 interface CoOwnCardProps {
@@ -37,9 +37,22 @@ export function CoOwnCard({
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
-    setChatMessages([...chatMessages, { id: Date.now(), sender: "You", text: message, time: "Just now" }]);
+    const newMsg = { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" };
+    const newMessages = [...chatMessages, newMsg];
+    setChatMessages(newMessages);
+    localStorage.setItem(`coown_chat_${id}`, JSON.stringify(newMessages));
     setMessage("");
   };
+
+  useEffect(() => {
+    const savedState = localStorage.getItem(`coown_${id}`);
+    if (savedState === 'true') setInvested(true);
+    
+    const savedChat = localStorage.getItem(`coown_chat_${id}`);
+    if (savedChat) {
+      try { setChatMessages(JSON.parse(savedChat)); } catch (e) {}
+    }
+  }, [id]);
   const progress = (fundedShares / maxShares) * 100;
   const isFullyFunded = fundedShares >= maxShares;
 
@@ -106,7 +119,7 @@ export function CoOwnCard({
            </button>
         ) : !invested ? (
            <button 
-             onClick={() => setInvested(true)}
+             onClick={() => { setInvested(true); localStorage.setItem(`coown_${id}`, 'true'); }}
              className="w-full py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all shadow-sm bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-md active:scale-[0.98]"
            >
              Claim a Share
@@ -164,7 +177,7 @@ export function CoOwnCard({
           </div>
         )}
         {invested && (
-           <button onClick={() => { setInvested(false); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full">Withdraw Share</button>
+           <button onClick={() => { setInvested(false); localStorage.removeItem(`coown_${id}`); localStorage.removeItem(`coown_chat_${id}`); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full">Withdraw Share</button>
         )}
       </div>
 

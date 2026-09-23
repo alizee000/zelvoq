@@ -3,7 +3,7 @@
 import { User, MapPin, HandHeart, MessageSquare, CheckCircle2, MessageCircle, Send } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ActionModal } from "./action-modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DeleteButton } from "./delete-button";
 
 interface BorrowCardProps {
@@ -28,17 +28,32 @@ export function BorrowCard({ id, name, ownerName, tower, condition, available, i
     { id: 1, sender: ownerName, text: "Hey! Let me know when you want to pick it up.", time: "10:00 AM" }
   ]);
 
+
+  useEffect(() => {
+    const savedState = localStorage.getItem(`borrow_${id}`);
+    if (savedState === 'true') setIsRequested(true);
+    localStorage.setItem(`borrow_${id}`, 'true');
+    
+    const savedChat = localStorage.getItem(`borrow_chat_${id}`);
+    if (savedChat) {
+      try { setChatMessages(JSON.parse(savedChat)); } catch (e) {}
+    }
+  }, [id]);
   const handleRequest = async () => {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
     setIsRequested(true);
+    localStorage.setItem(`borrow_${id}`, 'true');
     setIsModalOpen(false);
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
-    setChatMessages([...chatMessages, { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" }]);
+    const newMsg = { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" };
+    const newMessages = [...chatMessages, newMsg];
+    setChatMessages(newMessages);
+    localStorage.setItem(`borrow_chat_${id}`, JSON.stringify(newMessages));
     setMessage("");
   };
 
@@ -136,7 +151,7 @@ export function BorrowCard({ id, name, ownerName, tower, condition, available, i
         )}
 
         {isRequested && (
-          <button onClick={() => { setIsRequested(false); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Cancel Request</button>
+          <button onClick={() => { setIsRequested(false); localStorage.removeItem(`borrow_${id}`); localStorage.removeItem(`borrow_chat_${id}`); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Cancel Request</button>
         )}
       </div>
 

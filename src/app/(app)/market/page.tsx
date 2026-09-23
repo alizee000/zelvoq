@@ -84,6 +84,12 @@ export default async function MarketPage({
       <div className="px-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[200ms] fill-mode-both">
         {activeTab === "deals" ? (
           <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-black text-slate-900">Active Deals</h2>
+              <Link href="/add?type=deal" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform active:scale-95">
+                 <Plus className="w-5 h-5 text-white" />
+              </Link>
+            </div>
             {groupBuys.length > 0 ? (
               groupBuys.map((deal: any) => (
                 <GroupBuyCard 
@@ -155,6 +161,12 @@ export default async function MarketPage({
           </div>
         ) : activeTab === "borrow" ? (
           <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-black text-slate-900">Library Items</h2>
+              <Link href="/add?type=item" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform active:scale-95">
+                 <Plus className="w-5 h-5 text-white" />
+              </Link>
+            </div>
             {borrowItems.length > 0 ? (
               borrowItems.map((item: any) => (
                 <BorrowCard 
@@ -182,6 +194,12 @@ export default async function MarketPage({
           </div>
         ) : (
           <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-black text-slate-900">Available Spaces</h2>
+              <Link href="/add?type=space" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform active:scale-95">
+                 <Plus className="w-5 h-5 text-white" />
+              </Link>
+            </div>
              {spacesItems.length > 0 ? (
                spacesItems.map((item: any) => (
                  <SpaceCard 

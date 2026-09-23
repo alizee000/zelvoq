@@ -3,7 +3,7 @@
 import { Users, Clock, ArrowRight, ShoppingBag, MessageSquare, CheckCircle2, MessageCircle, Send } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ActionModal } from "./action-modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DeleteButton } from "./delete-button";
 
 interface GroupBuyCardProps {
@@ -34,17 +34,32 @@ export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantit
     { id: 2, sender: "Neighbor (Flat 505)", text: "Yes, the quality is excellent. Highly recommended.", time: "11:15 AM" }
   ]);
 
+
+  useEffect(() => {
+    const savedState = localStorage.getItem(`deal_${id}`);
+    if (savedState === 'true') setIsJoined(true);
+    localStorage.setItem(`deal_${id}`, 'true');
+    
+    const savedChat = localStorage.getItem(`deal_chat_${id}`);
+    if (savedChat) {
+      try { setChatMessages(JSON.parse(savedChat)); } catch (e) {}
+    }
+  }, [id]);
   const handleJoin = async () => {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
     setIsJoined(true);
+    localStorage.setItem(`deal_${id}`, 'true');
     setIsModalOpen(false);
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
-    setChatMessages([...chatMessages, { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" }]);
+    const newMsg = { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" };
+    const newMessages = [...chatMessages, newMsg];
+    setChatMessages(newMessages);
+    localStorage.setItem(`deal_chat_${id}`, JSON.stringify(newMessages));
     setMessage("");
   };
 
@@ -157,7 +172,7 @@ export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantit
         )}
 
         {isJoined && (
-          <button onClick={() => { setIsJoined(false); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Leave Group Buy</button>
+          <button onClick={() => { setIsJoined(false); localStorage.removeItem(`deal_${id}`); localStorage.removeItem(`deal_chat_${id}`); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Leave Group Buy</button>
         )}
       </div>
 

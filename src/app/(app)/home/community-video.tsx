@@ -1,7 +1,7 @@
 "use client";
 
 export function CommunityVideo() {
-  const videoUrl = "https://aqalfjxrzamtkrsxsvpe.supabase.co/storage/v1/object/public/video/gemini_generated_video_822701fb.mp4";
+  const videoUrl = "https://aqalfjxrzamtkrsxsvpe.supabase.co/storage/v1/object/public/video/gemini_generated_video_150cafde.mp4";
 
   return (
     <section className="animate-in fade-in zoom-in-95 duration-700 delay-75">

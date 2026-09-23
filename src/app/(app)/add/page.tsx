@@ -23,7 +23,7 @@ function TagsInput() {
 }
 
 export default function AddPage() {
-  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space" | "event" | null>(null);
+  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space" | "event" | "knock" | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 

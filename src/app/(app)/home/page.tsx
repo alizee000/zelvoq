@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search, Sparkles, Ticket, Activity, Camera, Coffee, ChevronRight } from "lucide-react";
 import { CommunityVideo } from "./community-video";
+import { DynamicGreeting } from "./dynamic-greeting";
+
 
 
 export default async function HomePage() {
@@ -53,9 +55,7 @@ export default async function HomePage() {
         
         {/* Header Section */}
         <section className="animate-in fade-in slide-in-from-top-4 duration-700">
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            ☀️ Good morning, {firstName}
-          </h1>
+          <DynamicGreeting firstName={firstName} />
           <p className="text-sm text-slate-500 mt-1">
             Your community is full of hidden talent.
           </p>

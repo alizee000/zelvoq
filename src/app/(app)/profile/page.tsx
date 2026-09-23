@@ -1,4 +1,4 @@
-import { User, Settings, Shield, Award, ChevronRight, LogOut, MapPin, Bell, Star } from "lucide-react";
+import { User, Settings, Shield, Award, ChevronRight, MapPin, Bell, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -7,7 +7,6 @@ import { KarmaRings } from "./karma-rings";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { logout } from "@/app/actions/auth";
 
 export default async function MyProfilePage() {
   const supabase = await createClient();
@@ -68,11 +67,6 @@ export default async function MyProfilePage() {
           </h1>
           <p className="text-sm font-medium text-slate-500 mt-1">Manage your account and listings</p>
         </div>
-        <form action={logout}>
-          <button type="submit" className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center hover:bg-slate-100 hover:scale-105 transition-all group">
-            <LogOut className="w-5 h-5 text-slate-400 group-hover:text-rose-500 transition-colors" />
-          </button>
-        </form>
       </div>
 
 

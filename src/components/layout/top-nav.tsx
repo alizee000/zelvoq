@@ -1,11 +1,13 @@
-import { Sparkles, User } from "lucide-react";
+import { Sparkles, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { getPollsForUser } from "@/lib/data/polls";
 import { NotificationsDropdown } from "./notifications-dropdown";
+import { TopNavMenu } from "./top-nav-menu";
 import { Logo } from "@/components/shared/logo";
+import { logout } from "@/app/actions/auth";
 
 export async function TopNav() {
   const supabase = await createClient();
@@ -41,6 +43,7 @@ export async function TopNav() {
       <div className="flex items-center gap-3">
         <NotificationsDropdown initialActive={activePolls} initialCompleted={completedPolls} />
         
+
         <Link href="/profile" className="relative group shrink-0">
           <div className="w-10 h-10 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform">
             {avatarUrl ? (
@@ -51,6 +54,7 @@ export async function TopNav() {
           </div>
           <div className="absolute top-0 right-0 w-3 h-3 bg-rose-500 border-2 border-white rounded-full"></div>
         </Link>
+        <TopNavMenu />
       </div>
     </header>
   );

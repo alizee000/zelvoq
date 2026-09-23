@@ -50,9 +50,6 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
           <h1 className="text-[32px] font-extrabold tracking-tight text-slate-900">
             Discover
           </h1>
-          <div className="w-10 h-10 bg-indigo-50 rounded-full flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-indigo-600" />
-          </div>
         </div>
 
         {/* Search Bar */}

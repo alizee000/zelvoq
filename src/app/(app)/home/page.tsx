@@ -157,7 +157,7 @@ export default async function HomePage() {
             </div>
           </Link>
 
-          <Link href="/market" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group">
+          <Link href="/market?tab=borrow" className="flex-1 bg-white rounded-[2rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md hover:scale-[1.02] transition-all flex items-center gap-4 group">
             <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0">
               <Wrench className="w-5 h-5 text-indigo-500" />
             </div>

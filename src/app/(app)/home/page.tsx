@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { LiveFeedClient } from "./live-feed-client";
+import { CommunityVideo } from "./community-video";
 import { KnockKnockRadar } from "./knock-knock-radar";
 import { getFeedPosts, getGroupBuys, getTalents } from "@/lib/data/fetchers";
 import { getPollsForUser } from "@/lib/data/polls";
@@ -96,6 +97,8 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col min-h-screen pb-[90px] relative bg-[#F8FAFC]">
       <div className="flex flex-col gap-6 px-6 pt-6 z-0">
+        
+        <CommunityVideo />
         
         {/* Impactful Typography Header */}
         <section className="pt-2 pb-2 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">

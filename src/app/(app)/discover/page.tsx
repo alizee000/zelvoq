@@ -8,7 +8,7 @@ export default async function DiscoverPage() {
   const skills = allTalents.filter((t: any) => t.category === 'skill');
 
   return (
-    <div className="flex flex-col min-h-full animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
+    <div className="flex flex-col min-h-full">
       <DiscoverClient skills={skills} />
       
       {/* CSS to hide scrollbar */}

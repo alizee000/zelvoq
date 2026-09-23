@@ -45,7 +45,7 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
     <div className="flex flex-col relative bg-white min-h-screen pb-32">
       
       {/* Page Header */}
-      <div className="pt-6 pb-4 px-6">
+      <div className="pt-6 pb-4 px-6 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-[32px] font-extrabold tracking-tight text-slate-900">
             Discover
@@ -53,7 +53,7 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
         </div>
 
         {/* Search Bar */}
-        <div className="relative group mb-6">
+        <div className="relative group mb-6 animate-in fade-in zoom-in-95 duration-700 delay-[100ms] fill-mode-both">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-slate-400" />
           </div>
@@ -70,7 +70,7 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
         </div>
 
         {/* Categories (Apple style pills) */}
-        <div className="flex overflow-x-auto gap-2 -mx-6 px-6 hide-scrollbar">
+        <div className="flex overflow-x-auto gap-2 -mx-6 px-6 hide-scrollbar animate-in fade-in slide-in-from-right-8 duration-700 delay-[200ms] fill-mode-both">
           {CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
@@ -91,7 +91,7 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
       </div>
 
       {/* Grid Content */}
-      <div className="px-6 pt-6">
+      <div className="px-6 pt-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[300ms] fill-mode-both">
         {uniqueNeighbors.length > 0 ? (
           <div className="grid grid-cols-2 gap-x-4 gap-y-8">
             {uniqueNeighbors.map((talent: any) => (

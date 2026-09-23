@@ -29,15 +29,15 @@ export default function AddPage() {
 
   if (!category) {
     return (
-      <div className="flex flex-col min-h-screen bg-white animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-32 pt-8">
+      <div className="flex flex-col min-h-screen bg-white pb-32 pt-8">
 
-        <div className="px-6 pt-6">
+        <div className="px-6 pt-6 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">
           <h1 className="text-3xl font-black tracking-tight text-slate-900 leading-tight mb-2">
             What would you like to list?
           </h1>
           <p className="text-slate-500 font-medium mb-10">Select a category to get started.</p>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[200ms] fill-mode-both">
             
             {/* Space Option */}
             <button 
@@ -152,7 +152,7 @@ export default function AddPage() {
       </header>
 
       {/* Form Area */}
-      <div className="px-6 mt-8">
+      <div className="px-6 mt-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[100ms] fill-mode-both">
         <form action={async (formData) => {
           setIsSubmitting(true);
           try {

@@ -27,10 +27,10 @@ export default async function MarketPage({
   const currentUserName = user?.user_metadata?.full_name || cookieStore.get("test_name")?.value || "Test Resident";
 
   return (
-    <div className="flex flex-col min-h-screen bg-white pb-32 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
+    <div className="flex flex-col min-h-screen bg-white pb-32">
       
       {/* Header */}
-      <div className="px-6 pt-10 pb-6">
+      <div className="px-6 pt-10 pb-6 animate-in fade-in slide-in-from-top-4 duration-700 delay-0 fill-mode-both">
         <h1 className="text-[32px] font-extrabold tracking-tight text-slate-900 leading-tight">
           Marketplace
         </h1>
@@ -38,7 +38,7 @@ export default async function MarketPage({
       </div>
 
       {/* iOS Segmented Control */}
-      <div className="px-6 mb-8">
+      <div className="px-6 mb-8 animate-in fade-in zoom-in-95 duration-700 delay-[100ms] fill-mode-both">
         <div className="bg-slate-100 p-1.5 rounded-full flex relative">
           <div 
             className="absolute top-1.5 bottom-1.5 w-[calc(33.333%-4px)] bg-white rounded-full shadow-sm transition-transform duration-300 ease-out"
@@ -72,7 +72,7 @@ export default async function MarketPage({
         </div>
       </div>
 
-      <div className="px-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div className="px-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[200ms] fill-mode-both">
         {activeTab === "deals" ? (
           <div className="flex flex-col gap-6">
             {groupBuys.length > 0 ? (

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, Sparkles, Ticket, Activity, Camera, Coffee, ChevronRight } from "lucide-react";
+import { CarouselWrapper } from "@/components/ui/carousel-wrapper";
 import { CommunityVideo } from "./community-video";
 import { DynamicGreeting } from "./dynamic-greeting";
 
@@ -50,8 +51,8 @@ export default async function HomePage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen pb-[90px] bg-white">
-      <div className="flex flex-col gap-6 px-6 pt-6">
+    <div className="flex flex-col min-h-screen pb-[90px] bg-white relative">
+      <div className="flex flex-col gap-6 px-6 pt-6 relative z-10">
         
         {/* Header Section */}
         <section className="animate-in fade-in slide-in-from-top-4 duration-700">
@@ -108,11 +109,11 @@ export default async function HomePage() {
           </div>
           
           
-          <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x hide-scrollbar">
+          <CarouselWrapper>
             {trendingItems.map((item, i) => {
               const Icon = item.icon;
               return (
-                <Link href={item.href} key={i} className={`flex-none w-[140px] ${item.bg} rounded-3xl p-5 snap-start shadow-sm hover:scale-[1.02] hover:shadow-md transition-all`}>
+                <Link href={item.href} key={i} style={{ animationDelay: `${150 + (i * 100)}ms`, animationFillMode: "both" }} className={`flex-none w-[140px] ${item.bg} rounded-3xl p-5 snap-start shadow-sm hover:scale-[1.05] transition-all duration-300 animate-in fade-in zoom-in-[0.8] slide-in-from-bottom-4`}>
                   <div className={`w-8 h-8 rounded-full ${item.iconBg} flex items-center justify-center mb-4 ${item.iconColor}`}>
                     <Icon className="w-4 h-4" />
                   </div>
@@ -121,7 +122,7 @@ export default async function HomePage() {
                 </Link>
               );
             })}
-          </div>
+          </CarouselWrapper>
         </section>
 
         {/* People you should know */}
@@ -131,7 +132,7 @@ export default async function HomePage() {
             <ChevronRight className="w-4 h-4 text-slate-400" />
           </div>
           
-          <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x hide-scrollbar">
+          <CarouselWrapper>
             {people.length > 0 ? people.map((person: any) => (
               <Link href={`/talent/${person.id}`} key={person.id} className="flex-none w-[120px] bg-white border border-slate-100 rounded-3xl p-4 flex flex-col items-center text-center snap-start shadow-sm hover:scale-[1.02] hover:border-indigo-100 transition-all cursor-pointer">
                 <div className="w-14 h-14 rounded-full overflow-hidden mb-3 bg-slate-100 border-2 border-white shadow-sm">
@@ -150,10 +151,11 @@ export default async function HomePage() {
             )) : (
               <div className="text-sm text-slate-500 p-4">No profiles found. Encourage your neighbors to join!</div>
             )}
-          </div>
+          </CarouselWrapper>
         </section>
 
       </div>
     </div>
   );
 }
+

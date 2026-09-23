@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Search, MapPin, Star, Sparkles, Filter } from "lucide-react";
+import { useState, useRef } from "react";
+import { Search, MapPin, Star, Sparkles, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -17,6 +17,15 @@ const CATEGORIES = [
 export function DiscoverClient({ skills }: { skills: any[] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = scrollRef.current.clientWidth * 0.8;
+      scrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    }
+  };
+
 
   const filteredSkills = skills.filter((skill) => {
     const matchesSearch = 
@@ -45,7 +54,7 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
       <div className="flex flex-col gap-6 px-6 pt-6">
         
         {/* Page Header */}
-        <section className="animate-in fade-in slide-in-from-top-4 duration-700">
+        <section className="">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
@@ -59,7 +68,7 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
         </section>
 
         {/* Search Bar */}
-        <section className="animate-in fade-in zoom-in-95 duration-700 delay-75">
+        <section className="">
           <div className="relative">
             <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-slate-400" />
@@ -75,7 +84,7 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
         </section>
 
         {/* Categories (Apple style pills) */}
-        <section className="animate-in fade-in slide-in-from-right-8 duration-700 delay-[200ms]">
+        <section className="">
           <div className="flex overflow-x-auto gap-2 pb-2 -mx-6 px-6 hide-scrollbar snap-x">
             {CATEGORIES.map((cat) => {
               const isSelected = selectedCategory === cat.id;
@@ -96,27 +105,51 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
           </div>
         </section>
 
-        {/* Grid Content */}
-        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[300ms]">
+        {/* Carousel Content */}
+        <section className="mt-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[200ms] fill-mode-both relative group">
           {uniqueNeighbors.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4">
-              {uniqueNeighbors.map((talent: any) => (
-                <Link href={`/talent/${talent.id}`} key={talent.id} className="flex-none bg-white border border-slate-100 rounded-3xl p-4 flex flex-col items-center text-center shadow-sm hover:scale-[1.02] hover:shadow-md hover:border-indigo-100 transition-all cursor-pointer">
-                  <div className="w-16 h-16 rounded-full overflow-hidden mb-3 bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center relative">
+            <>
+              <button 
+                onClick={() => scroll("left")}
+                className="absolute -left-4 top-[40%] -translate-y-1/2 z-10 w-10 h-10 bg-white/90 backdrop-blur rounded-full shadow-[0_4px_14px_rgba(0,0,0,0.1)] flex items-center justify-center text-slate-700 hover:text-indigo-600 hover:scale-110 border border-slate-100 opacity-0 md:group-hover:opacity-100 transition-all cursor-pointer"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              
+              <button 
+                onClick={() => scroll("right")}
+                className="absolute -right-4 top-[40%] -translate-y-1/2 z-10 w-10 h-10 bg-white/90 backdrop-blur rounded-full shadow-[0_4px_14px_rgba(0,0,0,0.1)] flex items-center justify-center text-slate-700 hover:text-indigo-600 hover:scale-110 border border-slate-100 opacity-0 md:group-hover:opacity-100 transition-all cursor-pointer"
+                aria-label="Scroll right"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+
+              <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-6 -mx-6 px-6 snap-x hide-scrollbar scroll-smooth">
+              {uniqueNeighbors.map((talent: any, i: number) => (
+                <Link 
+                  href={`/talent/${talent.id}`} 
+                  key={talent.id} 
+                  className="flex-none w-[42vw] md:w-[200px] bg-white border border-slate-100 rounded-3xl p-5 flex flex-col items-center text-center snap-start shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_10px_25px_rgba(0,0,0,0.06)] hover:-translate-y-1 hover:border-indigo-100 transition-all cursor-pointer"
+                >
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden mb-4 bg-slate-100 border-4 border-white shadow-sm shrink-0">
                     {talent.image_url ? (
                       <Image src={talent.image_url} alt={talent.owner_name} fill className="object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-2xl font-bold bg-indigo-50 text-indigo-300">
-                        {talent.owner_name?.charAt(0) || '?'}
+                      <div className="w-full h-full flex items-center justify-center text-2xl bg-indigo-50">
+                        👤
                       </div>
                     )}
                   </div>
-                  <h4 className="text-sm font-bold text-slate-900 line-clamp-1 w-full">{talent.owner_name}</h4>
-                  <p className="text-[10px] text-slate-500 line-clamp-1 w-full mt-0.5 font-medium">{talent.title}</p>
-                  <p className="text-[9px] text-slate-400 line-clamp-1 w-full mt-1 uppercase tracking-wider">{talent.tower || "Resident"}</p>
+                  <h3 className="text-base font-bold text-slate-900 w-full leading-tight">{talent.owner_name}</h3>
+                  <p className="text-[13px] text-slate-500 w-full mt-1.5 font-medium leading-relaxed">{talent.title}</p>
+                  <div className="mt-auto pt-3 w-full">
+                    <p className="text-[10px] text-slate-400 w-full uppercase tracking-wider font-bold">{talent.tower || "Resident"}</p>
+                  </div>
                 </Link>
               ))}
             </div>
+            </>
           ) : (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
@@ -129,6 +162,9 @@ export function DiscoverClient({ skills }: { skills: any[] }) {
         </section>
 
       </div>
-    </div>
+
+      </div>
   );
 }
+
+

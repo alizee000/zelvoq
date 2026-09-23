@@ -5,7 +5,7 @@ import { User, Camera, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { uploadProfilePic } from "@/app/actions/profile";
 
-export function AvatarUploader({ initialImage }: { initialImage?: string }) {
+export function AvatarUploader({ initialImage, ownerName }: { initialImage?: string, ownerName?: string }) {
   const [isUploading, setIsUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialImage);
 
@@ -33,6 +33,8 @@ export function AvatarUploader({ initialImage }: { initialImage?: string }) {
     <div className="relative w-24 h-24 rounded-full bg-indigo-50 border-4 border-white shadow-sm flex items-center justify-center text-3xl font-bold text-indigo-500 group cursor-pointer overflow-hidden">
       {imageUrl ? (
         <Image src={imageUrl} alt="Profile" fill className="object-cover" />
+      ) : ownerName ? (
+        <span className="uppercase text-4xl text-indigo-400 font-black">{ownerName.charAt(0)}</span>
       ) : (
         <User className="w-10 h-10" />
       )}

@@ -25,7 +25,7 @@ export default async function HomePage() {
   const feedPosts = await getFeedPosts();
   const groupBuys = await getGroupBuys();
   const talents = await getTalents();
-  const borrowItems = talents.filter((t: any) => t.category === "lend");
+  const borrowItems = talents.filter((t: any) => t.category === "lend" || t.category === "item");
   
   // Real weather fetch
   let temp = "24°C";

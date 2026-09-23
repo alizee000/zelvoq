@@ -88,7 +88,7 @@ export default async function HomePage() {
             </div>
             <div className="relative z-10 w-[65%]">
               <div className="inline-flex items-center gap-1 text-[#D97706] bg-[#FEF3C7] px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-3">
-                <Sparkles className="w-3 h-3" /> Hidden Gem
+                Hidden Gem
               </div>
               <h2 className="text-xl font-bold text-slate-900 mb-2 line-clamp-1">{gemTalent ? `Meet ${gemTalent.owner_name.split(' ')[0]}` : "Meet Ayesha"}</h2>
               <p className="text-xs text-slate-700 mb-4 leading-relaxed line-clamp-3">

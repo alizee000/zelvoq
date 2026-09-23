@@ -54,9 +54,9 @@ export function NotificationsDropdown({
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-12 right-0 w-80 bg-white rounded-3xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
-            <div className="p-4 border-b border-slate-100 bg-slate-50/50">
-              <h3 className="font-extrabold text-slate-900">Notifications</h3>
+          <div className="absolute top-12 right-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
+            <div className="p-3 border-b border-slate-100 bg-slate-50/50">
+              <h3 className="font-bold text-sm text-slate-900">Notifications</h3>
               <p className="text-xs font-medium text-slate-500">Community decisions & alerts</p>
             </div>
             
@@ -68,7 +68,7 @@ export function NotificationsDropdown({
               ) : (
                 <div className="flex flex-col">
                   {activePolls.map((poll) => (
-                    <div key={poll.id} className="p-4 border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                    <div key={poll.id} className="p-3 border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[9px] font-bold uppercase tracking-widest rounded">Action Required</span>
                       </div>
@@ -97,7 +97,7 @@ export function NotificationsDropdown({
 
               {/* Past Decisions Section */}
               {initialCompleted.length > 0 && (
-                <div className="p-4 bg-slate-50 border-t border-slate-100">
+                <div className="p-3 bg-slate-50 border-t border-slate-100">
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Past Decisions</h4>
                   <div className="flex flex-col gap-3">
                     {initialCompleted.map((poll) => (

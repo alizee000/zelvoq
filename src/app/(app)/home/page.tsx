@@ -33,7 +33,7 @@ export default async function HomePage() {
   let temp = "24°C";
   let weatherCondition = "Clear";
   try {
-    const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=25.2048&longitude=55.2708&current_weather=true", { next: { revalidate: 3600 } });
+    const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=12.9081&longitude=77.6476&current_weather=true", { next: { revalidate: 3600 } });
     if (res.ok) {
       const weatherData = await res.json();
       temp = `${Math.round(weatherData.current_weather.temperature)}°C`;

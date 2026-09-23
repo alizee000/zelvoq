@@ -20,7 +20,14 @@ export default async function HomePage() {
   }
 
   const allTalents = await getTalents();
-  const people = allTalents.filter((t: any) => t.category === "skill" || t.category === "service").slice(0, 5);
+  const allPeople = allTalents.filter((t: any) => t.category === "skill" || t.category === "service");
+  const uniquePeopleMap = new Map();
+  allPeople.forEach((t: any) => {
+    if (!uniquePeopleMap.has(t.owner_name)) {
+      uniquePeopleMap.set(t.owner_name, t);
+    }
+  });
+  const people = Array.from(uniquePeopleMap.values()).slice(0, 5);
 
 
   // Dynamic Trending Data

@@ -1,8 +1,13 @@
-import { MapPin, Calendar } from "lucide-react";
+"use client";
+
+import { MapPin, Calendar, Clock, HandHeart, MessageCircle, Send } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ActionModal } from "./action-modal";
+import { useState } from "react";
 import { DeleteButton } from "./delete-button";
 
 interface SpaceCardProps {
-  id?: string;
+  id: string;
   title: string;
   description: string;
   ownerName: string;
@@ -14,44 +19,139 @@ interface SpaceCardProps {
 }
 
 export function SpaceCard({ id, title, description, ownerName, location, availability, price, imageUrl, currentUserName }: SpaceCardProps) {
-  return (
-    <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden group hover:scale-[1.01] transition-transform relative">
-      {id && (currentUserName === ownerName || currentUserName === "Koodu") ? (
-        <DeleteButton id={id} type="talent" />
-      ) : null}
-      <div className="relative h-48 w-full bg-slate-200">
-        <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
-        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900">{price}</span>
-        </div>
-      </div>
-      <div className="p-5">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-xl font-black text-slate-900 leading-tight">{title}</h3>
-        </div>
-        <p className="text-sm text-slate-500 font-medium leading-relaxed mb-4 line-clamp-2">{description}</p>
-        
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
-            <MapPin className="w-3.5 h-3.5 text-indigo-500" />
-            {location}
-          </div>
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
-            <Calendar className="w-3.5 h-3.5 text-orange-500" />
-            {availability}
-          </div>
-        </div>
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRequested, setIsRequested] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const [message, setMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    { id: 1, sender: ownerName, text: "Hi! What dates do you need the space for?", time: "09:00 AM" }
+  ]);
 
-        <div className="mt-5 flex gap-2">
-          <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-3 rounded-xl transition-colors">
-            Request Space
-          </button>
-          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50" />
-            <span className="relative z-10 text-[10px] font-black text-slate-400">{ownerName.substring(0,2).toUpperCase()}</span>
-          </div>
+  const handleRequest = async () => {
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    setIsRequested(true);
+    setIsModalOpen(false);
+  };
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    setChatMessages([...chatMessages, { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" }]);
+    setMessage("");
+  };
+
+  return (
+    <div className="w-full bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col gap-5 relative overflow-hidden group">
+      {/* Top Image & Info */}
+      <div className="flex gap-4">
+        <div className="w-20 h-20 shrink-0 rounded-2xl overflow-hidden relative shadow-sm">
+          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+        </div>
+        <div className="flex-1 flex flex-col justify-center py-1">
+          <span className="text-[10px] text-indigo-500 uppercase tracking-widest font-bold mb-1 flex items-center gap-1">
+            <MapPin className="w-3 h-3" /> {location}
+          </span>
+          <h3 className="font-black text-lg text-slate-900 leading-tight mb-1">{title}</h3>
+          <p className="text-xs font-medium text-slate-400">By {ownerName}</p>
         </div>
       </div>
+      
+      <p className="text-xs text-slate-500 leading-relaxed whitespace-pre-wrap">{description}</p>
+      
+      {/* Status Bar */}
+      <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 space-y-3">
+        <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+          <span className="text-emerald-600 flex items-center gap-1">
+            <Calendar className="w-3.5 h-3.5" />
+            {availability}
+          </span>
+          <span className={price === "Free" ? "text-indigo-500" : "text-amber-500"}>
+            {price}
+          </span>
+        </div>
+      </div>
+
+      {/* Action Button & Chat */}
+      <div className="mt-2 flex flex-col gap-3">
+        {!isRequested ? (
+           <button 
+             onClick={() => setIsModalOpen(true)}
+             className="w-full py-4 rounded-xl font-bold text-sm tracking-wide transition-all shadow-sm bg-slate-900 text-white hover:bg-slate-800 hover:shadow-md active:scale-[0.98]"
+           >
+             Request to Book
+           </button>
+        ) : (
+           <button 
+             onClick={() => setShowChat(!showChat)}
+             className={`w-full py-4 rounded-xl font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 ${
+               showChat 
+                 ? 'bg-slate-100 text-slate-600' 
+                 : 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
+             }`}
+           >
+             <MessageCircle className="w-4 h-4" /> 
+             {showChat ? 'Close Chat' : `Chat with ${ownerName.split(' ')[0]} 🎉`}
+           </button>
+        )}
+
+        {/* Expandable Chat UI */}
+        {showChat && (
+          <div className="mt-2 bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden animate-in slide-in-from-top-2 fade-in duration-300">
+            <div className="bg-white px-4 py-3 border-b border-slate-100 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-bold text-slate-700">Direct Message with {ownerName}</span>
+            </div>
+            
+            <div className="p-4 h-48 overflow-y-auto flex flex-col gap-3">
+              {chatMessages.map(msg => (
+                <div key={msg.id} className={`flex flex-col ${msg.sender === currentUserName || msg.sender === 'You' ? 'items-end' : 'items-start'}`}>
+                  <span className="text-[10px] font-bold text-slate-400 mb-0.5">{msg.sender}</span>
+                  <div className={`px-3 py-2 rounded-2xl text-sm ${msg.sender === currentUserName || msg.sender === 'You' ? 'bg-indigo-600 text-white rounded-br-sm' : 'bg-white border border-slate-200 text-slate-700 rounded-bl-sm shadow-sm'}`}>
+                    {msg.text}
+                  </div>
+                  <span className="text-[9px] text-slate-400 mt-0.5">{msg.time}</span>
+                </div>
+              ))}
+            </div>
+
+            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
+              <input 
+                type="text" 
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Message owner..."
+                className="flex-1 bg-slate-50 border-transparent rounded-full px-4 py-2 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              />
+              <button 
+                type="submit" 
+                disabled={!message.trim()}
+                className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white shrink-0 disabled:opacity-50 disabled:bg-slate-300 transition-colors"
+              >
+                <Send className="w-3.5 h-3.5 ml-0.5" />
+              </button>
+            </form>
+          </div>
+        )}
+
+        {isRequested && (
+          <button onClick={() => { setIsRequested(false); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Cancel Booking</button>
+        )}
+      </div>
+
+      <ActionModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleRequest}
+        title={`Book ${title}?`}
+        description={
+          <>
+            You are requesting to book <strong>{title}</strong> from <strong>{ownerName}</strong>. They will review your request.
+          </>
+        }
+        confirmText="Send Request"
+        icon={<HandHeart className="w-6 h-6" />}
+      />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ArrowLeft, MapPin, Calendar as CalIcon, Users, Send } from "lucide-react";
 import Link from "next/link";
 
-import { joinEvent, sendEventMessage } from "@/app/actions/events";
+import { joinEvent, leaveEvent, sendEventMessage } from "@/app/actions/events";
 import { cookies } from "next/headers";
 
 export default async function EventDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -57,6 +57,20 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
             </button>
           </form>
         )}
+        
+        {hasJoined && (
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-sm font-bold text-emerald-600">You are attending! 🎉</span>
+            <form action={async () => {
+              "use server";
+              await leaveEvent(eventId);
+            }}>
+              <button className="text-xs font-bold text-rose-500 hover:text-rose-600 transition-colors">
+                Leave Event
+              </button>
+            </form>
+          </div>
+        )}
       </div>
 
       {/* Chat Area */}
@@ -80,6 +94,20 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
               </div>
             ))
           )
+        )}
+        
+        {hasJoined && (
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-sm font-bold text-emerald-600">You are attending! 🎉</span>
+            <form action={async () => {
+              "use server";
+              await leaveEvent(eventId);
+            }}>
+              <button className="text-xs font-bold text-rose-500 hover:text-rose-600 transition-colors">
+                Leave Event
+              </button>
+            </form>
+          </div>
         )}
       </div>
 

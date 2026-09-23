@@ -67,16 +67,17 @@ export default async function HomePage() {
 
         {/* Search Bar */}
         <section className="animate-in fade-in zoom-in-95 duration-700 delay-75">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-slate-400" />
-            </div>
+          <form action="/discover" className="relative block group">
+            <button type="submit" className="absolute inset-y-0 left-4 flex items-center cursor-pointer z-10 hover:scale-110 transition-transform">
+              <Search className="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+            </button>
             <input 
-              type="text" 
+              type="text"
+              name="q" 
               placeholder="What are you looking for?" 
-              className="w-full bg-slate-50 border-none rounded-full py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full bg-slate-50 border-none rounded-full py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500/20 shadow-sm"
             />
-          </div>
+          </form>
         </section>
 
         {/* Hidden Gem Hero */}

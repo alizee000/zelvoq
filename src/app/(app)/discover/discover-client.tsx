@@ -14,8 +14,8 @@ const CATEGORIES = [
   { name: "💻 Tech", id: "tech" },
 ];
 
-export function DiscoverClient({ skills }: { skills: any[] }) {
-  const [searchQuery, setSearchQuery] = useState("");
+export function DiscoverClient({ skills, initialQuery = "" }: { skills: any[], initialQuery?: string }) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const scrollRef = useRef<HTMLDivElement>(null);

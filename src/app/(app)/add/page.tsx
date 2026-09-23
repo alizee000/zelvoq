@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront, Calendar, BellRing } from "lucide-react";
+import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront, PieChart, Calendar, BellRing } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { addTalent } from "@/app/actions/talents";
 import { addGroupBuy } from "@/app/actions/group-buys";
 import { createEvent } from "@/app/actions/events";
 import { createKnockKnock } from "@/app/actions/knock-knocks";
+import { createCoOwnItem } from "@/app/actions/co-own";
 
 function TagsInput() {
   return (
@@ -23,7 +24,9 @@ function TagsInput() {
 }
 
 export default function AddPage() {
-  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space" | "event" | "knock" | null>(null);
+  const searchParams = useSearchParams();
+  const initialType = searchParams.get("type") as "skill" | "item" | "deal" | "space" | "event" | "knock" | "coown" | null;
+  const [category, setCategory] = useState<"skill" | "item" | "deal" | "space" | "event" | "knock" | "coown" | null>(initialType);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -38,36 +41,19 @@ export default function AddPage() {
           <p className="text-slate-500 font-medium mb-10">Select a category to get started.</p>
 
           <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[200ms] fill-mode-both">
-            
-            {/* Space Option */}
+            {/* Knock-Knock Option */}
             <button 
-              onClick={() => setCategory("space")}
-              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              onClick={() => setCategory("knock")}
+              className="w-full text-left bg-gradient-to-br from-rose-500 to-pink-500 rounded-3xl p-6 shadow-[0_8px_30px_rgba(244,63,94,0.3)] relative overflow-hidden flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
-                <h3 className="text-xl font-black text-slate-900 mb-1">Share a Space</h3>
-                <p className="text-sm text-slate-500 font-medium">Rent out your parking spot or room</p>
+                <h3 className="text-xl font-black text-white mb-1">Knock-Knock SOS</h3>
+                <p className="text-sm text-white/80 font-medium">Ask neighbors for a quick favor</p>
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(99,102,241,0.2)]">
-                <CarFront className="w-7 h-7" />
-              </div>
-            </button>
-
-
-            {/* Deal Option */}
-            <button 
-              onClick={() => setCategory("deal")}
-              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
-            >
-              <div>
-                <h3 className="text-xl font-black text-slate-900 mb-1">Start Group Buy</h3>
-                <p className="text-sm text-slate-500 font-medium">Unlock bulk discounts together</p>
-              </div>
-              <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(249,115,22,0.2)]">
-                <ShoppingBag className="w-7 h-7" />
+              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform">
+                <BellRing className="w-7 h-7" />
               </div>
             </button>
-
 
             {/* Item Option */}
             <button 
@@ -99,6 +85,21 @@ export default function AddPage() {
             </button>
 
 
+            {/* Deal Option */}
+            <button 
+              onClick={() => setCategory("deal")}
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+            >
+              <div>
+                <h3 className="text-xl font-black text-slate-900 mb-1">Start Group Buy</h3>
+                <p className="text-sm text-slate-500 font-medium">Unlock bulk discounts together</p>
+              </div>
+              <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+                <ShoppingBag className="w-7 h-7" />
+              </div>
+            </button>
+
+
             {/* Event Option */}
             <button 
               onClick={() => setCategory("event")}
@@ -113,17 +114,34 @@ export default function AddPage() {
               </div>
             </button>
 
-            {/* Knock-Knock Option */}
+            {/* Space Option */}
             <button 
-              onClick={() => setCategory("knock")}
-              className="w-full text-left bg-gradient-to-br from-rose-500 to-pink-500 rounded-3xl p-6 shadow-[0_8px_30px_rgba(244,63,94,0.3)] relative overflow-hidden flex items-center justify-between group hover:scale-[1.01] transition-transform"
+              onClick={() => setCategory("space")}
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
             >
               <div>
-                <h3 className="text-xl font-black text-white mb-1">Knock-Knock SOS</h3>
-                <p className="text-sm text-white/80 font-medium">Ask neighbors for a quick favor</p>
+                <h3 className="text-xl font-black text-slate-900 mb-1">Share a Space</h3>
+                <p className="text-sm text-slate-500 font-medium">Rent out your parking spot or room</p>
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform">
-                <BellRing className="w-7 h-7" />
+              <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                <CarFront className="w-7 h-7" />
+              </div>
+            </button>
+
+
+
+
+            {/* Co-Own Option */}
+            <button 
+              onClick={() => setCategory("coown")}
+              className="w-full text-left bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden border border-slate-100 flex items-center justify-between group hover:scale-[1.01] transition-transform"
+            >
+              <div>
+                <h3 className="text-xl font-black text-slate-900 mb-1">Co-Own an Asset</h3>
+                <p className="text-sm text-slate-500 font-medium">Pool money to buy a drone or PS5</p>
+              </div>
+              <div className="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(20,184,166,0.2)]">
+                <PieChart className="w-7 h-7" />
               </div>
             </button>
 
@@ -167,6 +185,9 @@ export default function AddPage() {
             } else if (category === "knock") {
               const res = await createKnockKnock(formData.get("title") as string);
               if (res.success) router.push("/home");
+                        } else if (category === "coown") {
+              const res = await createCoOwnItem(formData);
+              if (res.success) router.push("/market?tab=coown");
             } else {
               const res = await addTalent(formData);
               if (res.success) router.push(category === "skill" ? "/discover" : category === "space" ? "/market?tab=spaces" : "/market?tab=borrow");
@@ -183,7 +204,7 @@ export default function AddPage() {
             <input 
               name="title" 
               required 
-              placeholder={category === 'skill' ? "e.g., Mathematics Tutoring" : category === 'item' ? "e.g., Bosch Power Drill" : category === 'space' ? "e.g., Covered Parking Basement 1" : category === 'event' ? "e.g., Weekend Badminton Tournament" : category === 'knock' ? "e.g., Need 2 eggs urgently!" : "e.g., Farm Fresh Mangoes"} 
+              placeholder={category === 'skill' ? "e.g., Mathematics Tutoring" : category === 'item' ? "e.g., Bosch Power Drill" : category === 'space' ? "e.g., Covered Parking Basement 1" : category === 'event' ? "e.g., Weekend Badminton Tournament" : category === 'knock' ? "e.g., Need 2 eggs urgently!" : category === 'coown' ? "e.g., DJI Mini 4 Pro Drone" : "e.g., Farm Fresh Mangoes"} 
               className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all"
             />
           </div>
@@ -199,6 +220,26 @@ export default function AddPage() {
               className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all resize-none"
             />
           </div>
+          )}
+
+
+          {category === 'coown' && (
+            <>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Total Price</label>
+                <input name="total_price" type="number" required placeholder="₹50000" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Max Shares</label>
+                  <input name="max_shares" type="number" required placeholder="10" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Price per Share</label>
+                  <input name="price_per_share" type="number" required placeholder="₹5000" className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/20" />
+                </div>
+              </div>
+            </>
           )}
 
           {category === 'deal' ? (

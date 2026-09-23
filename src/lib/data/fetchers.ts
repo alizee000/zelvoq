@@ -67,3 +67,19 @@ export async function getFeedPosts() {
 
   return data;
 }
+
+
+export async function getCoOwnItems() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('co_own_items')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching co-own items:', error);
+    return [];
+  }
+
+  return data || [];
+}

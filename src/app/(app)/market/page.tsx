@@ -147,6 +147,7 @@ export default async function MarketPage({
                   pricePerShare={item.price_per_share}
                   fundedShares={item.funded_shares}
                   status={item.status}
+                  currentUserName={currentUserName}
                 />
               ))
             ) : (

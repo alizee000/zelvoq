@@ -13,6 +13,7 @@ interface CoOwnCardProps {
   pricePerShare: number;
   fundedShares: number;
   status: string;
+  currentUserName?: string;
 }
 
 export function CoOwnCard({

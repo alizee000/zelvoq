@@ -26,6 +26,7 @@ export function CoOwnCard({
   pricePerShare,
   fundedShares,
   status,
+  currentUserName,
 }: CoOwnCardProps) {
   const [invested, setInvested] = useState(false);
   const [showChat, setShowChat] = useState(false);

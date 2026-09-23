@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront, Calendar } from "lucide-react";
+import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront, Calendar, BellRing } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { addTalent } from "@/app/actions/talents";
 import { addGroupBuy } from "@/app/actions/group-buys";
 import { createEvent } from "@/app/actions/events";
+import { createKnockKnock } from "@/app/actions/knock-knocks";
 
 function TagsInput() {
   return (
@@ -52,6 +53,7 @@ export default function AddPage() {
               </div>
             </button>
 
+
             {/* Deal Option */}
             <button 
               onClick={() => setCategory("deal")}
@@ -65,6 +67,7 @@ export default function AddPage() {
                 <ShoppingBag className="w-7 h-7" />
               </div>
             </button>
+
 
             {/* Item Option */}
             <button 
@@ -80,6 +83,7 @@ export default function AddPage() {
               </div>
             </button>
 
+
             {/* Skill Option */}
             <button 
               onClick={() => setCategory("skill")}
@@ -94,6 +98,7 @@ export default function AddPage() {
               </div>
             </button>
 
+
             {/* Event Option */}
             <button 
               onClick={() => setCategory("event")}
@@ -105,6 +110,20 @@ export default function AddPage() {
               </div>
               <div className="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(244,63,94,0.2)]">
                 <Calendar className="w-7 h-7" />
+              </div>
+            </button>
+
+            {/* Knock-Knock Option */}
+            <button 
+              onClick={() => setCategory("knock")}
+              className="w-full text-left bg-gradient-to-br from-rose-500 to-pink-500 rounded-3xl p-6 shadow-[0_8px_30px_rgba(244,63,94,0.3)] relative overflow-hidden flex items-center justify-between group hover:scale-[1.01] transition-transform"
+            >
+              <div>
+                <h3 className="text-xl font-black text-white mb-1">Knock-Knock SOS</h3>
+                <p className="text-sm text-white/80 font-medium">Ask neighbors for a quick favor</p>
+              </div>
+              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform">
+                <BellRing className="w-7 h-7" />
               </div>
             </button>
 
@@ -125,8 +144,9 @@ export default function AddPage() {
         >
           <ArrowLeft className="w-5 h-5 text-slate-700" />
         </button>
+
         <h1 className="text-lg font-black tracking-tight text-slate-900">
-          {category === 'space' ? 'New Space' : category === 'deal' ? 'New Group Buy' : category === 'item' ? 'Lend Item' : category === 'event' ? 'Host Event' : 'Offer Skill'}
+          {category === 'space' ? 'New Space' : category === 'deal' ? 'New Group Buy' : category === 'item' ? 'Lend Item' : category === 'event' ? 'Host Event' : category === 'knock' ? 'Ask a Favor' : 'Offer Skill'}
         </h1>
         <div className="w-10 h-10" />
       </header>
@@ -144,6 +164,9 @@ export default function AddPage() {
             } else if (category === "event") {
               const res = await createEvent(formData);
               if (res.success) router.push("/events/" + res.id);
+            } else if (category === "knock") {
+              const res = await createKnockKnock(formData.get("title") as string);
+              if (res.success) router.push("/home");
             } else {
               const res = await addTalent(formData);
               if (res.success) router.push(category === "skill" ? "/discover" : category === "space" ? "/market?tab=spaces" : "/market?tab=borrow");
@@ -160,11 +183,12 @@ export default function AddPage() {
             <input 
               name="title" 
               required 
-              placeholder={category === 'skill' ? "e.g., Mathematics Tutoring" : category === 'item' ? "e.g., Bosch Power Drill" : category === 'space' ? "e.g., Covered Parking Basement 1" : category === 'event' ? "e.g., Weekend Badminton Tournament" : "e.g., Farm Fresh Mangoes"} 
+              placeholder={category === 'skill' ? "e.g., Mathematics Tutoring" : category === 'item' ? "e.g., Bosch Power Drill" : category === 'space' ? "e.g., Covered Parking Basement 1" : category === 'event' ? "e.g., Weekend Badminton Tournament" : category === 'knock' ? "e.g., Need 2 eggs urgently!" : "e.g., Farm Fresh Mangoes"} 
               className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all"
             />
           </div>
 
+          {category !== 'knock' && (
           <div className="space-y-1.5">
             <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Description</label>
             <textarea 
@@ -175,6 +199,7 @@ export default function AddPage() {
               className="w-full bg-slate-50 border-transparent rounded-2xl px-5 py-4 text-[15px] font-medium placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all resize-none"
             />
           </div>
+          )}
 
           {category === 'deal' ? (
             <>
@@ -208,6 +233,7 @@ export default function AddPage() {
             <>
               {category === 'skill' && <TagsInput />}
               
+              {category !== 'knock' && (
               <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                 <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center shrink-0">
                   <HeartHandshake className="w-5 h-5 text-indigo-500" />
@@ -221,10 +247,11 @@ export default function AddPage() {
                   <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                 </label>
               </div>
+              )}
             </>
           )}
 
-          {category !== 'skill' && (
+          {category !== 'skill' && category !== 'knock' && (
             <div className="space-y-1.5">
               <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Cover Photo</label>
               <div className="w-full h-32 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-slate-400 group cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-colors relative overflow-hidden">
@@ -242,6 +269,7 @@ export default function AddPage() {
           >
             {isSubmitting ? "Publishing..." : <><Sparkles className="w-4 h-4" /> Publish Listing</>}
           </button>
+
         </form>
       </div>
     </div>

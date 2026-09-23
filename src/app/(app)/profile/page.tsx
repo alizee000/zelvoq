@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { AvatarUploader } from "@/components/shared/avatar-uploader";
+import { KarmaRings } from "./karma-rings";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
@@ -49,6 +50,14 @@ export default async function MyProfilePage() {
     .eq("owner_name", ownerName)
     .order("created_at", { ascending: false });
 
+  // Calculate Karma
+  const { count: lendCount } = await supabase.from("talents").select("*", { count: 'exact', head: true }).eq("owner_name", ownerName).in("category", ["item", "lend"]);
+  const { count: groupBuysCount } = await supabase.from("group_buys").select("*", { count: 'exact', head: true }).eq("owner_name", ownerName);
+  const { count: eventsCount } = await supabase.from("events").select("*", { count: 'exact', head: true }).eq("owner_name", ownerName);
+  const { count: helpCount } = await supabase.from("knock_knocks").select("*", { count: 'exact', head: true }).eq("resolved_by", ownerName);
+  
+  const hostCount = (groupBuysCount || 0) + (eventsCount || 0);
+
   return (
     <div className="flex flex-col pb-32 relative min-h-screen bg-white animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
       {/* Header */}
@@ -65,6 +74,7 @@ export default async function MyProfilePage() {
           </button>
         </form>
       </div>
+
 
       <div className="px-6 flex flex-col gap-6 max-w-4xl mx-auto w-full">
         {/* Profile Card */}
@@ -89,6 +99,10 @@ export default async function MyProfilePage() {
             <span className="text-[13px] font-bold text-slate-700">Level 3 Neighbor</span>
           </div>
         </div>
+
+      <div>
+        <KarmaRings lendCount={lendCount || 0} hostCount={hostCount} helpCount={helpCount || 0} />
+      </div>
 
         {/* My Skills & Talents */}
         <div className="bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col gap-4">

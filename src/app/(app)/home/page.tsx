@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { LiveFeedClient } from "./live-feed-client";
+import { KnockKnockRadar } from "./knock-knock-radar";
 import { getFeedPosts, getGroupBuys, getTalents } from "@/lib/data/fetchers";
 import { getPollsForUser } from "@/lib/data/polls";
 import { CloudSun, Zap, ShoppingBag, Target, ArrowRight, Flame, Wrench, MapPin, Calendar, Plus } from "lucide-react";
@@ -25,6 +26,7 @@ export default async function HomePage() {
   const feedPosts = await getFeedPosts();
   const groupBuys = await getGroupBuys();
   const talents = await getTalents();
+  const { data: activeKnockKnocks } = await supabase.from("knock_knocks").select("*").eq("status", "active").order("created_at", { ascending: false });
   const borrowItems = talents.filter((t: any) => t.category === "lend" || t.category === "item");
   
   // Real weather fetch
@@ -144,6 +146,8 @@ export default async function HomePage() {
             </div>
           </Link>
         </section>
+
+        <KnockKnockRadar knockKnocks={activeKnockKnocks || []} />
 
         {/* Modern Action Pills */}
         <section className="grid grid-cols-2 gap-4">

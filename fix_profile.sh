@@ -1,0 +1,1 @@
+sed -i '' 's|import { AvatarUploader } from "@/components/shared/avatar-uploader";|import { AvatarUploader } from "@/components/shared/avatar-uploader";\nimport { KarmaRings } from "./karma-rings";|g' src/app/\(app\)/profile/page.tsx

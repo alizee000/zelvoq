@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Bell, Check, X } from "lucide-react";
 import { castVote } from "@/app/actions/polls";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export function NotificationsDropdown({ 
   initialActive, 
@@ -30,6 +31,24 @@ export function NotificationsDropdown({
       setHasUnread(true);
     }
   }, [notifications, activePolls]);
+
+  // Real-time subscription to feed_posts
+  useEffect(() => {
+    const supabase = createClient();
+    
+    const channel = supabase.channel('realtime_notifications')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'feed_posts' }, (payload) => {
+        // Automatically fetch new notifications from server
+        router.refresh();
+        // Immediately trigger the red badge
+        setHasUnread(true);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [router]);
 
   const handleOpenDropdown = () => {
     setIsOpen(!isOpen);

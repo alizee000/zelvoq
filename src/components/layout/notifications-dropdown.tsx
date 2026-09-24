@@ -106,7 +106,7 @@ export function NotificationsDropdown({
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-12 -right-16 sm:-right-4 w-[270px] sm:w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
+          <div className="fixed sm:absolute top-16 sm:top-12 right-2 sm:-right-4 w-[250px] sm:w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
             <div className="p-2 border-b border-slate-100 bg-slate-50/50">
               <h3 className="font-bold text-xs text-slate-900">Notifications</h3>
               <p className="text-[10px] font-medium text-slate-500">Community decisions & alerts</p>
@@ -152,7 +152,7 @@ export function NotificationsDropdown({
                 <div className="p-2 border-t border-slate-100">
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Community Activity</h4>
                   <div className="flex flex-col gap-2">
-                    {notifications.map((notif: any) => (
+                    {notifications.slice(0, 3).map((notif: any) => (
                       <div key={notif.id} className="flex gap-3">
                         <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
                           <span className="text-[9px] font-bold text-slate-600">{notif.author_name.charAt(0)}</span>

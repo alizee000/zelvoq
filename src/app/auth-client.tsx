@@ -1,188 +1,56 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { Building2, KeyRound, Sparkles, UserPlus, Fingerprint, ArrowRight, Loader2, User } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { login, signup } from "@/app/actions/auth";
+import { Sparkles } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
+import { SignIn } from "@clerk/nextjs";
 
 export default function AuthClientPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [showDemo, setShowDemo] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    const formData = new FormData(e.currentTarget);
-    
-    startTransition(async () => {
-      let result;
-      if (isLogin) {
-        result = await login(formData);
-      } else {
-        result = await signup(formData);
-      }
-      
-      if (result?.error) {
-        setError(result.error);
-      }
-    });
+  const clerkAppearance = {
+    layout: {
+      socialButtonsPlacement: "bottom",
+      logoPlacement: "none",
+    },
+    elements: {
+      cardBox: "w-full shadow-sm rounded-[2rem]",
+      card: "shadow-none bg-white border border-slate-100 rounded-[2rem] p-8 w-full",
+      headerTitle: "text-2xl font-extrabold text-slate-900 tracking-tight",
+      headerSubtitle: "text-sm font-medium text-slate-500",
+      socialButtonsBlockButton: "rounded-full py-3.5 bg-slate-50 border-none shadow-sm text-sm font-bold text-slate-900 hover:bg-slate-100 transition-all",
+      formFieldInput: "w-full bg-slate-50 border-none shadow-sm rounded-full py-3.5 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-slate-900",
+      formFieldLabel: "text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5",
+      formButtonPrimary: "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-full mt-2 transition-all shadow-lg shadow-indigo-600/20 text-[15px]",
+      footerAction: "hidden", // We can hide it or let it stay. Let's let it stay to allow switching!
+      footerActionText: "text-sm text-slate-500 font-medium",
+      footerActionLink: "text-sm font-bold text-indigo-600 hover:text-indigo-700",
+      dividerLine: "bg-slate-100",
+      dividerText: "text-slate-400 text-xs font-bold uppercase",
+      identityPreviewEditButtonIcon: "text-indigo-600",
+      formFieldSuccessText: "text-emerald-600 text-xs",
+      formFieldErrorText: "text-rose-600 text-xs mt-1"
+    }
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/80 selection:bg-indigo-500/30 text-slate-900 flex-col relative">
-      {/* Decorative background blur elements */}
+    <div className="flex flex-col min-h-screen bg-slate-50/50 relative overflow-hidden">
       <div className="fixed top-0 left-0 w-full h-96 bg-gradient-to-b from-indigo-100/40 to-transparent pointer-events-none -z-10 blur-3xl" />
       <div className="fixed bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-purple-200/30 to-transparent pointer-events-none -z-10 blur-3xl rounded-full" />
 
-      <main className="flex-1 w-full max-w-md mx-auto relative overflow-y-auto overflow-x-hidden pb-12 z-0 flex flex-col justify-center min-h-screen p-6">
-        {/* Branding Header */}
-        <div className="flex flex-col items-center justify-center mb-8 gap-4">
-          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] flex items-center justify-center shadow-xl shadow-indigo-500/30">
+      <main className="flex-1 flex flex-col items-center justify-center p-6 relative z-10 w-full max-w-md mx-auto min-h-[100dvh] py-12">
+        <div className="mb-8 flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-4 duration-700 shrink-0">
+          <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-indigo-500/30 mb-6 relative group">
+            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity rounded-3xl" />
             <Logo className="w-8 h-8 text-white" />
           </div>
-          <div className="text-center">
-            <h1 className="text-3xl font-black tracking-tight text-slate-900 mb-1">MyKoodu</h1>
-            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest opacity-80">My community. My people. My world.</p>
-          </div>
+          <h1 className="text-4xl font-black tracking-tighter text-slate-900 mb-2">MyKoodu</h1>
+          <p className="text-slate-500 font-medium text-sm">My community. My people. My world.</p>
         </div>
 
-        <div className="w-full bg-white/80 backdrop-blur-xl border border-white rounded-[2rem] p-6 sm:p-8 shadow-2xl shadow-indigo-900/5">
-          
-          {/* Auth Tabs */}
-          <div className="flex bg-slate-100/50 p-1 rounded-full mb-8">
-            <button 
-              onClick={() => { setIsLogin(true); setError(null); }}
-              className={cn(
-                "flex-1 py-3 text-sm font-bold rounded-full transition-all",
-                isLogin ? "bg-white text-indigo-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
-              )}
-            >
-              Resident Login
-            </button>
-            <button 
-              onClick={() => { setIsLogin(false); setError(null); }}
-              className={cn(
-                "flex-1 py-3 text-sm font-bold rounded-full transition-all",
-                !isLogin ? "bg-white text-indigo-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
-              )}
-            >
-              New Move-in
-            </button>
-          </div>
-
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-                {isLogin ? "Welcome home." : "Join the society."}
-              </h2>
-              <p className="text-sm font-medium text-slate-500 mt-1">
-                {isLogin ? "Enter your credentials to enter." : "Verify your apartment to start."}
-              </p>
-            </div>
-          </div>
-          
-          <div className="mb-6">
-            <button 
-              type="button"
-              onClick={() => setShowDemo(!showDemo)}
-              className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition-colors uppercase tracking-widest bg-indigo-50 px-3 py-1.5 rounded-full w-fit"
-            >
-              {showDemo ? "Hide Demo Credentials" : "Show Demo Credentials"}
-            </button>
-            
-            {showDemo && (
-              <div className="mt-3 p-4 bg-indigo-50 border border-indigo-100 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
-                <p className="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-1">Demo Access</p>
-                <p className="text-sm text-indigo-700 font-medium">
-                  Welcome to <strong>DSR Rainbow Heights</strong> (HSR Layout, Bangalore).<br/><br/>
-                  Use <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">test@example.com</span>, any password, and Society Passcode <span className="font-bold bg-indigo-100 px-1 py-0.5 rounded">KOODU-2026</span> to bypass verification!
-                </p>
-              </div>
-            )}
-          </div>
-          
-          {error && (
-            <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 text-sm font-medium rounded-xl">
-              {error}
-            </div>
-          )}
-
-          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-            
-            {!isLogin && (
-              <>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Full Name</label>
-                  <div className="relative">
-                    <User className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input name="name" type="text" placeholder="John Doe" required className="w-full bg-slate-50 border-none shadow-sm rounded-full py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-1 space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Tower</label>
-                    <div className="relative">
-                      <Building2 className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <select name="tower" required className="w-full bg-slate-50 border-none shadow-sm rounded-full py-4 pl-12 pr-4 text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all appearance-none">
-                        <option value="Tower A">Tower A</option>
-                        <option value="Tower B">Tower B</option>
-                        <option value="Tower C">Tower C</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Flat #</label>
-                    <input name="flat" type="text" placeholder="e.g. 402" required className="w-full bg-slate-50 border-none shadow-sm rounded-full py-4 px-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Society Passcode</label>
-                  <div className="relative">
-                    <KeyRound className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" />
-                    <input name="passcode" type="text" placeholder="e.g. KOODU-2026" required className="w-full bg-indigo-50/50 border-none shadow-sm rounded-full py-4 pl-12 pr-4 text-sm text-indigo-900 placeholder:text-indigo-400 font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all uppercase" />
-                  </div>
-                </div>
-              </>
-            )}
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Email Address</label>
-              <div className="relative">
-                <Fingerprint className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input name="email" type="email" placeholder="hello@example.com" required className="w-full bg-slate-50 border-none shadow-sm rounded-full py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Password</label>
-              <div className="relative">
-                <KeyRound className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input name="password" type="password" placeholder="••••••••" required className="w-full bg-slate-50 border-none shadow-sm rounded-full py-4 pl-12 pr-4 text-sm text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isPending}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full mt-4 transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20 group disabled:opacity-70"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Please wait...
-                </>
-              ) : (
-                <>
-                  {isLogin ? "Access Community" : "Submit Verification"}
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </button>
-          </form>
+        <div className="w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150 fill-mode-both shrink-0">
+          <SignIn 
+            appearance={clerkAppearance} 
+            routing="hash"
+            fallbackRedirectUrl="/home"
+          />
         </div>
       </main>
     </div>

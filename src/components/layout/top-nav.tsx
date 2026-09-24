@@ -2,6 +2,7 @@ import { Sparkles, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
+import { getUserDetails } from "@/lib/auth-helpers";
 import { cookies } from "next/headers";
 import { getPollsForUser } from "@/lib/data/polls";
 import { NotificationsDropdown } from "./notifications-dropdown";
@@ -11,16 +12,18 @@ import { logout } from "@/app/actions/auth";
 
 export async function TopNav() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const cookieStore = await cookies();
-  const avatarUrl = user?.user_metadata?.avatar_url || "";
-
-  let fullName = "Koodu";
-  if (user) {
-    fullName = user.user_metadata?.full_name || "Resident";
-  } else if (cookieStore.has("test_name")) {
-    fullName = cookieStore.get("test_name")?.value || "Koodu";
-  }
+  const { user, ownerName: fullName, tower } = await getUserDetails();
+  const avatarUrl = "";
+  
+  // Fetch real notifications (feed posts from the same tower/apartment, not authored by the user)
+  const { data: notifications } = await supabase
+    .from("feed_posts")
+    .select("*")
+    .eq("tower", tower)
+    .neq("author_name", fullName)
+    .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+    .order("created_at", { ascending: false })
+    .limit(10);
 
   const { activePolls, completedPolls } = await getPollsForUser(fullName);
 
@@ -41,7 +44,7 @@ export async function TopNav() {
       </div>
       
       <div className="flex items-center gap-3">
-        <NotificationsDropdown initialActive={activePolls} initialCompleted={completedPolls} />
+        <NotificationsDropdown initialActive={activePolls} initialCompleted={completedPolls} notifications={notifications || []} />
         
 
         <Link href="/profile" className="relative group shrink-0">

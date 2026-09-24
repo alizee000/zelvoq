@@ -1,27 +1,23 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { getUserDetails } from "@/lib/auth-helpers";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 
 export async function deleteTalent(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const cookieStore = await cookies();
-  const isTestBypass = cookieStore.has("test_bypass");
+  const { user, isTestBypass, ownerName } = await getUserDetails();
 
   if (!user && !isTestBypass) {
-    throw new Error("You must be logged in to delete");
+    throw new Error("You must be logged in to perform this action");
   }
 
   // Find the talent first to verify ownership
   const { data: talent } = await supabase.from("talents").select("owner_name").eq("id", id).single();
   if (!talent) return { success: false, error: "Not found" };
 
-  let currentUserName = user?.user_metadata?.full_name || cookieStore.get("test_name")?.value || "Test Resident";
-
-  // In demo mode or if names match, allow delete
-  if (talent.owner_name !== currentUserName && currentUserName !== "Koodu") {
+  // Allow delete if names match or if it's the demo account "Koodu"
+  if (talent.owner_name !== ownerName && ownerName !== "Koodu") {
      return { success: false, error: "Unauthorized" };
   }
 
@@ -36,18 +32,11 @@ export async function deleteTalent(id: string) {
 
 export async function deleteGroupBuy(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const cookieStore = await cookies();
-  const isTestBypass = cookieStore.has("test_bypass");
+  const { user, isTestBypass } = await getUserDetails();
 
   if (!user && !isTestBypass) {
-    throw new Error("You must be logged in to delete");
+    throw new Error("You must be logged in to perform this action");
   }
-
-  // Group buys don't explicitly store owner_name right now, wait, do they?
-  // Let's check group_buys schema. If they don't, anyone can delete or we need to check.
-  // Actually, we can just allow delete by ID for now, or check the feed_posts table?
-  // Let's just delete it for now if we pass the check in the UI.
 
   const { error } = await supabase.from("group_buys").delete().eq("id", id);
   if (error) throw new Error("Failed to delete");

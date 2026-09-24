@@ -1,6 +1,6 @@
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { TopNav } from "@/components/layout/top-nav";
-import { createClient } from "@/lib/supabase/server";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
 import { cookies } from "next/headers";
@@ -10,12 +10,11 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { userId } = await auth();
   const cookieStore = await cookies();
   const isTestBypass = cookieStore.has("test_bypass");
 
-  if (!user && !isTestBypass) {
+  if (!userId && !isTestBypass) {
     redirect("/");
   }
 

@@ -1,4 +1,4 @@
-"use client";
+content = """"use client";
 
 import { useState, useRef, useEffect, useTransition } from "react";
 import { ArrowLeft, Send, Sparkles, Image as ImageIcon, Mic, Bot } from "lucide-react";
@@ -173,3 +173,6 @@ export default function ChatClient({
     </div>
   );
 }
+"""
+with open('src/app/(app)/chat/[id]/chat-client.tsx', 'w') as f:
+    f.write(content)

@@ -1,21 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Bell, Check, X } from "lucide-react";
 import { castVote } from "@/app/actions/polls";
 import { useRouter } from "next/navigation";
 
 export function NotificationsDropdown({ 
   initialActive, 
-  initialCompleted 
+  initialCompleted,
+  notifications = []
 }: { 
   initialActive: any[],
-  initialCompleted: any[]
+  initialCompleted: any[],
+  notifications?: any[]
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activePolls, setActivePolls] = useState(initialActive);
   const [isVoting, setIsVoting] = useState(false);
+  const [hasUnread, setHasUnread] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const latestNotifId = notifications?.[0]?.id || 'none';
+    const latestPollId = activePolls?.[0]?.id || 'none';
+    const currentLatest = `${latestNotifId}-${latestPollId}`;
+    const lastSeen = localStorage.getItem('last_seen_notif');
+    
+    if ((notifications.length > 0 || activePolls.length > 0) && currentLatest !== lastSeen) {
+      setHasUnread(true);
+    }
+  }, [notifications, activePolls]);
+
+  const handleOpenDropdown = () => {
+    setIsOpen(!isOpen);
+    if (!isOpen) {
+      const latestNotifId = notifications?.[0]?.id || 'none';
+      const latestPollId = activePolls?.[0]?.id || 'none';
+      localStorage.setItem('last_seen_notif', `${latestNotifId}-${latestPollId}`);
+      setHasUnread(false);
+    }
+  };
 
   const handleVote = async (pollId: string, choice: 'yes' | 'no') => {
     if (isVoting) return;
@@ -36,13 +60,13 @@ export function NotificationsDropdown({
     <div className="relative">
       {/* Bell Button */}
       <button 
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleOpenDropdown}
         className="relative p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
       >
         <Bell className="w-5 h-5 text-slate-700" />
-        {activePolls.length > 0 && (
+        {hasUnread && (
           <div className="absolute top-0 right-0 w-4 h-4 bg-rose-500 border-2 border-white rounded-full flex items-center justify-center">
-            <span className="text-[8px] font-bold text-white">{activePolls.length}</span>
+            <span className="text-[8px] font-bold text-white">{activePolls.length + notifications.length}</span>
           </div>
         )}
       </button>
@@ -61,7 +85,7 @@ export function NotificationsDropdown({
             </div>
             
             <div className="max-h-[60vh] overflow-y-auto hide-scrollbar">
-              {activePolls.length === 0 ? (
+              {(activePolls.length === 0 && notifications.length === 0) ? (
                 <div className="p-8 text-center text-slate-500 text-sm font-medium">
                   You're all caught up!
                 </div>

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MoreVertical, LogOut } from "lucide-react";
-import { logout } from "@/app/actions/auth";
+import { SignOutButton } from "@clerk/nextjs";
 
 export function TopNavMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,15 +29,14 @@ export function TopNavMenu() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-top-2 z-50">
-          <form action={logout}>
+          <SignOutButton>
             <button 
-              type="submit" 
               className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-rose-500 hover:bg-rose-50 transition-colors text-left"
             >
               <LogOut className="w-4 h-4" />
               Sign Out
             </button>
-          </form>
+          </SignOutButton>
         </div>
       )}
     </div>

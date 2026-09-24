@@ -61,7 +61,7 @@ export function KnockKnockListClient({ initialKnocks }: { initialKnocks: any[] }
                 <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{knock.tower}</div>
               </div>
             </div>
-            <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full">
+            <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full" suppressHydrationWarning>
               <Clock className="w-3 h-3" />
               {formatDistanceToNow(new Date(knock.created_at))}
             </div>

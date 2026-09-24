@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { getTalents } from "@/lib/data/fetchers";
 import { cookies } from "next/headers";
 import Image from "next/image";
@@ -12,14 +13,18 @@ import { DynamicGreeting } from "./dynamic-greeting";
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const clerkUser = await currentUser();
   const cookieStore = await cookies();
   
-  let firstName = "Resident";
-  if (user?.user_metadata?.full_name) {
-    firstName = user.user_metadata.full_name.split(" ")[0];
+  let firstName = "";
+  if (clerkUser?.firstName) {
+    firstName = clerkUser.firstName;
+  } else if (clerkUser?.emailAddresses?.[0]?.emailAddress) {
+    firstName = clerkUser.emailAddresses[0].emailAddress.substring(0, 4);
   } else if (cookieStore.has("test_name")) {
-    firstName = (cookieStore.get("test_name")?.value || "Resident").split(" ")[0];
+    firstName = (cookieStore.get("test_name")?.value || "User").split(" ")[0];
+  } else {
+    firstName = "Guest";
   }
 
   const allTalents = await getTalents();

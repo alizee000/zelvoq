@@ -4,33 +4,42 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { AvatarUploader } from "@/components/shared/avatar-uploader";
 import { KarmaRings } from "./karma-rings";
+import { EditProfileModal } from "./edit-profile-modal";
+import { currentUser } from "@clerk/nextjs/server";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export default async function MyProfilePage() {
+  const clerkUser = await currentUser();
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
   const cookieStore = await cookies();
   const isTestBypass = cookieStore.has("test_bypass");
 
-  if (!user && !isTestBypass) {
+  if (!clerkUser && !isTestBypass) {
     redirect("/");
   }
 
-  let ownerName = "";
-  let tower = "";
-  let flat = "";
+  let ownerName = "Guest";
+  let tower = "Unknown Tower";
+  let flat = "Unknown Flat";
+  let society = "DSR Rainbow Heights";
 
-  if (user) {
-    ownerName = user.user_metadata?.full_name || user.email;
-    tower = user.user_metadata?.tower || "Unknown Tower";
-    flat = user.user_metadata?.flat || "Unknown Flat";
+  if (clerkUser) {
+    if (clerkUser.firstName) {
+        ownerName = `${clerkUser.firstName} ${clerkUser.lastName || ''}`.trim();
+    } else if (clerkUser.emailAddresses?.[0]?.emailAddress) {
+        ownerName = clerkUser.emailAddresses[0].emailAddress.substring(0, 4);
+    }
+    
+    tower = (clerkUser.publicMetadata?.tower as string) || "DSR Rainbow Heights";
+    flat = (clerkUser.publicMetadata?.flat as string) || "Apt 134";
+    society = (clerkUser.publicMetadata?.society as string) || "DSR Rainbow Heights";
   } else {
     ownerName = cookieStore.get("test_name")?.value || "Koodu";
     tower = cookieStore.get("test_tower")?.value || "Test Tower";
     flat = cookieStore.get("test_flat")?.value || "101";
+    society = cookieStore.get("test_society")?.value || "Test Society";
   }
 
   // Fetch existing image from their real profile table
@@ -68,6 +77,9 @@ export default async function MyProfilePage() {
         {/* Profile Card */}
         <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-32 bg-slate-50 border-b border-slate-100"></div>
+          <div className="absolute top-4 right-4 z-20">
+            <EditProfileModal currentFlat={flat} currentTower={tower} currentSociety={society} />
+          </div>
           
           {/* INTERACTIVE AVATAR UPLOADER */}
           <div className="relative z-10 mt-10">
@@ -80,7 +92,7 @@ export default async function MyProfilePage() {
           </div>
           
           <h2 className="text-2xl font-black text-slate-900 mt-2">{ownerName}</h2>
-          <p className="text-slate-500 font-medium text-[13px] mt-1 tracking-wide uppercase">Flat {flat} · {tower}</p>
+          <p className="text-slate-500 font-medium text-[11px] mt-1 tracking-wide uppercase">Flat {flat} · {tower}<br/>{society}</p>
           
           <div className="flex items-center gap-2 mt-4 px-5 py-2.5 bg-slate-50 rounded-full border border-slate-100">
             <Award className="w-4 h-4 text-amber-500" />

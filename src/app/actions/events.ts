@@ -1,22 +1,19 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { getUserDetails } from "@/lib/auth-helpers";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export async function createEvent(formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const cookieStore = await cookies();
+  const { user, isTestBypass, ownerName, tower } = await getUserDetails();
   
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const category = formData.get("category") as string;
   const location = formData.get("location") as string;
   const dateStr = formData.get("event_date") as string;
-
-  let ownerName = user?.user_metadata?.full_name || cookieStore.get("test_name")?.value || "Test Resident";
-  let tower = user?.user_metadata?.tower || cookieStore.get("test_tower")?.value || "Test Tower";
 
   const { data: event, error } = await supabase.from("events").insert([{
     title,

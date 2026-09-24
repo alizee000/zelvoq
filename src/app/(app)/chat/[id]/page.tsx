@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import { getUserDetails } from "@/lib/auth-helpers";
 import ChatClient from "./chat-client";
 
 export default async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
@@ -39,6 +40,25 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
     receiverImage = profile?.image_url || null;
   }
 
+  
+  const { ownerName: currentUserName } = await getUserDetails();
+
+  const { data: rawMessages } = await supabase
+    .from("feed_posts")
+    .select("*")
+    .eq("type", "chat")
+    .eq("tower", resolvedParams.id)
+    .order("created_at", { ascending: true });
+
+  // Map feed_posts back to message format
+  const relevantMessages = (rawMessages || []).map(m => ({
+    id: m.id,
+    sender_name: m.author_name,
+    receiver_name: receiverName,
+    text: m.content,
+    created_at: m.created_at
+  }));
+
   return (
     <>
       <ChatClient 
@@ -46,6 +66,8 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
         receiverName={receiverName}
         receiverImage={receiverImage}
         talentTitle={talentTitle}
+        currentUserName={currentUserName}
+        initialMessages={relevantMessages}
       />
     </>
   );

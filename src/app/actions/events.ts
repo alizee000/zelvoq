@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUserDetails } from "@/lib/auth-helpers";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function createEvent(formData: FormData) {
   const supabase = await createClient();
@@ -61,9 +62,8 @@ export async function joinEvent(eventId: string) {
     tower: tower
   }]);
 
-  revalidatePath(`/events/${eventId}`);
   revalidatePath("/events");
-  return { success: true };
+  redirect(`/chat/${eventId}`);
 }
 
 export async function sendEventMessage(eventId: string, message: string) {
@@ -101,7 +101,6 @@ export async function leaveEvent(eventId: string) {
     return { success: false, error: error.message };
   }
 
-  revalidatePath(`/events/${eventId}`);
   revalidatePath("/events");
-  return { success: true };
+  redirect(`/chat/${eventId}`);
 }

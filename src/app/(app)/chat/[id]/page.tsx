@@ -17,10 +17,11 @@ export default async function ChatPage(
   const { data: talent } = await supabase.from("talents").select("*").eq("id", resolvedParams.id).single();
   const { data: groupBuy } = await supabase.from("group_buys").select("*").eq("id", resolvedParams.id).single();
   const { data: borrowItem } = await supabase.from("borrow_items").select("*").eq("id", resolvedParams.id).single();
+  const { data: event } = await supabase.from("events").select("*").eq("id", resolvedParams.id).single();
 
-  if (!talent && !groupBuy && !borrowItem) return notFound();
+  if (!talent && !groupBuy && !borrowItem && !event) return notFound();
 
-  const isPublicChat = !!groupBuy;
+  const isPublicChat = !!groupBuy || !!event;
 
   let receiverName = "User";
   let talentTitle = "Chat";
@@ -33,6 +34,9 @@ export default async function ChatPage(
   } else if (groupBuy) {
     receiverName = "Group Discussion";
     talentTitle = groupBuy.title;
+  } else if (event) {
+    receiverName = "Event Chat";
+    talentTitle = event.title;
   } else if (borrowItem) {
     receiverName = borrowItem.owner_name;
     talentTitle = borrowItem.title;

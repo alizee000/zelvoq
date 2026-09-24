@@ -1,17 +1,31 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export function CarouselWrapper({ children, className = "" }: { children: React.ReactNode, className?: string }) {
+export function CarouselWrapper({ children, className = "", autoScrollInterval }: { children: React.ReactNode, className?: string, autoScrollInterval?: number }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
       const scrollAmount = scrollRef.current.clientWidth * 0.8;
-      scrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+      
+      // Infinite loop effect for auto-scrolling
+      if (direction === "right" && scrollRef.current.scrollLeft >= scrollRef.current.scrollWidth - scrollRef.current.clientWidth - 10) {
+         scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+         scrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+      }
     }
   };
+
+  useEffect(() => {
+    if (!autoScrollInterval) return;
+    const interval = setInterval(() => {
+      scroll("right");
+    }, autoScrollInterval);
+    return () => clearInterval(interval);
+  }, [autoScrollInterval]);
 
   return (
     <div className={`relative group ${className}`}>

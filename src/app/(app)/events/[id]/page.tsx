@@ -73,62 +73,13 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
         )}
       </div>
 
-      {/* Chat Area */}
-      <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
-        {!hasJoined ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center opacity-50">
-            <Users className="w-12 h-12 text-slate-400 mb-4" />
-            <h3 className="font-bold text-slate-700">Chat is locked</h3>
-            <p className="text-sm text-slate-500">Join the event to see messages.</p>
-          </div>
-        ) : (
-          messages?.length === 0 ? (
-            <div className="text-center text-slate-400 text-sm py-10 font-medium">No messages yet. Say hi!</div>
-          ) : (
-            messages?.map(msg => (
-              <div key={msg.id} className={`flex flex-col ${msg.user_name === currentUserName ? 'items-end' : 'items-start'}`}>
-                <span className="text-[10px] font-bold text-slate-400 mb-1 ml-1">{msg.user_name}</span>
-                <div className={`px-4 py-3 rounded-2xl max-w-[85%] text-sm ${msg.user_name === currentUserName ? 'bg-indigo-500 text-white rounded-br-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm'}`}>
-                  {msg.message}
-                </div>
-              </div>
-            ))
-          )
-        )}
-        
-        {hasJoined && (
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-sm font-bold text-emerald-600">You are attending! 🎉</span>
-            <form action={async () => {
-              "use server";
-              await leaveEvent(eventId);
-            }}>
-              <button className="text-xs font-bold text-rose-500 hover:text-rose-600 transition-colors">
-                Leave Event
-              </button>
-            </form>
-          </div>
-        )}
-      </div>
-
-      {/* Message Input */}
+      {/* Realtime Chat Button */}
       {hasJoined && (
-        <div className="fixed bottom-[95px] left-4 right-4 rounded-3xl md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full max-w-md mx-auto bg-white border-t border-slate-100 p-2 pl-4 z-20 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-200">
-          <form action={async (formData) => {
-            "use server";
-            const msg = formData.get("message") as string;
-            if (msg.trim()) await sendEventMessage(eventId, msg);
-          }} className="flex gap-2">
-            <input 
-              name="message" 
-              placeholder="Send a message..." 
-              autoComplete="off"
-              className="flex-1 bg-slate-100 rounded-full px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-            />
-            <button className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white shrink-0 shadow-md shadow-indigo-500/20">
-              <Send className="w-5 h-5 ml-1" />
-            </button>
-          </form>
+        <div className="px-6 mt-6">
+          <Link href={`/chat/${eventId}`} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl transition-colors shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2">
+            <Send className="w-5 h-5" />
+            Enter Event Chat
+          </Link>
         </div>
       )}
     </div>

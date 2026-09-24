@@ -296,7 +296,16 @@ export default function AddPage() {
             disabled={isSubmitting}
             className="w-full mt-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-[15px] py-4 rounded-2xl transition-transform active:scale-95 disabled:opacity-70 disabled:active:scale-100 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center gap-2"
           >
-            {isSubmitting ? "Publishing..." : <><Sparkles className="w-4 h-4" /> Publish Listing</>}
+            {isSubmitting ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" /> Publish Listing
+              </>
+            )}
           </button>
 
         </form>

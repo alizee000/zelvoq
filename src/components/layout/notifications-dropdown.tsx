@@ -6,6 +6,15 @@ import { castVote } from "@/app/actions/polls";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+function formatTime(dateString: string) {
+  try {
+    const d = new Date(dateString);
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' at ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  } catch (e) {
+    return '';
+  }
+}
+
 export function NotificationsDropdown({ 
   initialActive, 
   initialCompleted,
@@ -97,13 +106,13 @@ export function NotificationsDropdown({
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-12 right-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
-            <div className="p-3 border-b border-slate-100 bg-slate-50/50">
-              <h3 className="font-bold text-sm text-slate-900">Notifications</h3>
-              <p className="text-xs font-medium text-slate-500">Community decisions & alerts</p>
+          <div className="absolute top-12 right-0 w-64 bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
+            <div className="p-2 border-b border-slate-100 bg-slate-50/50">
+              <h3 className="font-bold text-xs text-slate-900">Notifications</h3>
+              <p className="text-[10px] font-medium text-slate-500">Community decisions & alerts</p>
             </div>
             
-            <div className="max-h-[60vh] overflow-y-auto hide-scrollbar">
+            <div className="max-h-[200px] overflow-y-auto hide-scrollbar">
               {(activePolls.length === 0 && notifications.length === 0) ? (
                 <div className="p-8 text-center text-slate-500 text-sm font-medium">
                   You're all caught up!
@@ -111,11 +120,11 @@ export function NotificationsDropdown({
               ) : (
                 <div className="flex flex-col">
                   {activePolls.map((poll) => (
-                    <div key={poll.id} className="p-3 border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                    <div key={poll.id} className="p-2 border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[9px] font-bold uppercase tracking-widest rounded">Action Required</span>
                       </div>
-                      <h4 className="font-bold text-sm text-slate-900 mb-3">{poll.title}</h4>
+                      <h4 className="font-bold text-xs text-slate-900 mb-3">{poll.title}</h4>
                       
                       <div className="flex items-center gap-2">
                         <button 
@@ -140,17 +149,20 @@ export function NotificationsDropdown({
 
               {/* Feed Notifications Section */}
               {notifications.length > 0 && (
-                <div className="p-3 border-t border-slate-100">
+                <div className="p-2 border-t border-slate-100">
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Community Activity</h4>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-2">
                     {notifications.map((notif: any) => (
                       <div key={notif.id} className="flex gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
-                          <span className="text-[10px] font-bold text-slate-600">{notif.author_name.charAt(0)}</span>
+                        <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
+                          <span className="text-[9px] font-bold text-slate-600">{notif.author_name.charAt(0)}</span>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-slate-800 leading-tight">
+                          <p className="text-xs font-medium text-slate-800 leading-tight">
                             <span className="font-bold">{notif.author_name}</span> {notif.content}
+                          </p>
+                          <p className="text-[8px] font-bold text-slate-400 mt-1 uppercase tracking-widest" suppressHydrationWarning>
+                            {formatTime(notif.created_at)}
                           </p>
                         </div>
                       </div>
@@ -163,7 +175,7 @@ export function NotificationsDropdown({
               {initialCompleted.length > 0 && (
                 <div className="p-3 bg-slate-50 border-t border-slate-100">
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Past Decisions</h4>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-2">
                     {initialCompleted.map((poll) => (
                       <div key={poll.id}>
                         <div className="flex justify-between items-start mb-1.5">

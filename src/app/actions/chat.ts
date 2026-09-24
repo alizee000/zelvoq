@@ -25,6 +25,6 @@ export async function sendMessage(listingId: string, receiverName: string, text:
     throw new Error("Failed to send message");
   }
 
-  revalidatePath(`/chat/${listingId}`);
+  revalidatePath("/chat/[id]", "page");
   return { success: true };
 }

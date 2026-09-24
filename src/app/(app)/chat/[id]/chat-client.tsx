@@ -16,6 +16,7 @@ type Message = {
 
 export default function ChatClient({
   talentId,
+  chatRoomId,
   receiverName,
   receiverImage,
   talentTitle,
@@ -23,6 +24,7 @@ export default function ChatClient({
   initialMessages,
 }: {
   talentId: string;
+  chatRoomId?: string;
   receiverName: string;
   receiverImage: string | null;
   talentTitle: string;
@@ -53,7 +55,7 @@ export default function ChatClient({
           }
       }
 
-      await sendMessage(talentId, targetReceiver, textToSend);
+      await sendMessage(chatRoomId || talentId, targetReceiver, textToSend);
       router.refresh();
     });
   };

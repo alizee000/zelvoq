@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+with open('src/app/(app)/chat/[id]/page.tsx', 'w') as f:
+    f.write("""import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { getUserDetails } from "@/lib/auth-helpers";
 import ChatClient from "./chat-client";
@@ -156,3 +157,4 @@ export default async function ChatPage(
     </>
   );
 }
+""")

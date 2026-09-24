@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useTransition } from "react";
 import { ArrowLeft, Send, Sparkles, Image as ImageIcon, Mic, Bot } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { sendMessage } from "@/app/actions/chat";
 
 type Message = {
@@ -39,6 +40,26 @@ export default function ChatClient({
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [initialMessages]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const activeRoomId = chatRoomId || talentId;
+    
+    const channel = supabase.channel(`chat_${activeRoomId}`)
+      .on('postgres_changes', { 
+        event: 'INSERT', 
+        schema: 'public', 
+        table: 'feed_posts',
+        filter: `tower=eq.${activeRoomId}`
+      }, (payload) => {
+        router.refresh();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [chatRoomId, talentId, router]);
 
   const handleSend = () => {
     if (!input.trim() || isPending) return;
@@ -83,10 +104,10 @@ export default function ChatClient({
             </div>
             <div>
               <h2 className="text-sm font-extrabold text-slate-900 tracking-tight leading-tight">
-                {currentUserName === receiverName ? talentTitle : receiverName}
+                {receiverName === "Group Discussion" ? talentTitle : currentUserName === receiverName ? talentTitle : receiverName}
               </h2>
               <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">
-                {currentUserName === receiverName ? "Listing Chat" : talentTitle}
+                {receiverName === "Group Discussion" ? "Community Chat" : currentUserName === receiverName ? "Listing Chat" : talentTitle}
               </p>
             </div>
           </div>

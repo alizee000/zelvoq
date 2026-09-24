@@ -31,7 +31,7 @@ export default async function ChatPage(
     talentTitle = talent.title;
     ownerNameForImage = talent.owner_name;
   } else if (groupBuy) {
-    receiverName = "Group Buy Chat";
+    receiverName = "Group Discussion";
     talentTitle = groupBuy.title;
   } else if (borrowItem) {
     receiverName = borrowItem.owner_name;

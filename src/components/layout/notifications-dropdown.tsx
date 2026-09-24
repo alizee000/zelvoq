@@ -112,7 +112,7 @@ export function NotificationsDropdown({
               <p className="text-[10px] font-medium text-slate-500">Community decisions & alerts</p>
             </div>
             
-            <div className="max-h-[350px] overflow-y-auto hide-scrollbar">
+            <div className="max-h-[200px] overflow-y-auto">
               {(activePolls.length === 0 && notifications.length === 0) ? (
                 <div className="p-8 text-center text-slate-500 text-sm font-medium">
                   You're all caught up!
@@ -152,7 +152,7 @@ export function NotificationsDropdown({
                 <div className="p-2 border-t border-slate-100">
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Community Activity</h4>
                   <div className="flex flex-col gap-2">
-                    {notifications.slice(0, 3).map((notif: any) => (
+                    {notifications.map((notif: any) => (
                       <div key={notif.id} className="flex gap-3">
                         <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
                           <span className="text-[9px] font-bold text-slate-600">{notif.author_name.charAt(0)}</span>

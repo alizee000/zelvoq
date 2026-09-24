@@ -106,7 +106,7 @@ export function NotificationsDropdown({
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="fixed sm:absolute top-16 sm:top-12 right-2 sm:-right-4 w-[250px] sm:w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
+          <div className="fixed sm:absolute top-16 sm:top-12 right-1 sm:-right-8 w-[250px] sm:w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
             <div className="p-2 border-b border-slate-100 bg-slate-50/50">
               <h3 className="font-bold text-xs text-slate-900">Notifications</h3>
               <p className="text-[10px] font-medium text-slate-500">Community decisions & alerts</p>

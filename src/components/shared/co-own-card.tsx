@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Users, Coins, Sparkles, MessageCircle, Send } from "lucide-react";
 
 interface CoOwnCardProps {
@@ -29,31 +30,10 @@ export function CoOwnCard({
   currentUserName,
 }: CoOwnCardProps) {
   const [invested, setInvested] = useState(false);
-  const [showChat, setShowChat] = useState(false);
-  const [message, setMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState([
-    { id: 1, sender: "Arjun (Flat 402)", text: "I can keep the item for the first week of next month!", time: "10:24 AM" },
-    { id: 2, sender: "Fatima (Flat 105)", text: "Sounds perfect. I will take it for the weekend.", time: "10:30 AM" }
-  ]);
-
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-    const newMsg = { id: Date.now(), sender: currentUserName || "You", text: message, time: "Just now" };
-    const newMessages = [...chatMessages, newMsg];
-    setChatMessages(newMessages);
-    localStorage.setItem(`coown_chat_${id}`, JSON.stringify(newMessages));
-    setMessage("");
-  };
 
   useEffect(() => {
     const savedState = localStorage.getItem(`coown_${id}`);
     if (savedState === 'true') setInvested(true);
-    
-    const savedChat = localStorage.getItem(`coown_chat_${id}`);
-    if (savedChat) {
-      try { setChatMessages(JSON.parse(savedChat)); } catch (e) {}
-    }
   }, [id]);
   const progress = (fundedShares / maxShares) * 100;
   const isFullyFunded = fundedShares >= maxShares;
@@ -127,59 +107,16 @@ export function CoOwnCard({
              Claim a Share
            </button>
         ) : (
-           <button 
-             onClick={() => setShowChat(!showChat)}
-             className={`w-full py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 ${
-               showChat 
-                 ? 'bg-slate-100 text-slate-600' 
-                 : 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
-             }`}
+           <Link 
+             href={`/chat/${id}`}
+             className="w-full py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100"
            >
              <MessageCircle className="w-4 h-4" /> 
-             {showChat ? 'Close Chat' : 'Enter Co-Owners Chat 🎉'}
-           </button>
-        )}
-
-        {/* Expandable Chat UI */}
-        {showChat && (
-          <div className="mt-2 bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden animate-in slide-in-from-top-2 fade-in duration-300">
-            <div className="bg-white px-4 py-3 border-b border-slate-100 flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-bold text-slate-700">Co-Owners Lounge ({Math.max(fundedShares, 3)} Online)</span>
-            </div>
-            
-            <div className="p-4 h-48 overflow-y-auto flex flex-col gap-3">
-              {chatMessages.map(msg => (
-                <div key={msg.id} className={`flex flex-col ${msg.sender === 'You' ? 'items-end' : 'items-start'}`}>
-                  <span className="text-[10px] font-bold text-slate-400 mb-0.5">{msg.sender}</span>
-                  <div className={`px-3 py-2 rounded-2xl text-sm ${msg.sender === 'You' ? 'bg-indigo-600 text-white rounded-br-sm' : 'bg-white border border-slate-200 text-slate-700 rounded-bl-sm shadow-sm'}`}>
-                    {msg.text}
-                  </div>
-                  <span className="text-[9px] text-slate-400 mt-0.5">{msg.time}</span>
-                </div>
-              ))}
-            </div>
-
-            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
-              <input 
-                type="text" 
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Message co-owners..."
-                className="flex-1 bg-slate-50 border-transparent rounded-full px-4 py-2 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-              />
-              <button 
-                type="submit" 
-                disabled={!message.trim()}
-                className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white shrink-0 disabled:opacity-50 disabled:bg-slate-300 transition-colors"
-              >
-                <Send className="w-3.5 h-3.5 ml-0.5" />
-              </button>
-            </form>
-          </div>
+             Enter Co-Owners Chat 🎉
+           </Link>
         )}
         {invested && (
-           <button onClick={() => { setInvested(false); localStorage.removeItem(`coown_${id}`); localStorage.removeItem(`coown_chat_${id}`); setShowChat(false); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full">Withdraw Share</button>
+           <button onClick={() => { setInvested(false); localStorage.removeItem(`coown_${id}`); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full">Withdraw Share</button>
         )}
       </div>
 

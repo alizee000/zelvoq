@@ -19,7 +19,7 @@ export async function TopNav() {
   const { data: notifications } = await supabase
     .from("feed_posts")
     .select("*")
-    .eq("tower", tower)
+    .or(`tower.eq."${tower}",tower.eq."${fullName}"`)
     .neq("author_name", fullName)
     .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
     .order("created_at", { ascending: false })

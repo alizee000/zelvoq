@@ -1,36 +1,11 @@
-"use server";
+import re
 
-import { createClient } from "@/lib/supabase/server";
-import { getUserDetails } from "@/lib/auth-helpers";
-import { revalidatePath } from "next/cache";
+with open('src/app/actions/knock-knocks.ts', 'r') as f:
+    content = f.read()
 
-export async function createKnockKnock(title: string) {
-  const supabase = await createClient();
-  const { ownerName: creatorName, tower } = await getUserDetails();
-
-  const { error } = await supabase.from("knock_knocks").insert([{
-    title,
-    creator_name: creatorName,
-    tower: tower,
-    status: 'active'
-  }]);
-
-  if (error) throw new Error("Failed to create Knock-Knock");
-
-  // Also broadcast to feed
-  await supabase.from("feed_posts").insert([{
-    content: `needs help: ${title}`,
-    type: "knock",
-    author_name: creatorName,
-    tower: tower
-  }]);
-
-  revalidatePath("/knock-knocks");
-  revalidatePath("/home");
-  return { success: true };
-}
-
-export async function resolveKnockKnock(id: string) {
+# Modify resolveKnockKnock to fetch the creator's name and insert a direct notification
+old_resolve = r'export async function resolveKnockKnock\(id: string\) \{.*?return \{ success: true \};\s*\}'
+new_resolve = """export async function resolveKnockKnock(id: string) {
   const supabase = await createClient();
   const { ownerName: resolvedBy } = await getUserDetails();
 
@@ -57,4 +32,9 @@ export async function resolveKnockKnock(id: string) {
   revalidatePath("/home");
   revalidatePath("/profile");
   return { success: true };
-}
+}"""
+content = re.sub(old_resolve, new_resolve, content, flags=re.DOTALL)
+
+with open('src/app/actions/knock-knocks.ts', 'w') as f:
+    f.write(content)
+

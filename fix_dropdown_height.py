@@ -3,12 +3,11 @@ import re
 with open('src/components/layout/notifications-dropdown.tsx', 'r') as f:
     content = f.read()
 
-# Replace the max height container
-old_container = r'<div className="max-h-\[60vh\] overflow-y-auto hide-scrollbar">'
-new_container = '<div className="max-h-[260px] overflow-y-auto hide-scrollbar">'
+# Increase the max-h 
+content = content.replace('className="max-h-[200px] overflow-y-auto hide-scrollbar"', 'className="max-h-[60vh] md:max-h-[400px] overflow-y-auto hide-scrollbar"')
 
-content = re.sub(old_container, new_container, content)
+# In case the user means on mobile the dropdown is pushed off-screen due to `right-0 w-64`, let's make it responsive
+content = content.replace('className="absolute top-12 right-0 w-64 bg-white rounded-2xl', 'className="absolute top-12 right-0 w-[calc(100vw-3rem)] sm:w-80 max-w-sm bg-white rounded-2xl')
 
 with open('src/components/layout/notifications-dropdown.tsx', 'w') as f:
     f.write(content)
-

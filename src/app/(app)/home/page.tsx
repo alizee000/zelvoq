@@ -55,7 +55,7 @@ export default async function HomePage() {
       <div className="flex flex-col gap-6 px-6 pt-6 relative z-10">
         
         {/* Header Section */}
-        <section className="animate-in fade-in slide-in-from-top-4 duration-700">
+        <section className="animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
           <DynamicGreeting firstName={firstName} />
           <p className="text-sm text-slate-500 mt-1">
             Your community is full of hidden talent.
@@ -66,7 +66,7 @@ export default async function HomePage() {
         <CommunityVideo />
 
         {/* Search Bar */}
-        <section className="animate-in fade-in zoom-in-95 duration-700 delay-75">
+        <section className="animate-in fade-in zoom-in-95 duration-700 delay-75 fill-mode-both">
           <form action="/discover" className="relative block group">
             <button type="submit" className="absolute inset-y-0 left-4 flex items-center cursor-pointer z-10 hover:scale-110 transition-transform">
               <Search className="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
@@ -81,7 +81,7 @@ export default async function HomePage() {
         </section>
 
         {/* Hidden Gem Hero */}
-        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[150ms] fill-mode-both">
           <Link href={gemTalent ? `/talent/${gemTalent.id}` : "/discover"} className="block w-full bg-gradient-to-br from-[#FFF5F0] to-[#FFE8E0] rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
             <div className="absolute right-0 bottom-0 w-32 h-40">
               {/* Fallback image if we don't have a baker */}
@@ -103,7 +103,7 @@ export default async function HomePage() {
         </section>
 
         {/* Trending Section */}
-        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[200ms]">
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[225ms] fill-mode-both">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-bold text-slate-900">Trending in your community</h2>
             <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -127,15 +127,15 @@ export default async function HomePage() {
         </section>
 
         {/* People you should know */}
-        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[300ms]">
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-[300ms] fill-mode-both">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-bold text-slate-900">People you should know</h2>
             <ChevronRight className="w-4 h-4 text-slate-400" />
           </div>
           
           <CarouselWrapper>
-            {people.length > 0 ? people.map((person: any) => (
-              <Link href={`/talent/${person.id}`} key={person.id} className="flex-none w-[120px] bg-white border border-slate-100 rounded-3xl p-4 flex flex-col items-center text-center snap-start shadow-sm hover:scale-[1.02] hover:border-indigo-100 transition-all cursor-pointer">
+            {people.length > 0 ? people.map((person: any, i: number) => (
+              <Link href={`/talent/${person.id}`} key={person.id} style={{ animationDelay: `${300 + (i * 75)}ms`, animationFillMode: "both" }} className="flex-none w-[120px] bg-white border border-slate-100 rounded-3xl p-4 flex flex-col items-center text-center snap-start shadow-sm hover:scale-[1.02] hover:border-indigo-100 transition-all cursor-pointer animate-in fade-in zoom-in-[0.9] slide-in-from-right-8 duration-500">
                 <div className="w-14 h-14 rounded-full overflow-hidden mb-3 bg-slate-100 border-2 border-white shadow-sm">
                   {person.image_url ? (
                     <img src={person.image_url} alt={person.title} className="w-full h-full object-cover" />

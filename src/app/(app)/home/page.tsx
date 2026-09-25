@@ -10,6 +10,8 @@ import { MotionSection } from "@/components/ui/motion-wrapper";
 import { CommunityVideo } from"./community-video";
 import { DynamicGreeting } from"./dynamic-greeting";
 
+export const revalidate = 0;
+
 
 
 export default async function HomePage() {

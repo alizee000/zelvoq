@@ -1,6 +1,8 @@
 import { getTalents } from "@/lib/data/fetchers";
 import { DiscoverClient } from "./discover-client";
 
+export const revalidate = 0;
+
 
 export default async function DiscoverPage(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const searchParams = await props.searchParams;

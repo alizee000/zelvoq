@@ -53,9 +53,9 @@ export default async function MarketPage({
           <div 
             className="absolute top-1.5 bottom-1.5 w-[calc(25%-4px)] bg-white rounded-full shadow-sm transition-transform duration-300 ease-out"
             style={{ 
-              transform: `translateX(${activeTab === 'deals' ? '0%' : activeTab === 'coown' ? '100%' : activeTab === 'borrow' ? '200%' : '300%'})`,
+              transform: `translateX(${activeTab === 'deals' ? '0%' : activeTab === 'borrow' ? '100%' : activeTab === 'spaces' ? '200%' : '300%'})`,
               left: activeTab === 'deals' ? '6px' : activeTab === 'coown' ? '2px' : activeTab === 'borrow' ? '-2px' : '-6px',
-              marginLeft: activeTab === 'deals' ? '0px' : activeTab === 'coown' ? '6px' : activeTab === 'borrow' ? '12px' : '18px'
+              marginLeft: activeTab === 'deals' ? '0px' : activeTab === 'borrow' ? '6px' : activeTab === 'spaces' ? '12px' : '18px'
             }}
           />
           <Link
@@ -64,13 +64,6 @@ export default async function MarketPage({
             className={`flex-1 flex items-center justify-center gap-1 py-3 text-[10px] sm:text-[11px] uppercase tracking-wider font-bold z-10 transition-colors ${activeTab === 'deals' ? 'text-indigo-600' : 'text-slate-500'}`}
           >
             <ShoppingBag className="w-3.5 h-3.5" /> Deals
-          </Link>
-          <Link
-            href="?tab=coown"
-            scroll={false}
-            className={`flex-1 flex items-center justify-center gap-1 py-3 text-[10px] sm:text-[11px] uppercase tracking-wider font-bold z-10 transition-colors ${activeTab === 'coown' ? 'text-indigo-600' : 'text-slate-500'}`}
-          >
-            <PieChart className="w-3.5 h-3.5" /> Co-Own
           </Link>
           <Link
             href="?tab=borrow"
@@ -85,6 +78,13 @@ export default async function MarketPage({
             className={`flex-1 flex items-center justify-center gap-1 py-3 text-[10px] sm:text-[11px] uppercase tracking-wider font-bold z-10 transition-colors ${activeTab === 'spaces' ? 'text-indigo-600' : 'text-slate-500'}`}
           >
             <CarFront className="w-3.5 h-3.5" /> Spaces
+          </Link>
+          <Link
+            href="?tab=coown"
+            scroll={false}
+            className={`flex-1 flex items-center justify-center gap-1 py-3 text-[10px] sm:text-[11px] uppercase tracking-wider font-bold z-10 transition-colors ${activeTab === 'coown' ? 'text-indigo-600' : 'text-slate-500'}`}
+          >
+            <PieChart className="w-3.5 h-3.5" /> Co-Own
           </Link>
         </div>
       </div>

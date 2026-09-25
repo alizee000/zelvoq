@@ -8,7 +8,10 @@ export function CarouselWrapper({ children, className = "", autoScrollInterval }
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = scrollRef.current.clientWidth * 0.8;
+      // Calculate width based on the first child element to ensure exact snapping
+      const firstChild = scrollRef.current.firstElementChild as HTMLElement;
+      // scrollAmount = child width + gap (approx 16px)
+      const scrollAmount = firstChild ? firstChild.clientWidth + 16 : scrollRef.current.clientWidth * 0.8;
       
       // Infinite loop effect for auto-scrolling
       if (direction === "right" && scrollRef.current.scrollLeft >= scrollRef.current.scrollWidth - scrollRef.current.clientWidth - 10) {
@@ -45,7 +48,7 @@ export function CarouselWrapper({ children, className = "", autoScrollInterval }
         <ChevronRight className="w-5 h-5" />
       </button>
 
-      <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x hide-scrollbar scroll-smooth">
+      <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x snap-mandatory hide-scrollbar scroll-smooth">
         {children}
       </div>
     </div>

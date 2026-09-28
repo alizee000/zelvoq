@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Sparkles, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront, PieChart, Calendar, BellRing } from "lucide-react";
+import { ArrowLeft, Check, Wrench, ShoppingBag, HeartHandshake, UploadCloud, Building, Target, CarFront, PieChart, Calendar, BellRing } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { addTalent } from "@/app/actions/talents";
@@ -303,7 +303,7 @@ export default function AddPage() {
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4" /> Publish Listing
+                <Check className="w-4 h-4" /> Publish Listing
               </>
             )}
           </button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { ArrowRight, Search, Gem } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -35,7 +35,7 @@ export function AISearchBar() {
       
       <div className="relative flex items-center w-full bg-slate-900/80 backdrop-blur-md border border-cyan-500/30 shadow-[0_0_15px_rgba(0,255,255,0.05)] hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(0,255,255,0.2)] rounded-2xl overflow-hidden transition-all duration-300">
         <div className="pl-4 pr-3 py-4 flex items-center justify-center text-cyan-400" style={{ filter: 'drop-shadow(0 0 5px rgba(0,255,255,0.8))' }}>
-          <Sparkles className="w-5 h-5 transition-transform duration-700 group-hover:scale-110" />
+          <Search className="w-5 h-5 transition-transform duration-700 group-hover:scale-110" />
         </div>
         
         <div className="flex-1 py-4 text-base font-mono w-full">

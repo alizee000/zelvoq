@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useTransition } from "react";
-import { ArrowLeft, Send, Sparkles, Image as ImageIcon, Mic, Bot } from "lucide-react";
+import { ArrowLeft, Send, Zap, Image as ImageIcon, Mic, Bot } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";

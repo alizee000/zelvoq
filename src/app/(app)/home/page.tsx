@@ -5,7 +5,7 @@ import { DynamicGreeting } from "./dynamic-greeting";
 import { currentUser } from "@clerk/nextjs/server";
 import { CarouselWrapper } from "@/components/ui/carousel-wrapper";
 import Link from "next/link";
-import { Sparkles, ArrowRight, MapPin, Calendar, Star, Users } from "lucide-react";
+import { ArrowRight, MapPin, Calendar, Star, Users } from "lucide-react";
 import Image from "next/image";
 
 export const revalidate = 0;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { ArrowLeft, User, Sparkles } from "lucide-react";
+import { ArrowLeft, User, Zap } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -99,7 +99,7 @@ export function HiveNetwork({ talents }: { talents: any[] }) {
             className="flex flex-col"
           >
             <div className="flex items-center gap-3 mb-6">
-              <Sparkles className="w-5 h-5 text-indigo-400" />
+              <Zap className="w-5 h-5 text-indigo-400" />
               <h2 className="text-2xl font-bold text-white tracking-tight">{clusterName}</h2>
               <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent ml-4" />
             </div>

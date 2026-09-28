@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Users, Coins, Sparkles, MessageCircle, Send } from "lucide-react";
+import { Users, Coins, Activity, MessageCircle, Send } from "lucide-react";
 
 interface CoOwnCardProps {
   id: string;
@@ -51,7 +51,7 @@ export function CoOwnCard({
           />
           {status === 'active' && (
              <div className="absolute top-2 left-2 bg-emerald-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
-               <Sparkles className="w-3 h-3" /> Live
+               <Activity className="w-3 h-3" /> Live
              </div>
           )}
         </div>

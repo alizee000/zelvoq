@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
+import { Hexagon } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { SignIn } from "@clerk/nextjs";
 

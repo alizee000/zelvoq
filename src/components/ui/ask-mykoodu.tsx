@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Sparkles } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -44,7 +44,7 @@ export function AskMyKoodu() {
         
         <div className="relative flex items-center p-2">
           <div className="w-12 h-12 flex items-center justify-center shrink-0">
-            <Sparkles className="w-5 h-5 text-slate-400" />
+            <Search className="w-5 h-5 text-slate-400" />
           </div>
           
           <div className="flex-1 relative h-12 flex items-center">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles, ArrowRight } from "lucide-react";
+import { ArrowRight, Gem } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +22,7 @@ export function HiddenGem({ id, name, avatarUrl, tower, headline, description, t
       
       <div className="relative bg-slate-900/60 backdrop-blur-2xl rounded-[calc(1.5rem-1px)] h-full border border-cyan-500/30 flex flex-col p-6 z-10 shadow-[inset_0_0_20px_rgba(0,255,255,0.05)]">
         <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="w-4 h-4 text-cyan-400" style={{ filter: 'drop-shadow(0 0 5px rgba(0,255,255,0.8))' }} />
+          <Gem className="w-4 h-4 text-cyan-400" style={{ filter: 'drop-shadow(0 0 5px rgba(0,255,255,0.8))' }} />
           <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-300">Target Acquired</span>
         </div>
         

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, MapPin, Sparkles, ArrowRight, User } from "lucide-react";
+import { Search, MapPin, ArrowRight, User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -26,7 +26,7 @@ export function DiscoverClient({ skills, initialQuery = "" }: { skills: any[], i
       <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 pt-12 pb-4">
         <div className="relative group">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <Sparkles className="w-5 h-5 text-indigo-400" />
+            <Search className="w-5 h-5 text-indigo-400" />
           </div>
           <input 
             type="text" 

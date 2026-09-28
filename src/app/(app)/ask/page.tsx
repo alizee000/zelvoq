@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, ArrowRight, Loader2, Star, MessageSquare, ArrowLeft } from "lucide-react";
+import { ArrowRight, Loader2, Star, MessageSquare, ArrowLeft, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
@@ -53,7 +53,7 @@ export default function AskPage() {
               {isSearching ? (
                 <Loader2 className="w-6 h-6 animate-spin" />
               ) : (
-                <Sparkles className="w-6 h-6" />
+                <Search className="w-6 h-6" />
               )}
             </div>
             

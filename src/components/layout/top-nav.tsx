@@ -29,18 +29,20 @@ export async function TopNav() {
 
   return (
     <header className="sticky top-0 z-40 px-6 py-4 flex items-center justify-between bg-white/70 backdrop-blur-xl border-b border-slate-200/50">
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-hidden">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 shrink-0">
             <Logo className="w-5 h-5 text-white" />
           </div>
-          <h1 className="text-xl font-black tracking-tight text-slate-900">
-            MyKoodu
-          </h1>
+          <div className="flex flex-col overflow-hidden">
+            <h1 className="text-[19px] font-black tracking-tight text-slate-900 leading-none">
+              MyKoodu
+            </h1>
+            <p className="text-[7.5px] font-bold uppercase tracking-[0.1em] text-slate-400 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis opacity-90">
+              My community. My people. My world.
+            </p>
+          </div>
         </div>
-        <p className="text-[7.5px] font-bold uppercase tracking-widest text-slate-400 ml-10 -mt-1 opacity-80">
-          My community. My people. My world.
-        </p>
       </div>
       
       <div className="flex items-center gap-3">

@@ -41,8 +41,8 @@ export default function AuthClientPage() {
             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity rounded-3xl" />
             <Logo className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-black tracking-tighter text-slate-900 mb-2">MyKoodu</h1>
-          <p className="text-slate-500 font-medium text-sm">My community. My people. My world.</p>
+          <h1 className="text-4xl font-black tracking-tighter text-slate-900 leading-none mt-2">MyKoodu</h1>
+          <p className="text-slate-400 font-bold uppercase tracking-[0.1em] text-[10px] mt-2 whitespace-nowrap">My community. My people. My world.</p>
         </div>
 
         <div className="w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150 fill-mode-both shrink-0">

@@ -22,8 +22,9 @@ export function Sidebar() {
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
             <Search className="w-5 h-5 text-white" />
           </div>
-          <div>
-            <span className="text-xl font-bold tracking-tight">MyKoodu</span>
+          <div className="flex flex-col items-start justify-center overflow-hidden">
+            <span className="text-[19px] font-black tracking-tight leading-none">MyKoodu</span>
+            <span className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5 whitespace-nowrap">My community. My people. My world.</span>
           </div>
         </Link>
 

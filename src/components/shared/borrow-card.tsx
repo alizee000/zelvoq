@@ -1,11 +1,8 @@
 "use client";
 
-import { Clock, MapPin, HandHeart, MessageCircle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { ActionModal } from "./action-modal";
-import { useState, useEffect } from "react";
+import { Hand, MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { DeleteButton } from "./delete-button";
+import Image from "next/image";
 
 interface BorrowCardProps {
   id: string;
@@ -16,88 +13,44 @@ interface BorrowCardProps {
   condition: string;
   available: boolean;
   imageFallback: string;
-  currentUserName?: string;
+  currentUserName?: string | null;
 }
 
-export function BorrowCard({ id, name, description, ownerName, tower, condition, available, imageFallback, currentUserName }: BorrowCardProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRequested, setIsRequested] = useState(false);
-
-  useEffect(() => {
-    const savedState = localStorage.getItem(`borrow_${id}`);
-    if (savedState === 'true') setIsRequested(true);
-  }, [id]);
-
-  const handleRequest = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setIsRequested(true);
-    localStorage.setItem(`borrow_${id}`, 'true');
-    setIsModalOpen(false);
-  };
-
+export function BorrowCard({ id, name, description, ownerName, tower, available, imageFallback }: BorrowCardProps) {
   return (
-    <div className="w-full bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col gap-4 relative overflow-hidden group">
-      
-      <div className="flex justify-between items-start">
-        <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-2xl shrink-0">
-          {imageFallback}
-        </div>
-        <Badge className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase border-none ${
-          available ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
-        }`}>
-          {available ? "Available" : "Borrowed"}
-        </Badge>
-      </div>
-
-      <div>
-        <h3 className="font-black text-lg text-slate-900 leading-tight">{name}</h3>
-        <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{description}</p>
-      </div>
-      
-      <div className="flex items-center gap-4 text-xs font-semibold text-slate-600 mt-2">
-        <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-           <MapPin className="w-3.5 h-3.5 text-indigo-500" />
-           {ownerName} • {tower}
-        </div>
-      </div>
-
-      {/* Action Button & Chat */}
-      <div className="mt-2 flex flex-col gap-3">
-        {!isRequested ? (
-           <button 
-             onClick={() => setIsModalOpen(true)}
-             className="w-full py-4 rounded-xl font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 bg-slate-900 text-white hover:bg-slate-800"
-           >
-             Request to Book
-           </button>
+    <Link 
+      href={`/talent/${id}`}
+      className="flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all group border border-slate-100"
+    >
+      <div className="w-full h-48 bg-slate-100 relative overflow-hidden">
+        {imageFallback !== "📦" && !imageFallback.startsWith("http") ? (
+          <div className="absolute inset-0 flex items-center justify-center text-5xl bg-slate-100">{imageFallback}</div>
         ) : (
-           <Link 
-             href={`/chat/${id}`}
-             className="w-full py-4 rounded-xl font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100"
-           >
-             <MessageCircle className="w-4 h-4" /> 
-             Chat with {ownerName.split(' ')[0]} 🎉
-           </Link>
+          <Image src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80" alt={name} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
         )}
-
-        {isRequested && (
-          <button onClick={() => { setIsRequested(false); localStorage.removeItem(`borrow_${id}`); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Cancel Request</button>
-        )}
+        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm text-xs font-bold text-slate-700">
+          <MapPin className="w-3.5 h-3.5 text-indigo-500" /> {tower || "Resident"}
+        </div>
       </div>
-
-      <ActionModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={handleRequest}
-        title={`Book ${name}?`}
-        description={
-          <>
-            You are requesting to book <strong>{name}</strong> from <strong>{ownerName}</strong>. You'll be able to chat with them to arrange pickup.
-          </>
-        }
-        confirmText="Send Request"
-        icon={<HandHeart className="w-6 h-6" />}
-      />
-    </div>
+      
+      <div className="p-5">
+        <h3 className="text-xl font-bold text-slate-900 mb-1">{name}</h3>
+        <p className="text-sm font-medium text-slate-500 mb-4 line-clamp-1">From {ownerName.split(' ')[0]}</p>
+        
+        <p className="text-sm text-slate-600 leading-relaxed mb-6 line-clamp-2">
+          {description}
+        </p>
+        
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Available
+          </div>
+          <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
+            <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-indigo-600" />
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 }

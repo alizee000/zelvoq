@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Compass, User, Store, Plus, Vote } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { triggerHaptic } from "@/lib/utils/haptics";
+import { motion } from "framer-motion";
 
 const LEFT_NAV = [
   { name: "Home", href: "/home", icon: Home },
@@ -22,14 +24,18 @@ export function BottomNav() {
     items.map((item) => {
       const isActive = pathname === item.href;
       return (
-        <Link
+        <motion.div
           key={item.href}
-          href={item.href}
-          className={cn(
-            "flex flex-col items-center justify-center h-full space-y-1 transition-all px-3",
-            isActive ? "text-indigo-600" : "text-slate-400 hover:text-indigo-400"
-          )}
+          whileTap={{ scale: 0.85 }}
+          onClick={() => triggerHaptic('light')}
         >
+          <Link
+            href={item.href}
+            className={cn(
+              "flex flex-col items-center justify-center h-full space-y-1 transition-all px-3",
+              isActive ? "text-indigo-600" : "text-slate-400 hover:text-indigo-400"
+            )}
+          >
           <item.icon
             className={cn(
               "h-5 w-5 transition-transform duration-200",
@@ -43,7 +49,8 @@ export function BottomNav() {
           )}>
             {item.name}
           </span>
-        </Link>
+          </Link>
+        </motion.div>
       );
     });
 
@@ -56,9 +63,11 @@ export function BottomNav() {
       {/* Center Action Button */}
       <div className="absolute left-1/2 -translate-x-1/2 -top-5">
         <div className="absolute inset-0 bg-indigo-500 rounded-full animate-ping opacity-20"></div>
-        <Link href="/add" className="relative w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full shadow-lg shadow-indigo-500/30 flex items-center justify-center text-white hover:scale-105 hover:-translate-y-1 transition-all group border-4 border-slate-50/50">
-          <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
-        </Link>
+        <motion.div whileTap={{ scale: 0.9, rotate: 15 }} onClick={() => triggerHaptic('medium')}>
+          <Link href="/add" className="relative w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full shadow-lg shadow-indigo-500/30 flex items-center justify-center text-white transition-all group border-4 border-slate-50/50">
+          <Plus className="w-6 h-6 transition-transform duration-300" />
+          </Link>
+        </motion.div>
       </div>
 
       <div className="flex items-center gap-2 h-full">

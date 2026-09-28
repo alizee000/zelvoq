@@ -1,11 +1,12 @@
 "use client";
 
-import { Users, Clock, ArrowRight, ShoppingBag, MessageSquare, CheckCircle2, MessageCircle, Send } from "lucide-react";
+import { Clock, ArrowRight, ShoppingBag, MessageCircle, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ActionModal } from "./action-modal";
 import { useState, useEffect } from "react";
-import { DeleteButton } from "./delete-button";
+import { triggerHaptic } from "@/lib/utils/haptics";
+import Image from "next/image";
 
 interface GroupBuyCardProps {
   id: string;
@@ -21,8 +22,7 @@ interface GroupBuyCardProps {
   description: string;
 }
 
-export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantity, originalPrice, discountedPrice, expiresInDays, imageFallback,
-  currentUserName, description }: GroupBuyCardProps) {
+export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantity, originalPrice, discountedPrice, expiresInDays, imageFallback, currentUserName, description }: GroupBuyCardProps) {
   const progressPercent = Math.min(100, Math.round((currentQuantity / targetQuantity) * 100));
   const isGoalReached = currentQuantity >= targetQuantity;
   
@@ -35,7 +35,7 @@ export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantit
   }, [id]);
 
   const handleJoin = async () => {
-    // Simulate network delay
+    triggerHaptic('medium');
     await new Promise((resolve) => setTimeout(resolve, 500));
     setIsJoined(true);
     localStorage.setItem(`deal_${id}`, 'true');
@@ -43,74 +43,69 @@ export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantit
   };
 
   return (
-    <div className="w-full bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col gap-5 relative overflow-hidden group">
-      <div className="flex gap-4">
-        <div className="w-16 h-16 shrink-0 bg-orange-50 rounded-2xl flex items-center justify-center text-3xl">
-          {imageFallback}
-        </div>
-        <div className="flex-1 flex flex-col justify-center">
-          <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">
-            {vendor}
-          </span>
-          <h3 className="font-black text-lg text-slate-900 leading-tight">
-            {title}
-          </h3>
-        </div>
-      </div>
-      
-      <p className="text-xs text-slate-500 line-clamp-2">{description}</p>
-      
-      {/* Pricing */}
-      <div className="flex items-end gap-2 mt-2">
-        <span className="text-2xl font-extrabold text-slate-900">₹{discountedPrice}</span>
-        <span className="text-sm font-medium text-slate-400 line-through mb-1">₹{originalPrice}</span>
-        <Badge className="ml-auto bg-green-100 text-green-700 border-none px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase mb-1">
-          Save ₹{originalPrice - discountedPrice}
-        </Badge>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-        <div className="flex justify-between items-center text-[10px] font-bold tracking-widest uppercase mb-3">
-          <span className={isGoalReached ? "text-green-600" : "text-slate-500"}>
-            {isGoalReached ? "GOAL REACHED!" : `${currentQuantity} / ${targetQuantity} JOINED`}
-          </span>
-          <span className="text-orange-500 flex items-center gap-1">
-            <Clock className="w-3 h-3" />
-            {expiresInDays}D LEFT
-          </span>
-        </div>
+    <div className="w-full bg-white rounded-[2rem] overflow-hidden shadow-sm border border-slate-100 flex flex-col group hover:shadow-lg transition-all relative">
+      <div className="h-40 bg-slate-100 relative overflow-hidden flex items-center justify-center">
+        {imageFallback.startsWith('http') ? (
+          <Image src={imageFallback} alt={title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+        ) : (
+          <div className="text-6xl">{imageFallback}</div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         
-        <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-          <div 
-            className={`h-full rounded-full transition-all duration-1000 ease-out ${isGoalReached ? 'bg-green-500' : 'bg-orange-500'}`}
-            style={{ width: `${progressPercent}%` }} 
-          />
+        <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+          <Badge className="bg-emerald-500 text-white border-none px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-sm">
+            Save ₹{originalPrice - discountedPrice}
+          </Badge>
+          <div className="text-right">
+            <span className="text-xs font-bold text-white/70 line-through block mb-0.5">₹{originalPrice}</span>
+            <span className="text-2xl font-black text-white leading-none">₹{discountedPrice}</span>
+          </div>
         </div>
       </div>
 
-      {/* Action Button & Chat */}
-      <div className="mt-2 flex flex-col gap-3">
+      <div className="p-6">
+        <div className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1.5">{vendor}</div>
+        <h3 className="font-bold text-lg text-slate-900 leading-tight mb-2">{title}</h3>
+        <p className="text-sm font-medium text-slate-500 line-clamp-2 mb-6">{description}</p>
+        
+        <div className="mb-6">
+          <div className="flex justify-between items-center text-[10px] font-bold tracking-widest uppercase mb-2">
+            <span className={isGoalReached ? "text-emerald-600 flex items-center gap-1" : "text-slate-500"}>
+              {isGoalReached ? <><CheckCircle2 className="w-3 h-3"/> GOAL REACHED</> : `${currentQuantity} / ${targetQuantity} JOINED`}
+            </span>
+            <span className="text-slate-400 flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              {expiresInDays}D LEFT
+            </span>
+          </div>
+          <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div 
+              className={`h-full rounded-full transition-all duration-1000 ease-out ${isGoalReached ? 'bg-emerald-500' : 'bg-slate-900'}`}
+              style={{ width: `${progressPercent}%` }} 
+            />
+          </div>
+        </div>
+
         {!isJoined ? (
           <button 
-            onClick={() => setIsModalOpen(true)}
-            className="w-full py-4 rounded-2xl font-black text-sm tracking-wide text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] active:scale-95 flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800"
+            onClick={() => { triggerHaptic('light'); setIsModalOpen(true); }}
+            className="w-full py-3.5 rounded-2xl font-bold text-[15px] tracking-wide text-white transition-transform active:scale-95 flex items-center justify-center gap-2 bg-slate-900 hover:bg-indigo-600 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
           >
             Join Deal
-            <ArrowRight className="w-4 h-4" />
           </button>
         ) : (
           <Link 
              href={`/chat/${id}`}
-             className="w-full py-4 rounded-xl font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100"
+             onClick={() => triggerHaptic('light')}
+             className="w-full py-3.5 rounded-2xl font-bold text-[15px] tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
            >
              <MessageCircle className="w-4 h-4" /> 
-             Enter Deal Chat 🎉
+             Enter Deal Chat
            </Link>
         )}
-
+        
         {isJoined && (
-          <button onClick={() => { setIsJoined(false); localStorage.removeItem(`deal_${id}`); }} className="text-[11px] font-bold text-rose-500 hover:text-rose-600 mt-1 transition-colors text-center w-full block">Leave Group Buy</button>
+          <button onClick={() => { setIsJoined(false); localStorage.removeItem(`deal_${id}`); }} className="text-[11px] font-bold text-slate-400 hover:text-slate-600 mt-4 transition-colors text-center w-full block">Leave Group Buy</button>
         )}
       </div>
 
@@ -118,13 +113,9 @@ export function GroupBuyCard({ id, title, vendor, targetQuantity, currentQuantit
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleJoin}
-        title={`Join ${title} Deal?`}
-        description={
-          <>
-            You are committing to purchase this item from <strong>{vendor}</strong> for the discounted price of <strong>₹{discountedPrice}</strong>.
-          </>
-        }
-        confirmText="Confirm Purchase"
+        title="Confirm Purchase"
+        description={<>You are committing to purchase this item from <strong>{vendor}</strong> for <strong>₹{discountedPrice}</strong>. Payment will be collected when the goal is reached.</>}
+        confirmText="Join Deal"
         icon={<ShoppingBag className="w-6 h-6" />}
       />
     </div>

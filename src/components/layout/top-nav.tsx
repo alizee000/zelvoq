@@ -28,7 +28,7 @@ export async function TopNav() {
   const { activePolls, completedPolls } = await getPollsForUser(fullName);
 
   return (
-    <header className="sticky top-0 z-40 px-6 py-4 flex items-center justify-between bg-white/70 backdrop-blur-xl border-b border-slate-200/50">
+    <header className="sticky top-0 z-40 pl-6 pr-2 py-4 flex items-center justify-between bg-white/70 backdrop-blur-xl border-b border-slate-200/50">
       <div className="flex flex-col overflow-hidden">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 shrink-0">
@@ -45,7 +45,7 @@ export async function TopNav() {
         </div>
       </div>
       
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5">
         <NotificationsDropdown initialActive={activePolls} initialCompleted={completedPolls} notifications={notifications || []} />
         
 

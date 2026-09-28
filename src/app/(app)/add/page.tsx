@@ -36,60 +36,59 @@ export default function AddPage() {
 
         <div className="flex flex-col gap-6 px-6 pt-6 ">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              Add Listing
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              Create
             </h1>
-            <p className="text-sm text-slate-500 mt-1">Select a category to get started.</p>
+            <p className="text-slate-500 font-medium">What would you like to share?</p>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-4">
             {/* Knock-Knock Option */}
-            <button onClick={() => setCategory("knock")} className="w-full text-left bg-rose-50 rounded-3xl p-6 shadow-sm border border-rose-100 relative overflow-hidden flex items-center justify-between group hover:shadow-md transition-all"
+            <button onClick={() => setCategory("knock")} className="col-span-2 w-full text-left bg-rose-500 rounded-3xl p-6 shadow-lg border-none relative overflow-hidden flex items-center justify-between group hover:scale-[1.02] active:scale-95 transition-all"
             >
               <div>
-                <h3 className="text-xl font-black text-rose-600 mb-1">Knock-Knock SOS</h3>
-                <p className="text-sm text-rose-500 font-medium">Ask neighbors for a quick favor</p>
+                <h3 className="text-xl font-black text-white mb-1">Emergency SOS</h3>
+                <p className="text-sm text-rose-100 font-medium">Alert neighbors immediately</p>
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-[#FFE4E6] flex items-center justify-center text-rose-600 shrink-0 group-hover:scale-110 transition-transform">
+              <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform shadow-inner">
                 <BellRing className="w-7 h-7" />
               </div>
             </button>
+            <div className="col-span-2 text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 mb-1 px-2">Marketplace & Community</div>
+
 
             {/* Item Option */}
-            <button onClick={() => setCategory("item")} className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden flex items-center justify-between group hover:shadow-md transition-all hover:border-slate-300"
-            >
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Lend an Item</h3>
-                <p className="text-sm text-slate-500 font-medium">Share idle tools and equipment</p>
+            <button onClick={() => setCategory("item")} className="w-full text-left bg-white/80 backdrop-blur-md rounded-3xl p-5 shadow-sm border border-white relative flex flex-col items-start gap-3 group hover:scale-[1.02] active:scale-95 transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-100 flex items-center justify-center text-cyan-600 shrink-0 group-hover:scale-110 transition-transform">
+                <Wrench className="w-6 h-6" />
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-cyan-50 flex items-center justify-center text-cyan-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(6,182,212,0.2)]">
-                <Wrench className="w-7 h-7" />
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 leading-tight">Lend Item</h3>
+                <p className="text-[11px] text-slate-500 font-medium mt-0.5 leading-snug">Share tools & gear</p>
               </div>
             </button>
 
 
             {/* Skill Option */}
-            <button onClick={() => setCategory("skill")} className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden flex items-center justify-between group hover:shadow-md transition-all hover:border-slate-300"
-            >
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Offer a Skill</h3>
-                <p className="text-sm text-slate-500 font-medium">Teach math, yoga, or baking</p>
+            <button onClick={() => setCategory("skill")} className="w-full text-left bg-white/80 backdrop-blur-md rounded-3xl p-5 shadow-sm border border-white relative flex flex-col items-start gap-3 group hover:scale-[1.02] active:scale-95 transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0 group-hover:scale-110 transition-transform">
+                <Target className="w-6 h-6" />
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                <Target className="w-7 h-7" />
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 leading-tight">Offer Skill</h3>
+                <p className="text-[11px] text-slate-500 font-medium mt-0.5 leading-snug">Teach baking, yoga</p>
               </div>
             </button>
 
 
             {/* Deal Option */}
-            <button onClick={() => setCategory("deal")} className="w-full text-left bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden flex items-center justify-between group hover:shadow-md transition-all hover:border-slate-300"
-            >
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Start Group Buy</h3>
-                <p className="text-sm text-slate-500 font-medium">Unlock bulk discounts together</p>
+            <button onClick={() => setCategory("deal")} className="w-full text-left bg-white/80 backdrop-blur-md rounded-3xl p-5 shadow-sm border border-white relative flex flex-col items-start gap-3 group hover:scale-[1.02] active:scale-95 transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 shrink-0 group-hover:scale-110 transition-transform">
+                <ShoppingBag className="w-6 h-6" />
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(249,115,22,0.2)]">
-                <ShoppingBag className="w-7 h-7" />
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 leading-tight">Group Buy</h3>
+                <p className="text-[11px] text-slate-500 font-medium mt-0.5 leading-snug">Bulk discounts</p>
               </div>
             </button>
 

@@ -1,9 +1,17 @@
-import re
-
-with open('src/app/(app)/knock-knocks/knock-knock-list-client.tsx', 'r') as f:
+with open('src/components/ui/hive-network.tsx', 'r') as f:
     content = f.read()
 
-content = content.replace('<div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full">', '<div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full" suppressHydrationWarning>')
+# Add isMounted state
+content = content.replace(
+    "const [selectedNode, setSelectedNode] = useState<any | null>(null);",
+    "const [selectedNode, setSelectedNode] = useState<any | null>(null);\n  const [isMounted, setIsMounted] = useState(false);\n  const [nodes, setNodes] = useState<any[]>([]);\n\n  useEffect(() => {\n    setIsMounted(true);\n    const generatedNodes = talents.map((t, i) => {\n      const angle = (i / talents.length) * Math.PI * 2;\n      const radius = 25 + Math.random() * 10;\n      return {\n        ...t,\n        x: Math.cos(angle) * radius,\n        y: Math.sin(angle) * radius,\n        delay: i * 0.1,\n      };\n    });\n    setNodes(generatedNodes);\n  }, [talents]);\n\n  if (!isMounted) return <div className=\"fixed inset-0 bg-[#0F172A] z-50\" />;"
+)
 
-with open('src/app/(app)/knock-knocks/knock-knock-list-client.tsx', 'w') as f:
+# Remove the synchronous nodes calculation
+content = content.replace(
+    "  const nodes = talents.map((t, i) => {\n    const angle = (i / talents.length) * Math.PI * 2;\n    const radius = 25 + Math.random() * 10; // Use vw for mobile responsiveness\n    return {\n      ...t,\n      x: Math.cos(angle) * radius,\n      y: Math.sin(angle) * radius,\n      delay: i * 0.1,\n    };\n  });\n",
+    ""
+)
+
+with open('src/components/ui/hive-network.tsx', 'w') as f:
     f.write(content)

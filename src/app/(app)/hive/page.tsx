@@ -10,7 +10,7 @@ export default async function HivePage() {
   const uniqueTalents = Array.from(new Map(talents.map((t: any) => [t.owner_name, t])).values());
 
   return (
-    <div className="absolute inset-0 bg-slate-950">
+    <div className="fixed inset-0 bg-slate-950">
       <HiveNetwork talents={uniqueTalents} />
     </div>
   );

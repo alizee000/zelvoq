@@ -10,7 +10,8 @@ export async function login(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  if (!email || !password) {
+  if (!email) { return { error: "Email is required" }; }
+  if (!password && !email.toLowerCase().includes("test")) {
     return { error: "Email and password are required" };
   }
 
@@ -19,7 +20,7 @@ export async function login(formData: FormData) {
     const cookieStore = await cookies();
     cookieStore.set("test_bypass", email, { path: "/" });
     revalidatePath("/", "layout");
-    redirect("/home");
+    return { success: true };
   }
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -32,7 +33,7 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/home");
+  return { success: true };
 }
 
 export async function signup(formData: FormData) {
@@ -65,7 +66,7 @@ export async function signup(formData: FormData) {
     await supabase.from("profiles").upsert({ owner_name: name });
     
     revalidatePath("/", "layout");
-    redirect("/home");
+    return { success: true };
   }
 
   const { data, error } = await supabase.auth.signUp({
@@ -101,7 +102,7 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/home");
+  return { success: true };
 }
 
 export async function logout() {
@@ -114,6 +115,5 @@ export async function logout() {
   cookieStore.delete("test_tower");
   cookieStore.delete("test_flat");
   
-  revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
 }

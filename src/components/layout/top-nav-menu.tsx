@@ -2,11 +2,22 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MoreVertical, LogOut } from "lucide-react";
-import { SignOutButton } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
+import { logout } from "@/app/actions/auth";
 
 export function TopNavMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    // 1. Sign out of Clerk (if they have a real session)
+    try { await signOut(); } catch (e) {}
+    // 2. Clear our custom test_bypass cookies & Supabase session
+    try { await logout(); } catch (e) {}
+    // 3. Force redirect to login screen
+    window.location.href = "/";
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -29,14 +40,13 @@ export function TopNavMenu() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-top-2 z-50">
-          <SignOutButton>
-            <button 
-              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-rose-500 hover:bg-rose-50 transition-colors text-left"
-            >
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </button>
-          </SignOutButton>
+          <button 
+            onClick={handleSignOut}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-rose-500 hover:bg-rose-50 transition-colors text-left"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
         </div>
       )}
     </div>

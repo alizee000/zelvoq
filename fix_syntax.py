@@ -1,36 +1,17 @@
-import os
+import re
 
-files = [
-    'src/components/shared/group-buy-card.tsx',
-    'src/components/shared/borrow-card.tsx',
-    'src/components/shared/space-card.tsx',
-    'src/components/shared/co-own-card.tsx'
-]
+with open('src/app/(app)/add/page.tsx', 'r') as f:
+    lines = f.readlines()
 
-for filepath in files:
-    if os.path.exists(filepath):
-        with open(filepath, 'r') as f:
-            content = f.read()
-        
-        # Revert the bad useState, useEffect replacement on the function calls
-        content = content.replace('useState, useEffect(', 'useState(')
-        
-        # But wait, it also messed up the import: `import { useState, useEffect } from "react";` -> `import { useState, useEffect, useEffect } from "react";`?
-        # Let's just fix the function calls first.
-        content = content.replace('useState, useEffect([', 'useState([')
-        content = content.replace('useState, useEffect("', 'useState("')
-        
-        # Ensure the import is correct
-        if 'import { useState } from "react";' in content:
-             content = content.replace('import { useState } from "react";', 'import { useState, useEffect } from "react";')
-        elif 'import { useState, useEffect } from "react";' in content:
-             pass # correct
-        elif 'import { useState, useEffect, useEffect }' in content:
-             content = content.replace('import { useState, useEffect, useEffect } from "react";', 'import { useState, useEffect } from "react";')
-             
-        # Just use regex to fix any remaining `useState, useEffect(` calls
-        import re
-        content = re.sub(r'useState,\s*useEffect\(', 'useState(', content)
+# The error was at line 202 and 281
+# Let's just find lines that are literally exactly `          )}` and `              )}`
+# Wait, let's look at the context.
+new_lines = []
+for i, line in enumerate(lines):
+    # If the line is a solitary closing brace and parenthesis and we know it's a syntax error
+    if line.strip() == ')}' and i in [201, 280]: # 0-indexed
+        continue
+    new_lines.append(line)
 
-        with open(filepath, 'w') as f:
-            f.write(content)
+with open('src/app/(app)/add/page.tsx', 'w') as f:
+    f.writelines(new_lines)

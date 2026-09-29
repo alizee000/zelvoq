@@ -55,13 +55,13 @@ export function BottomNav() {
     });
 
   return (
-    <div className="fixed bottom-6 left-6 right-6 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-md h-16 bg-white/80 backdrop-blur-2xl border border-white/60 rounded-full shadow-[0_20px_40px_-10px_rgba(79,70,229,0.15)] z-50 flex items-center justify-between px-4 pb-safe">
+    <div className="fixed bottom-0 left-0 right-0 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-md h-[88px] bg-white/85 backdrop-blur-2xl border-t border-slate-200/60 z-50 flex items-start justify-between px-6 pt-3 pb-safe shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
       <div className="flex items-center gap-2 h-full">
         {renderNavItems(LEFT_NAV)}
       </div>
       
       {/* Center Action Button */}
-      <div className="absolute left-1/2 -translate-x-1/2 -top-5">
+      <div className="absolute left-1/2 -translate-x-1/2 top-0 -translate-y-1/3">
         <div className="absolute inset-0 bg-indigo-500 rounded-full animate-ping opacity-20"></div>
         <motion.div whileTap={{ scale: 0.9, rotate: 15 }} onClick={() => triggerHaptic('medium')}>
           <Link href="/add" className="relative w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full shadow-lg shadow-indigo-500/30 flex items-center justify-center text-white transition-all group border-4 border-slate-50/50">

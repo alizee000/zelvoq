@@ -28,20 +28,15 @@ export async function TopNav() {
   const { activePolls, completedPolls } = await getPollsForUser(fullName);
 
   return (
-    <header className="sticky top-0 z-40 pl-6 pr-2 py-4 flex items-center justify-between bg-white/70 backdrop-blur-xl border-b border-slate-200/50">
+    <header className="sticky top-0 z-40 pl-6 pr-2 py-4 flex items-center justify-between bg-white/90 backdrop-blur-3xl border-b border-slate-100/50">
       <div className="flex flex-col overflow-hidden">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 shrink-0">
+          <div className="w-8 h-8 rounded-[10px] bg-slate-900 flex items-center justify-center shadow-sm shrink-0">
             <Logo className="w-5 h-5 text-white" />
           </div>
-          <div className="flex flex-col overflow-hidden">
-            <h1 className="text-[19px] font-black tracking-tight text-slate-900 leading-none">
-              MyKoodu
-            </h1>
-            <p className="text-[7.5px] font-bold uppercase tracking-[0.1em] text-slate-400 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis opacity-90">
-              My community. My people. My world.
-            </p>
-          </div>
+          <h1 className="text-[20px] font-black tracking-tight text-slate-900 leading-none">
+            MyKoodu
+          </h1>
         </div>
       </div>
       

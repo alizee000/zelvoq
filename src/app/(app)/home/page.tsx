@@ -5,6 +5,7 @@ import { DynamicGreeting } from "./dynamic-greeting";
 import { currentUser } from "@clerk/nextjs/server";
 import { CarouselWrapper } from "@/components/ui/carousel-wrapper";
 import Link from "next/link";
+import { LiveKnocks } from "@/components/ui/live-knocks";
 import { ArrowRight, MapPin, Calendar, Star, Users, Zap } from "lucide-react";
 import Image from "next/image";
 
@@ -15,6 +16,21 @@ export default async function HomePage() {
   const firstName = user?.firstName || "Neighbor";
   
   const allTalents = await getTalents();
+
+  const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
+  const { createClient } = await import("@/lib/supabase/server");
+  const supabase = await createClient();
+  const { data: dbKnocks } = await supabase.from("knock_knocks").select("*").eq("status", "active").order("created_at", { ascending: false });
+  
+  const liveKnocks = dbKnocks?.map((k: any) => ({
+    id: k.id,
+    title: k.title,
+    owner_name: k.creator_name,
+    image_url: '', 
+    created_at: k.created_at,
+    tower: k.tower
+  })) || [];
+
   
   // Filter for Hidden Gems (skills/services)
   const hiddenGems = allTalents?.filter((t: any) => t.category === 'skill' || t.category === 'service').slice(0, 5) || [];
@@ -29,8 +45,13 @@ export default async function HomePage() {
       <div className="relative w-full overflow-hidden bg-white rounded-b-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8">
         {/* Subtle decorative mesh gradient */}
         <div className="absolute top-[-50%] left-[-20%] w-[140%] h-[150%] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-100/40 via-white to-orange-50/40 pointer-events-none opacity-70" />
+
+        {/* Live Knocks Status Row - At the very top */}
+        <div className="relative z-20 pt-2">
+          <LiveKnocks knocks={liveKnocks} userFirstName={firstName} userFullName={fullName} userImageUrl={user?.imageUrl} />
+        </div>
         
-        <div className="relative z-10 px-6 pt-16 pb-10">
+        <div className="relative z-10 px-6 pt-6 pb-8">
           <MotionSection delay={0}>
 
             

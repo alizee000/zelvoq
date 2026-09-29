@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { Star, Package, Key, ShoppingBag, Calendar, PieChart, Hand, Check, UploadCloud, HeartHandshake, ArrowLeft, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { addTalent } from "@/app/actions/talents";
+import { addGroupBuy } from "@/app/actions/group-buys";
+import { createEvent } from "@/app/actions/events";
+import { createCoOwnItem } from "@/app/actions/co-own";
 
 function TagsInput() {
   const [tags, setTags] = useState<string[]>([]);
@@ -52,7 +56,6 @@ export default function AddPage() {
   const router = useRouter();
 
   const categories = [
-    { id: 'knock', label: 'Knock Knock', desc: 'Ask for quick help', icon: Hand, color: 'text-amber-500', bg: 'bg-amber-50', border: 'border-amber-100' },
     { id: 'skill', label: 'Share a Skill', desc: 'Teach or offer services', icon: Star, color: 'text-indigo-500', bg: 'bg-indigo-50', border: 'border-indigo-100' },
     { id: 'item', label: 'Lend an Item', desc: 'Tools, books, appliances', icon: Package, color: 'text-orange-500', bg: 'bg-orange-50', border: 'border-orange-100' },
     { id: 'event', label: 'Host Event', desc: 'Meetups, games, classes', icon: Calendar, color: 'text-rose-500', bg: 'bg-rose-50', border: 'border-rose-100' },
@@ -86,14 +89,30 @@ export default function AddPage() {
       is_paid: data.is_paid === 'on',
     };
 
-    // Simulate API Call
-    await new Promise(r => setTimeout(r, 1200));
-    
-    // Route based on category
-    if (category === 'deal') router.push('/home');
-    else if (category === 'event') router.push('/events');
-    else if (category === 'knock') router.push('/knocks');
-    else router.push('/home');
+    try {
+      if (category === 'deal') {
+        await addGroupBuy(formData);
+        router.push('/home');
+      } else if (category === 'event') {
+        await createEvent(formData);
+        router.push('/events');
+
+      } else if (category === 'coown') {
+        await createCoOwnItem(formData);
+        router.push('/home');
+      } else {
+        // skill, item, space map to talents
+        // we need to inject category manually if it's missing from form
+        formData.set("category", category as string);
+        formData.set("tags", finalTags);
+        formData.set("is_paid", data.is_paid === 'on' ? "true" : "false");
+        await addTalent(formData);
+        router.push('/home');
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to create listing.");
+    }
     
     setIsSubmitting(false);
   };
@@ -158,18 +177,18 @@ export default function AddPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest pl-1">
-              {category === 'knock' ? 'What do you need?' : 'Title'}
+              {'Title'}
             </label>
             <input 
               name="title" 
               required 
               autoFocus
-              placeholder={category === 'deal' ? "e.g., 50kg Alphonso Mangoes" : category === 'knock' ? "e.g., Can someone lend me a ladder?" : "e.g., Sourdough Baking Masterclass"} 
+              placeholder={category === 'deal' ? "e.g., 50kg Alphonso Mangoes" : "e.g., Sourdough Baking Masterclass"} 
               className="w-full bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder:text-slate-400 px-5 py-4 text-[16px] font-bold focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all shadow-sm"
             />
           </div>
 
-          {category !== 'knock' && (
+          
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest pl-1">Description</label>
               <textarea 
@@ -180,7 +199,6 @@ export default function AddPage() {
                 className="w-full bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder:text-slate-400 px-5 py-4 text-[15px] font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all shadow-sm resize-none"
               />
             </div>
-          )}
 
           {category === 'coown' && (
             <>
@@ -245,7 +263,7 @@ export default function AddPage() {
             <>
               {category === 'skill' && <TagsInput />}
               
-              {category !== 'knock' && (
+              
               <label className="flex items-center gap-4 bg-white p-5 rounded-[1.5rem] border border-slate-200 shadow-sm cursor-pointer hover:border-indigo-300 transition-colors group">
                 <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0 group-hover:bg-indigo-100 transition-colors">
                   <HeartHandshake className="w-6 h-6 text-indigo-500" />
@@ -259,11 +277,10 @@ export default function AddPage() {
                   <div className="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[20px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-[22px] after:w-[22px] after:transition-all peer-checked:bg-indigo-600"></div>
                 </div>
               </label>
-              )}
             </>
           )}
 
-          {category !== 'skill' && category !== 'knock' && (
+          {category !== 'skill' && (
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest pl-1">Cover Photo</label>
               <div className="w-full h-40 bg-white border-2 border-dashed border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 rounded-[1.5rem] flex flex-col items-center justify-center text-slate-500 group cursor-pointer transition-all relative overflow-hidden shadow-sm">
